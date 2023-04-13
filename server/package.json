@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon",
     "lint-write": "npx prettier --write .",
-    "test": "npx prettier --check ."
+    "test": "npx prettier --check . && jest"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +17,9 @@
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.0",
     "@types/mongoose": "^5.11.97",
+    "jest": "^29.5.0",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.7",
     "ts-node": "^10.9.1",
