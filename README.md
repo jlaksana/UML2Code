@@ -1,5 +1,7 @@
 # UML2Code
 
+[![Node.js CI](https://github.com/jlaksana/UML2Code/actions/workflows/nodeci.yml/badge.svg)](https://github.com/jlaksana/UML2Code/actions/workflows/nodeci.yml)
+
 ## Table of Contents
 
 - [Overview](#overview)
