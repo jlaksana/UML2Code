@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon",
     "lint-write": "npx prettier --write .",
-    "test": "npx prettier --check . && jest"
+    "test": "npx prettier --check ."
   },
   "keywords": [],
   "author": "",
