@@ -6,7 +6,9 @@
   "scripts": {
     "start": "nodemon",
     "lint-write": "npx prettier --write .",
-    "test": "npx prettier --check ."
+    "test": "npx prettier --check .",
+    "build": "npx tsc",
+    "start:prod": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
