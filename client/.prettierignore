@@ -1,0 +1,10 @@
+package.json
+package-lock.json
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+
+*.env
+
+public
+node_modules
