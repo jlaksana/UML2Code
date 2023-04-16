@@ -1,5 +1,5 @@
-import "./App.css";
-import logo from "./assets/UML2.png";
+import './App.css';
+import logo from './assets/UML2.png';
 
 function App() {
   return (
