@@ -7,5 +7,5 @@
     "sourceMap": true,
     "noImplicitAny": true
   },
-  "include": ["src/**/*", ".eslintrc.js"]
+  "include": ["src/**/*", ".eslintrc.js", "jest.config.ts"]
 }
