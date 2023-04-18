@@ -1,0 +1,13 @@
+.start-menu {
+  margin: auto;
+  min-width: 500px;
+  min-height: 530px;
+  border-radius: 10px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5em;
+  box-sizing: border-box;
+  padding: 0 5%;
+}
