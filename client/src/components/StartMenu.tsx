@@ -1,6 +1,7 @@
 import LoadingButton from '@mui/lab/LoadingButton';
 import { TextField } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/UML2.png';
 import '../styles/StartMenu.css';
 
@@ -8,6 +9,8 @@ function StartMenu() {
   const [id, setId] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   // ! This is a hack to make the loading button work. Remove later
   const sleep = (ms: number) =>
@@ -24,6 +27,7 @@ function StartMenu() {
       // call api to check if diagram exists
       // console.log(id);
       // redirect to editor
+      navigate(`/${id}`);
     } else {
       setError(true);
     }
@@ -31,8 +35,10 @@ function StartMenu() {
   };
 
   const handleCreate = async () => {
+    setLoading(true);
     // call api to create new diagram
     // redirect to editor
+    navigate(`/1234`);
   };
 
   return (

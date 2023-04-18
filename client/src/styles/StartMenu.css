@@ -1,5 +1,8 @@
 .start-menu {
-  margin: auto;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   min-width: 500px;
   min-height: 530px;
   border-radius: 10px;
@@ -9,5 +12,10 @@
   align-items: center;
   gap: 1.5em;
   box-sizing: border-box;
-  padding: 0 5%;
+  padding: 0 4em;
+}
+
+.logo {
+  height: 140px;
+  padding: 1em;
 }
