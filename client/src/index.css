@@ -1,5 +1,5 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   line-height: 1.5;
   font-weight: 400;
   background: radial-gradient(
@@ -9,7 +9,12 @@
   );
 }
 
+body {
+  margin: 0;
+}
+
 #root {
+  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;

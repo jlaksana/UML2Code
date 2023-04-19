@@ -37,7 +37,7 @@ describe('StartMenu', () => {
     fireEvent.click(goButton);
 
     await waitFor(() => {
-      expect(getByText('Editor page')).toBeInTheDocument();
+      expect(getByText('ID: 1234')).toBeInTheDocument();
     });
   });
 });
