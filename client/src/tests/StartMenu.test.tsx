@@ -25,7 +25,7 @@ describe('StartMenu', () => {
   });
 
   it('redirects to a valid diagram', async () => {
-    const { getByLabelText, getByText } = render(
+    const { getByLabelText, getByText, getByAltText } = render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
@@ -35,6 +35,24 @@ describe('StartMenu', () => {
 
     fireEvent.change(input, { target: { value: '1234' } });
     fireEvent.click(goButton);
+
+    await waitFor(() => {
+      expect(getByText('ID: 1234')).toBeInTheDocument();
+    });
+
+    const homeButton = getByAltText('logo');
+    fireEvent.click(homeButton);
+  });
+
+  it('click create new and redirects to editor', async () => {
+    const { getByText } = render(
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    );
+    const createButton = getByText('Create New');
+
+    fireEvent.click(createButton);
 
     await waitFor(() => {
       expect(getByText('ID: 1234')).toBeInTheDocument();
