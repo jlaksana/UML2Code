@@ -1,7 +1,6 @@
-import AddIcon from '@mui/icons-material/Add';
-import CodeIcon from '@mui/icons-material/Code';
-import IosShareIcon from '@mui/icons-material/IosShare';
-import { Button } from '@mui/material';
+import CodeRoundedIcon from '@mui/icons-material/CodeRounded';
+import ShareIcon from '@mui/icons-material/Share';
+import { Button, Tooltip } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import logo from '../assets/UML2.png';
 import '../styles/Header.css';
@@ -12,23 +11,30 @@ function Header() {
   return (
     <div className="header">
       <div className="left">
-        <Link to="/">
-          <img src={logo} className="logo2" alt="logo" />
-        </Link>
-        <Button variant="contained" startIcon={<AddIcon />} size="large">
-          New
-        </Button>
+        <Tooltip title="Return home" placement="right">
+          <Link to="/">
+            <img src={logo} className="logo2" alt="logo" />
+          </Link>
+        </Tooltip>
       </div>
       <div className="center">
         <span>ID: {id}</span>
       </div>
       <div className="right">
-        <Button variant="contained" startIcon={<IosShareIcon />} size="large">
-          Share
-        </Button>
-        <Button variant="contained" startIcon={<CodeIcon />} size="large">
-          Code
-        </Button>
+        <Tooltip title="Share or print">
+          <Button variant="contained" startIcon={<ShareIcon />} size="large">
+            Share
+          </Button>
+        </Tooltip>
+        <Tooltip title="Generate code">
+          <Button
+            variant="contained"
+            startIcon={<CodeRoundedIcon />}
+            size="large"
+          >
+            Code
+          </Button>
+        </Tooltip>
       </div>
     </div>
   );
