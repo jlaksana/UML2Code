@@ -1,7 +1,7 @@
-import { AcceptedTypes } from '../../types';
+import { DataTypes } from '../../types';
 import GenericSelect, { GenericSelectProps } from './GenericSelect';
 
-interface TypeSelectProps extends GenericSelectProps<AcceptedTypes> {
+interface TypeSelectProps extends GenericSelectProps<DataTypes> {
   forMethod?: boolean;
 }
 
@@ -11,7 +11,7 @@ function TypeSelect({
   error,
   forMethod = false,
 }: TypeSelectProps) {
-  const types: AcceptedTypes[] = [
+  const types: DataTypes[] = [
     'int',
     'float',
     'double',

@@ -2,15 +2,17 @@ import { Switch } from '@mui/material';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import '../styles/Editor.css';
-import { AcceptedTypes } from '../types';
+import { DataTypes, Visibility } from '../types';
 import AddNewSpeedDial from './AddNewSpeedDial';
 import Header from './Header';
 import TypeSelect from './selects/TypeSelect';
+import VisibilitySelect from './selects/VisibilitySelect';
 
 function Editor() {
   const { id } = useParams();
 
-  const [type, setType] = useState<AcceptedTypes>(null);
+  const [type, setType] = useState<DataTypes>(null);
+  const [visibility, setVisibility] = useState<Visibility>('+');
   const [error, setError] = useState(false);
 
   return (
@@ -23,6 +25,11 @@ function Editor() {
         }}
       />
       <TypeSelect option={type} setOption={setType} error={error} />
+      <VisibilitySelect
+        option={visibility}
+        setOption={setVisibility}
+        error={error}
+      />
       <AddNewSpeedDial />
     </div>
   );

@@ -1,4 +1,4 @@
-export type AcceptedTypes =
+export type DataTypes =
   | null
   | 'int'
   | 'float'
@@ -7,3 +7,5 @@ export type AcceptedTypes =
   | 'string'
   | 'char'
   | 'void';
+
+export type Visibility = '+' | '-' | '#';
