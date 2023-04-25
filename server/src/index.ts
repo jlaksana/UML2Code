@@ -1,7 +1,7 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import mongoose from 'mongoose';
+import connectDB from './db';
 
 dotenv.config();
 
@@ -18,6 +18,4 @@ app.listen(5000, () => {
   console.log('Server running on http://localhost:5000/');
 });
 
-mongoose.Promise = Promise;
-mongoose.connect(process.env.MONGO_URL);
-mongoose.connection.on('error', (error: Error) => console.log(error));
+connectDB();
