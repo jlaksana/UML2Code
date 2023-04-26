@@ -3,7 +3,7 @@ import mongoose, { ConnectOptions } from 'mongoose';
 import Diagram, { IDiagram } from '../models/diagram';
 import Entity from '../models/entity';
 
-describe('Entity', () => {
+describe('Entity Schema', () => {
   let mongoServer: MongoMemoryServer;
   let diagram: IDiagram;
 
