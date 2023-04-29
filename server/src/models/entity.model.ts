@@ -22,8 +22,8 @@ const entitySchema = z.object({
   diagramId: z.number().min(1000).max(9999),
   x: z.number(),
   y: z.number(),
-  attributes: z.array(entityAttribute),
-  methods: z.array(entityMethod),
+  attributes: z.array(entityAttribute).optional(),
+  methods: z.array(entityMethod).optional(),
 });
 
 type Entity = z.infer<typeof entitySchema> & Document;
