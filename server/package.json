@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon",
     "lint": "npx eslint --fix src/**",
-    "test": "npx eslint src/** && jest --silent --verbose",
+    "test": "npx eslint src/** tests && jest --silent --verbose",
     "coverage": "jest --coverage",
     "build": "npx tsc",
     "start:prod": "node dist/index.js"
@@ -49,6 +49,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongoose": "^7.0.3"
+    "mongoose": "^7.0.3",
+    "zod": "^3.21.4"
   }
 }

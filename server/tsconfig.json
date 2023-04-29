@@ -5,7 +5,9 @@
     "baseUrl": "src",
     "outDir": "./dist",
     "sourceMap": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "strict": true,
+    "esModuleInterop": true
   },
-  "include": ["src/**/*", ".eslintrc.js", "jest.config.ts"]
+  "include": ["src/**/*", ".eslintrc.js", "jest.config.ts", "tests"]
 }

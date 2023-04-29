@@ -1,8 +1,8 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
-import Diagram from '../models/diagram';
-import Entity from '../models/entity';
-import Relationship from '../models/relationship';
+import { DiagramModel } from '../src/models/diagram.model';
+import { EntityModel } from '../src/models/entity.model';
+import { RelationshipModel } from '../src/models/relationship.model';
 
 let mongoServer: MongoMemoryServer;
 let testDiagramId: number;
@@ -18,12 +18,12 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   } as ConnectOptions);
 
-  const diagram = new Diagram({ _id: 1000 });
+  const diagram = new DiagramModel({ _id: 1000 });
   await diagram.save();
   testDiagramId = diagram._id;
 
   // Create test entities
-  const testEntity1 = await Entity.create({
+  const testEntity1 = await EntityModel.create({
     variant: 'class',
     name: 'TestClass',
     x: 0,
@@ -34,7 +34,7 @@ beforeAll(async () => {
   });
   testEntity1Id = testEntity1._id;
 
-  const testEntity2 = await Entity.create({
+  const testEntity2 = await EntityModel.create({
     variant: 'class',
     name: 'TestAnotherClass',
     x: 0,
@@ -46,22 +46,22 @@ beforeAll(async () => {
   testEntity2Id = testEntity2._id;
 });
 
+afterEach(async () => {
+  await RelationshipModel.deleteMany({});
+});
+
 afterAll(async () => {
   // clear all test data after all tests
-  await Entity.deleteMany({});
-  await Diagram.deleteMany({});
+  await EntityModel.deleteMany({});
+  await DiagramModel.deleteMany({});
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
   await mongoServer.stop();
 });
 
-afterEach(async () => {
-  await Relationship.deleteMany({});
-});
-
 describe('Relationship Schema', () => {
   it('should create a relationship', async () => {
-    const testRelationship = new Relationship({
+    const testRelationship = new RelationshipModel({
       variant: 'association',
       diagramId: testDiagramId,
       src: testEntity1Id,
@@ -85,7 +85,7 @@ describe('Relationship Schema', () => {
   });
 
   it('should not create a relationship with a non-existent diagramId', async () => {
-    const testRelationship = new Relationship({
+    const testRelationship = new RelationshipModel({
       variant: 'association',
       diagramId: 4040,
       src: testEntity1Id,
@@ -100,7 +100,7 @@ describe('Relationship Schema', () => {
   });
 
   it('should not create a relationship with a non-existent src entity', async () => {
-    const testRelationship = new Relationship({
+    const testRelationship = new RelationshipModel({
       variant: 'inheritance',
       diagramId: testDiagramId,
       src: new mongoose.Types.ObjectId(),
@@ -115,7 +115,7 @@ describe('Relationship Schema', () => {
   });
 
   it('should not create a relationship with a non-existent tar entity', async () => {
-    const testRelationship = new Relationship({
+    const testRelationship = new RelationshipModel({
       variant: 'inheritance',
       diagramId: testDiagramId,
       src: testEntity1Id,
@@ -130,7 +130,7 @@ describe('Relationship Schema', () => {
   });
 
   it('should not create a relationship with a invalid variant', async () => {
-    const testRelationship = new Relationship({
+    const testRelationship = new RelationshipModel({
       variant: 'invalid',
       diagramId: testDiagramId,
       src: testEntity1Id,

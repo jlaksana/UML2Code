@@ -1,11 +1,11 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
-import Diagram, { IDiagram } from '../models/diagram';
-import Entity from '../models/entity';
+import { Diagram, DiagramModel } from '../src/models/diagram.model';
+import { EntityModel } from '../src/models/entity.model';
 
 describe('Entity Schema', () => {
   let mongoServer: MongoMemoryServer;
-  let diagram: IDiagram;
+  let diagram: Diagram;
 
   beforeAll(async () => {
     // create a new in-memory database before running any tests
@@ -15,10 +15,8 @@ describe('Entity Schema', () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     } as ConnectOptions);
-  });
 
-  beforeEach(async () => {
-    diagram = new Diagram({ _id: 1000 });
+    diagram = new DiagramModel({ _id: 1000 });
     await diagram.save();
   });
 
@@ -30,12 +28,11 @@ describe('Entity Schema', () => {
   });
 
   afterEach(async () => {
-    await Entity.deleteMany({});
-    await Diagram.deleteMany({});
+    await EntityModel.deleteMany({});
   });
 
   it('should create a new entity', async () => {
-    const entity = new Entity({
+    const entity = new EntityModel({
       variant: 'class',
       name: 'TestClass',
       x: 10,
@@ -78,14 +75,14 @@ describe('Entity Schema', () => {
   });
 
   it('should not allow duplicate entities in the same diagram', async () => {
-    const entity1 = new Entity({
+    const entity1 = new EntityModel({
       variant: 'class',
       name: 'TestClass',
       x: 10,
       y: 20,
       diagramId: diagram._id,
     });
-    const entity2 = new Entity({
+    const entity2 = new EntityModel({
       variant: 'interface',
       name: 'TestClass',
       x: 20,
@@ -97,17 +94,17 @@ describe('Entity Schema', () => {
   });
 
   it('should allow same name entities in different diagrams', async () => {
-    const diagram2 = new Diagram({ _id: 1001 });
+    const diagram2 = new DiagramModel({ _id: 1001 });
     await diagram2.save();
 
-    const entity1 = new Entity({
+    const entity1 = new EntityModel({
       variant: 'class',
       name: 'TestClass',
       x: 10,
       y: 20,
       diagramId: diagram._id,
     });
-    const entity2 = new Entity({
+    const entity2 = new EntityModel({
       variant: 'interface',
       name: 'TestClass',
       x: 20,
@@ -119,7 +116,7 @@ describe('Entity Schema', () => {
   });
 
   it('should not allow entities with invalid variants', async () => {
-    const entity = new Entity({
+    const entity = new EntityModel({
       variant: 'invalid',
       name: 'TestClass',
       x: 10,
@@ -130,7 +127,7 @@ describe('Entity Schema', () => {
   });
 
   it('should not allow entities without an existing diagram', async () => {
-    const entity = new Entity({
+    const entity = new EntityModel({
       variant: 'class',
       name: 'TestClass',
       x: 10,
@@ -141,7 +138,7 @@ describe('Entity Schema', () => {
   });
 
   it('should not allow attributes with invalid types', async () => {
-    const entity = new Entity({
+    const entity = new EntityModel({
       variant: 'class',
       name: 'TestClass',
       x: 10,
@@ -160,7 +157,7 @@ describe('Entity Schema', () => {
   });
 
   it('should not allow attributes with duplicate names', async () => {
-    const entity = new Entity({
+    const entity = new EntityModel({
       variant: 'class',
       name: 'TestClass',
       x: 10,

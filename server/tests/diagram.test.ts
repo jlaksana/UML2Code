@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
-import Diagram from '../models/diagram';
+import { DiagramModel } from '../src/models/diagram.model';
 
 describe('Diagram Schema', () => {
   let mongoServer: MongoMemoryServer;
@@ -24,11 +24,11 @@ describe('Diagram Schema', () => {
   });
 
   afterEach(async () => {
-    await Diagram.deleteMany({});
+    await DiagramModel.deleteMany({});
   });
 
   it('should be able to save a valid diagram', async () => {
-    const diagram1 = new Diagram({
+    const diagram1 = new DiagramModel({
       _id: 1234,
     });
     const savedDiagram1 = await diagram1.save();
@@ -36,7 +36,7 @@ describe('Diagram Schema', () => {
     expect(savedDiagram1.createdAt).not.toBeUndefined();
     expect(savedDiagram1.updatedAt).not.toBeUndefined();
 
-    const diagram2 = new Diagram({
+    const diagram2 = new DiagramModel({
       _id: '1235',
     });
     const savedDiagram2 = await diagram2.save();
@@ -45,25 +45,25 @@ describe('Diagram Schema', () => {
   });
 
   it('should not save a diagram with an invalid id', async () => {
-    const diagram = new Diagram({
+    const diagram = new DiagramModel({
       _id: 999,
     });
     await expect(diagram.save()).rejects.toThrow();
   });
 
   it('should not save a diagram with a duplicate id', async () => {
-    const diagram1 = new Diagram({
+    const diagram1 = new DiagramModel({
       _id: 1234,
     });
     await diagram1.save();
-    const diagram2 = new Diagram({
+    const diagram2 = new DiagramModel({
       _id: 1234,
     });
     await expect(diagram2.save()).rejects.toThrow();
   });
 
   it('should not save a diagram without an id', async () => {
-    const diagram = new Diagram({});
+    const diagram = new DiagramModel({});
     await expect(diagram.save()).rejects.toThrow();
   });
 });
