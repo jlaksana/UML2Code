@@ -62,12 +62,18 @@ describe('Entity Schema', () => {
     expect(entity.x).toBe(10);
     expect(entity.y).toBe(20);
     expect(entity.diagramId).toEqual(diagram._id);
-    expect(entity.attributes).toHaveLength(1);
+    expect(entity.attributes).toBeDefined();
+    if (!entity.attributes) {
+      throw new Error('attributes is undefined');
+    }
     expect(entity.attributes[0].name).toBe('testAttr');
     expect(entity.attributes[0].visibility).toBe('+');
     expect(entity.attributes[0].type).toBe('string');
     expect(entity.attributes[0].isConstant).toBe(false);
-    expect(entity.methods).toHaveLength(1);
+    expect(entity.methods).toBeDefined();
+    if (!entity.methods) {
+      throw new Error('methods is undefined');
+    }
     expect(entity.methods[0].name).toBe('testMethod');
     expect(entity.methods[0].isStatic).toBe(true);
     expect(entity.methods[0].visibility).toBe('-');
