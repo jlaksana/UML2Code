@@ -2,8 +2,8 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { TextField } from '@mui/material';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../assets/UML2.png';
-import '../styles/StartMenu.css';
+import logo from '../../assets/UML2.png';
+import '../../styles/StartMenu.css';
 
 function StartMenu() {
   const id = useRef<HTMLInputElement>();
