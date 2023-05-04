@@ -1,5 +1,5 @@
 export type DataTypes =
-  | null
+  | ''
   | 'int'
   | 'float'
   | 'double'
@@ -9,3 +9,16 @@ export type DataTypes =
   | 'void';
 
 export type Visibility = '+' | '-' | '#';
+
+// TODO: add more to these defintions
+export type Klass = {
+  name: string;
+};
+
+export type Interface = {
+  name: string;
+};
+
+export type Enum = {
+  name: string;
+};

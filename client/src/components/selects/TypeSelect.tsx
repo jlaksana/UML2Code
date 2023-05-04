@@ -1,26 +1,20 @@
 import { DataTypes } from '../../types';
 import GenericSelect, { GenericSelectProps } from './GenericSelect';
 
-interface TypeSelectProps extends GenericSelectProps<DataTypes> {
-  forMethod?: boolean;
-}
+export const types: DataTypes[] = [
+  'int',
+  'float',
+  'double',
+  'char',
+  'boolean',
+  'string',
+];
 
 function TypeSelect({
   option,
   setOption,
   error,
-  forMethod = false,
-}: TypeSelectProps) {
-  const types: DataTypes[] = [
-    'int',
-    'float',
-    'double',
-    'char',
-    'boolean',
-    'string',
-    forMethod ? 'void' : null,
-  ];
-
+}: GenericSelectProps<DataTypes>) {
   return (
     <GenericSelect
       option={option}

@@ -26,7 +26,7 @@ function GenericSelect<T>({
   options,
   error,
   label,
-  width = 450,
+  width = 300,
 }: GenericSelectOnlyProps<T>) {
   const isError = error && !option;
 
@@ -43,7 +43,6 @@ function GenericSelect<T>({
         sx={{ width }}
       >
         {options.map((opt) => {
-          if (!opt) return null;
           return (
             <MenuItem key={opt as string} value={opt as string}>
               {opt as string}

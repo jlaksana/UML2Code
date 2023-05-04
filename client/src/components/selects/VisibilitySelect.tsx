@@ -1,12 +1,13 @@
 import { Visibility } from '../../types';
 import GenericSelect, { GenericSelectProps } from './GenericSelect';
 
+const visibilities: Visibility[] = ['+', '-', '#'];
+
 function VisibilitySelect({
   option,
   setOption,
-  error,
+  error = false,
 }: GenericSelectProps<Visibility>) {
-  const visibilities: Visibility[] = ['+', '-', '#'];
   return (
     <GenericSelect
       option={option}

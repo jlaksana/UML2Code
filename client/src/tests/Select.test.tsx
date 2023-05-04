@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import { vi } from 'vitest';
 import GenericSelect from '../components/selects/GenericSelect';
+import GroupSelect from '../components/selects/GroupSelect';
 import TypeSelect from '../components/selects/TypeSelect';
 import VisibilitySelect from '../components/selects/VisibilitySelect';
 
@@ -107,30 +108,6 @@ describe('TypeSelect', () => {
       expect(menuItem).toBeInTheDocument();
     });
   });
-
-  test('renders void option when forMethod is true', () => {
-    const { getByText, getByRole } = render(
-      <TypeSelect option="int" setOption={() => {}} error={false} forMethod />
-    );
-
-    const select = getByRole('button');
-    fireEvent.mouseDown(select);
-
-    const voidOption = getByText('void');
-    expect(voidOption).toBeInTheDocument();
-  });
-
-  test('does not render void option when forMethod is false', () => {
-    const { queryByText, getByRole } = render(
-      <TypeSelect option="int" setOption={() => {}} error={false} />
-    );
-
-    const select = getByRole('button');
-    fireEvent.mouseDown(select);
-
-    const voidOption = queryByText('void');
-    expect(voidOption).not.toBeInTheDocument();
-  });
 });
 
 describe('VisibilitySelect', () => {
@@ -150,5 +127,126 @@ describe('VisibilitySelect', () => {
       const menuItem = getAllByText(visibility);
       expect(menuItem[0]).toBeInTheDocument();
     });
+  });
+});
+
+describe('GroupSelect', () => {
+  afterEach(cleanup);
+
+  it('should render without errors', () => {
+    const { getAllByText } = render(
+      <GroupSelect
+        option="Test"
+        setOption={() => {}}
+        error={false}
+        label="Test Label"
+      />
+    );
+    const label = getAllByText('Test Label');
+    expect(label[0]).toBeInTheDocument();
+  });
+
+  it('should display error message when error prop is true and option is not set', () => {
+    const { getByText } = render(
+      <GroupSelect option="" setOption={() => {}} error label="Test Label" />
+    );
+    const errorText = getByText('Required *');
+    expect(errorText).toBeInTheDocument();
+  });
+
+  it('should display correct options when includePrimitives prop is true', () => {
+    const types = ['int', 'float', 'double', 'char', 'boolean', 'string'];
+
+    const { getByText, getByRole } = render(
+      <GroupSelect
+        option="Test"
+        setOption={() => {}}
+        error={false}
+        label="Test Label"
+        includePrimitives
+      />
+    );
+
+    const select = getByRole('button');
+    fireEvent.mouseDown(select);
+
+    const label = getByText('Primitives');
+    expect(label).toBeInTheDocument();
+
+    types.forEach((type) => {
+      const menuItem = getByRole('option', { name: type });
+      expect(menuItem).toBeInTheDocument();
+    });
+  });
+
+  it('should display correct options when includeClasses prop is true', () => {
+    const { getByText, getByRole } = render(
+      <GroupSelect
+        option="Test"
+        setOption={() => {}}
+        error={false}
+        label="Test Label"
+        includeClasses
+      />
+    );
+    const select = getByRole('button');
+    fireEvent.mouseDown(select);
+
+    const label = getByText('Classes');
+    expect(label).toBeInTheDocument();
+  });
+
+  it('should display correct options when includeInterfaces prop is true', () => {
+    const { getByText, getByRole } = render(
+      <GroupSelect
+        option="Test"
+        setOption={() => {}}
+        error={false}
+        label="Test Label"
+        includeInterfaces
+      />
+    );
+    const select = getByRole('button');
+    fireEvent.mouseDown(select);
+
+    const label = getByText('Interfaces');
+    expect(label).toBeInTheDocument();
+  });
+
+  it('should display correct options when includeEnums prop is true', () => {
+    const { getByText, getByRole } = render(
+      <GroupSelect
+        option="Test"
+        setOption={() => {}}
+        error={false}
+        label="Test Label"
+        includeEnums
+      />
+    );
+    const select = getByRole('button');
+    fireEvent.mouseDown(select);
+
+    const label = getByText('Enums');
+    expect(label).toBeInTheDocument();
+  });
+
+  it('should call setOption with selected value when an option is selected', () => {
+    const setOptionMock = vi.fn();
+    const { getByText, getByRole } = render(
+      <GroupSelect
+        option="Test"
+        setOption={setOptionMock}
+        error={false}
+        label="Test Label"
+        includePrimitives
+      />
+    );
+    const select = getByRole('button');
+    fireEvent.mouseDown(select);
+
+    const menuItem = getByText('int');
+    fireEvent.click(menuItem);
+
+    expect(setOptionMock).toHaveBeenCalledWith('int');
   });
 });

@@ -5,14 +5,16 @@ import '../styles/Editor.css';
 import { DataTypes, Visibility } from '../types';
 import AddNewSpeedDial from './AddNewSpeedDial';
 import Header from './Header';
+import GroupSelect from './selects/GroupSelect';
 import TypeSelect from './selects/TypeSelect';
 import VisibilitySelect from './selects/VisibilitySelect';
 
 function Editor() {
   const { id } = useParams();
 
-  const [type, setType] = useState<DataTypes>(null);
+  const [type, setType] = useState<DataTypes>('');
   const [visibility, setVisibility] = useState<Visibility>('+');
+  const [retType, setRetType] = useState('');
   const [error, setError] = useState(false);
 
   return (
@@ -29,6 +31,15 @@ function Editor() {
         option={visibility}
         setOption={setVisibility}
         error={error}
+      />
+      <GroupSelect
+        option={retType}
+        setOption={setRetType}
+        error={error}
+        label="Return"
+        includePrimitives
+        includeInterfaces
+        includeClasses
       />
       <AddNewSpeedDial />
     </div>
