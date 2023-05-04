@@ -1,12 +1,12 @@
 import LoadingButton from '@mui/lab/LoadingButton';
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/UML2.png';
 import '../styles/StartMenu.css';
 
 function StartMenu() {
-  const [id, setId] = useState('');
+  const id = useRef<HTMLInputElement>();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -22,12 +22,12 @@ function StartMenu() {
     const idRegex = /^\d{4}$/;
     setLoading(true);
     setError(false);
-    if (idRegex.test(id)) {
+    if (id.current?.value && idRegex.test(id.current.value)) {
       await sleep(1000);
       // call api to check if diagram exists
       // console.log(id);
       // redirect to editor
-      navigate(`/${id}`);
+      navigate(`/${id.current.value}`);
     } else {
       setError(true);
     }
@@ -47,14 +47,12 @@ function StartMenu() {
         <img src={logo} className="logo" alt="logo" />
       </div>
       <TextField
-        id="diagram-id"
+        inputRef={id}
         label="Diagram ID"
         variant="outlined"
         fullWidth
         error={error}
         helperText={error ? 'Invalid ID' : ''}
-        value={id}
-        onChange={(e) => setId(e.target.value)}
       />
       <LoadingButton
         variant="contained"

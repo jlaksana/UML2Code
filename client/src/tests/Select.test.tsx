@@ -59,7 +59,7 @@ describe('GenericSelect', () => {
   test('shows error message when option is not selected', () => {
     const { getByText } = render(
       <GenericSelect
-        option={null}
+        option=""
         setOption={() => {}}
         options={options}
         label="Select an option"
@@ -136,7 +136,7 @@ describe('GroupSelect', () => {
   it('should render without errors', () => {
     const { getAllByText } = render(
       <GroupSelect
-        option="Test"
+        option=""
         setOption={() => {}}
         error={false}
         label="Test Label"
@@ -159,7 +159,7 @@ describe('GroupSelect', () => {
 
     const { getByText, getByRole } = render(
       <GroupSelect
-        option="Test"
+        option=""
         setOption={() => {}}
         error={false}
         label="Test Label"
@@ -182,7 +182,7 @@ describe('GroupSelect', () => {
   it('should display correct options when includeClasses prop is true', () => {
     const { getByText, getByRole } = render(
       <GroupSelect
-        option="Test"
+        option=""
         setOption={() => {}}
         error={false}
         label="Test Label"
@@ -199,7 +199,7 @@ describe('GroupSelect', () => {
   it('should display correct options when includeInterfaces prop is true', () => {
     const { getByText, getByRole } = render(
       <GroupSelect
-        option="Test"
+        option=""
         setOption={() => {}}
         error={false}
         label="Test Label"
@@ -216,7 +216,7 @@ describe('GroupSelect', () => {
   it('should display correct options when includeEnums prop is true', () => {
     const { getByText, getByRole } = render(
       <GroupSelect
-        option="Test"
+        option=""
         setOption={() => {}}
         error={false}
         label="Test Label"
@@ -234,7 +234,7 @@ describe('GroupSelect', () => {
     const setOptionMock = vi.fn();
     const { getByText, getByRole } = render(
       <GroupSelect
-        option="Test"
+        option=""
         setOption={setOptionMock}
         error={false}
         label="Test Label"

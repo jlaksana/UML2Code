@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import App from '../App';
+import NotFound from '../components/NotFound';
 
 describe('StartMenu', () => {
   afterEach(cleanup);
@@ -57,5 +58,19 @@ describe('StartMenu', () => {
     await waitFor(() => {
       expect(getByText('ID: 1234')).toBeInTheDocument();
     });
+  });
+});
+
+describe('NotFound', () => {
+  afterEach(cleanup);
+
+  test('renders the 404 error message', () => {
+    const { getByText } = render(
+      <BrowserRouter>
+        <NotFound />
+      </BrowserRouter>
+    );
+    const errorMessage = getByText(/404 Not Found/i);
+    expect(errorMessage).toBeInTheDocument();
   });
 });
