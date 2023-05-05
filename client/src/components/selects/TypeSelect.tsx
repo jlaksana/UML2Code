@@ -1,7 +1,7 @@
-import { DataTypes } from '../../types';
+import { DataType } from '../../types';
 import GenericSelect, { GenericSelectProps } from './GenericSelect';
 
-export const types: DataTypes[] = [
+export const types: DataType[] = [
   'int',
   'float',
   'double',
@@ -14,7 +14,7 @@ function TypeSelect({
   option,
   setOption,
   error,
-}: GenericSelectProps<DataTypes>) {
+}: GenericSelectProps<DataType>) {
   return (
     <GenericSelect
       option={option}

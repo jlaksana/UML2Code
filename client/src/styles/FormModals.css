@@ -7,7 +7,7 @@
   background-color: white;
   max-width: 100vw;
   width: 500px;
-  min-height: 600px;
+  height: 600px;
   border-radius: 10px;
   box-sizing: border-box;
   padding: 1em 3em;
@@ -16,9 +16,34 @@
   flex-direction: column;
   justify-content: space-between;
 }
-
 .buttons {
   align-self: flex-end;
   display: flex;
   gap: 1em;
+}
+.field-list {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  max-height: 250px;
+  overflow: auto;
+  overflow-x: hidden;
+  gap: 15px;
+  padding-top: 5px;
+}
+.field-line {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+.remove-button {
+  height: 40px;
+  font-size: 1em;
+}
+.field-line .remove-button {
+  display: none;
+}
+.field-line:hover .remove-button {
+  display: inline;
 }

@@ -1,4 +1,4 @@
-export type DataTypes =
+export type DataType =
   | ''
   | 'int'
   | 'float'
@@ -13,6 +13,8 @@ export type Visibility = '+' | '-' | '#';
 // TODO: add more to these defintions
 export type Klass = {
   name: string;
+  isAbstract: boolean;
+  constants: Constant[];
 };
 
 export type Interface = {
@@ -21,4 +23,10 @@ export type Interface = {
 
 export type Enum = {
   name: string;
+};
+
+export type Constant = {
+  id: number;
+  name: string;
+  type: DataType;
 };
