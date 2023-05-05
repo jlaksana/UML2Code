@@ -2,11 +2,7 @@
   font-family: 'Roboto', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  background: radial-gradient(
-    circle at 0% 0.5%,
-    rgb(241, 241, 242) 0.1%,
-    rgb(224, 226, 228) 100.2%
-  );
+  background-color: #fbf9f6;
 }
 
 body {

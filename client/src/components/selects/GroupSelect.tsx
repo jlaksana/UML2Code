@@ -36,9 +36,13 @@ function GroupSelect({
   const classes: Klass[] = [
     {
       name: 'Test',
+      isAbstract: false,
+      constants: [],
     },
     {
       name: 'Test2',
+      isAbstract: false,
+      constants: [],
     },
   ];
   const interfaces: Interface[] = [

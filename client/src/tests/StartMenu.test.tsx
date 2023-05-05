@@ -1,9 +1,18 @@
 /* eslint-disable react/jsx-no-undef */
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import App from '../App';
 import NotFound from '../components/NotFound';
+
+// mock ResizeObserver to get around vitest not supporting it
+const ResizeObserverMock = vi.fn(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+}));
+
+vi.stubGlobal('ResizeObserver', ResizeObserverMock);
 
 describe('StartMenu', () => {
   afterEach(cleanup);
@@ -56,7 +65,7 @@ describe('StartMenu', () => {
     fireEvent.click(createButton);
 
     await waitFor(() => {
-      expect(getByText('ID: 1234')).toBeInTheDocument();
+      expect(getByText(/ID: 1234/i)).toBeInTheDocument();
     });
   });
 });
