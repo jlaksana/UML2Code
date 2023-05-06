@@ -38,11 +38,13 @@ function GroupSelect({
       name: 'Test',
       isAbstract: false,
       constants: [],
+      attributes: [],
     },
     {
       name: 'Test2',
       isAbstract: false,
       constants: [],
+      attributes: [],
     },
   ];
   const interfaces: Interface[] = [
