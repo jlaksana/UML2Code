@@ -1,7 +1,7 @@
-import { Visibility } from '../../types';
+import { Visibility } from '../../../types';
 import GenericSelect, { GenericSelectProps } from './GenericSelect';
 
-const visibilities: Visibility[] = ['+', '-', '#'];
+const visibilities: Visibility[] = ['+', '—', '#'];
 
 function VisibilitySelect({
   option,
@@ -14,7 +14,7 @@ function VisibilitySelect({
       setOption={setOption}
       options={visibilities}
       error={error}
-      label=""
+      label="Visibility"
       width={60}
     />
   );

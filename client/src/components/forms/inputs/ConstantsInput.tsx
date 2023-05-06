@@ -1,8 +1,8 @@
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import { Button, IconButton, TextField } from '@mui/material';
-import '../../styles/FormModals.css';
-import { Constant, DataType } from '../../types';
+import '../../../styles/FormModals.css';
+import { Constant, DataType } from '../../../types';
 import TypeSelect from '../selects/TypeSelect';
 
 type ConstantFieldProps = {
@@ -12,6 +12,7 @@ type ConstantFieldProps = {
   error: boolean;
 };
 
+// Individual constant field
 function ConstantField({
   constant,
   updateConstant,
@@ -22,23 +23,23 @@ function ConstantField({
 
   return (
     <div className="field-line">
-      <TextField
-        label="Name"
-        variant="outlined"
-        value={constant.name}
-        onChange={(e) =>
-          updateConstant(constant.id, e.target.value, constant.type)
-        }
-        error={isError}
-        helperText={isError ? 'Name cannot be empty' : ''}
-        sx={{ width: 230 }}
-      />
       <TypeSelect
         option={constant.type}
         setOption={(newType) =>
           updateConstant(constant.id, constant.name, newType)
         }
         error={isError}
+      />
+      <TextField
+        label="Name"
+        variant="standard"
+        value={constant.name}
+        onChange={(e) =>
+          updateConstant(constant.id, e.target.value, constant.type)
+        }
+        error={isError}
+        helperText={isError ? 'Name cannot be empty' : ''}
+        sx={{ width: 220 }}
       />
       <IconButton
         className="remove-button"
@@ -58,6 +59,7 @@ type ConstantsInputProps = {
   error: boolean;
 };
 
+// List of constant fields
 function ConstantsInput({
   constants,
   setConstants,

@@ -43,7 +43,7 @@ function StartMenu() {
       <TextField
         inputRef={id}
         label="Diagram ID"
-        variant="outlined"
+        variant="standard"
         fullWidth
         error={error}
         helperText={error ? 'Invalid ID' : ''}

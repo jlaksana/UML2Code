@@ -6,7 +6,7 @@ import {
   MenuItem,
   Select,
 } from '@mui/material';
-import { Enum, Interface, Klass } from '../../types';
+import { Enum, Interface, Klass } from '../../../types';
 import { types } from './TypeSelect';
 
 interface GroupSelectProps {

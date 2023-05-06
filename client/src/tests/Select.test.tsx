@@ -1,9 +1,9 @@
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import { vi } from 'vitest';
-import GenericSelect from '../components/selects/GenericSelect';
-import GroupSelect from '../components/selects/GroupSelect';
-import TypeSelect from '../components/selects/TypeSelect';
-import VisibilitySelect from '../components/selects/VisibilitySelect';
+import GenericSelect from '../components/forms/selects/GenericSelect';
+import GroupSelect from '../components/forms/selects/GroupSelect';
+import TypeSelect from '../components/forms/selects/TypeSelect';
+import VisibilitySelect from '../components/forms/selects/VisibilitySelect';
 
 describe('GenericSelect', () => {
   const options = ['Option 1', 'Option 2', 'Option 3'];
@@ -113,7 +113,7 @@ describe('TypeSelect', () => {
 describe('VisibilitySelect', () => {
   afterEach(cleanup);
 
-  const visibilities = ['+', '-', '#'];
+  const visibilities = ['+', '—', '#'];
 
   test('renders correctly', () => {
     const { getAllByText, getByRole } = render(

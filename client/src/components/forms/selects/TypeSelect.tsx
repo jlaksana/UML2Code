@@ -1,4 +1,4 @@
-import { DataType } from '../../types';
+import { DataType } from '../../../types';
 import GenericSelect, { GenericSelectProps } from './GenericSelect';
 
 export const types: DataType[] = [

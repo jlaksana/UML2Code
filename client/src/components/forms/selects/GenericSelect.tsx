@@ -34,6 +34,7 @@ function GenericSelect<T>({
     <FormControl error={isError}>
       <InputLabel htmlFor={`${label}-select`}>{label}</InputLabel>
       <Select
+        variant="standard"
         id={`${label}-select`}
         value={option}
         label={label}

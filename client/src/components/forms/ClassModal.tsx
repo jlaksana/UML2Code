@@ -10,8 +10,9 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import '../../styles/FormModals.css';
-import { Constant, Klass } from '../../types';
-import ConstantsInput from './ConstantsInput';
+import { Attribute, Constant, Klass } from '../../types';
+import AttributesInput from './inputs/AttributesInput';
+import ConstantsInput from './inputs/ConstantsInput';
 
 type ClassModalProps = {
   open: boolean;
@@ -23,9 +24,10 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
   const [name, setName] = useState('');
   const [isAbstract, setIsAbstract] = useState(false);
   const [constants, setConstants] = useState<Constant[]>([]);
+  const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [error, setError] = useState(false);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabValue(newValue);
   };
 
@@ -35,6 +37,7 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
     setName('');
     setIsAbstract(false);
     setConstants([]);
+    setAttributes([]);
   };
 
   const removeWhiteSpace = (str: string) => {
@@ -55,12 +58,25 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
         type: constant.type,
       };
     });
+    const validatedAttributes: Attribute[] = attributes.map((attribute) => {
+      const attrName = removeWhiteSpace(attribute.name);
+      if (attrName === '' || attribute.type === '') {
+        isError = true;
+      }
+      return {
+        id: attribute.id,
+        name: attrName,
+        type: attribute.type,
+        visibility: attribute.visibility,
+      };
+    });
 
     if (isError === false) {
       const klass: Klass = {
         name: removeWhiteSpace(name),
         isAbstract,
         constants: validatedConstants,
+        attributes: validatedAttributes,
       };
       console.log(klass);
       handleClose();
@@ -84,7 +100,7 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
         <div>
           <h2>Create Class</h2>
           <TextField
-            variant="outlined"
+            variant="standard"
             label="Class Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -97,17 +113,17 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
               <Checkbox
                 checked={isAbstract}
                 onChange={(e) => setIsAbstract(e.target.checked)}
-                sx={{ paddingLeft: 2.5 }}
+                sx={{ paddingLeft: 2 }}
               />
             }
             label="Abstract"
           />
           <TabContext value={tabValue}>
             <Box
-              sx={{ borderBottom: 1, borderColor: 'divider', paddingTop: 2 }}
+              sx={{ borderBottom: 1, borderColor: 'divider', paddingTop: 2.5 }}
             >
               <TabList
-                onChange={handleChange}
+                onChange={handleTabChange}
                 aria-label="add properties to class"
               >
                 <Tab label="Constants" value="1" />
@@ -122,8 +138,16 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
                 error={error}
               />
             </TabPanel>
-            <TabPanel value="2">Attributes Section</TabPanel>
-            <TabPanel value="3">Methods Section</TabPanel>
+            <TabPanel value="2" sx={{ padding: 0, paddingTop: '1em' }}>
+              <AttributesInput
+                attributes={attributes}
+                setAttributes={setAttributes}
+                error={error}
+              />
+            </TabPanel>
+            <TabPanel value="3" sx={{ padding: 0, paddingTop: '1em' }}>
+              Methods Section
+            </TabPanel>
           </TabContext>
         </div>
         <div className="buttons">

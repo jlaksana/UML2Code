@@ -8,13 +8,14 @@ export type DataType =
   | 'char'
   | 'void';
 
-export type Visibility = '+' | '-' | '#';
+export type Visibility = '+' | '—' | '#';
 
 // TODO: add more to these defintions
 export type Klass = {
   name: string;
   isAbstract: boolean;
   constants: Constant[];
+  attributes: Attribute[];
 };
 
 export type Interface = {
@@ -29,4 +30,11 @@ export type Constant = {
   id: number;
   name: string;
   type: DataType;
+};
+
+export type Attribute = {
+  id: number;
+  name: string;
+  type: DataType;
+  visibility: Visibility;
 };
