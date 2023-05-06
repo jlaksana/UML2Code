@@ -1,10 +1,4 @@
-import {
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-} from '@mui/material';
+import { MenuItem, TextField } from '@mui/material';
 
 // props every select component will have
 export type GenericSelectProps<T> = {
@@ -31,28 +25,49 @@ function GenericSelect<T>({
   const isError = error && !option;
 
   return (
-    <FormControl error={isError}>
-      <InputLabel htmlFor={`${label}-select`}>{label}</InputLabel>
-      <Select
-        variant="standard"
-        id={`${label}-select`}
-        value={option}
-        label={label}
-        onChange={(e) => {
-          setOption(e.target.value as T);
-        }}
-        sx={{ width }}
-      >
-        {options.map((opt) => {
-          return (
-            <MenuItem key={opt as string} value={opt as string}>
-              {opt as string}
-            </MenuItem>
-          );
-        })}
-      </Select>
-      {isError ? <FormHelperText>Required *</FormHelperText> : null}
-    </FormControl>
+    // <FormControl error={isError}>
+    //   <InputLabel htmlFor={`${label}-select`}>{label}</InputLabel>
+    //   <Select
+    //     variant="standard"
+    //     id={`${label}-select`}
+    //     value={option}
+    //     label={label}
+    //     onChange={(e) => {
+    //       setOption(e.target.value as T);
+    //     }}
+    //     sx={{ width }}
+    //   >
+    //     {options.map((opt) => {
+    //       return (
+    //         <MenuItem key={opt as string} value={opt as string}>
+    //           {opt as string}
+    //         </MenuItem>
+    //       );
+    //     })}
+    //   </Select>
+    //   {isError ? <FormHelperText>Required *</FormHelperText> : null}
+    // </FormControl>
+    <TextField
+      id={`${label}-select`}
+      variant="standard"
+      select
+      label={label}
+      value={option}
+      onChange={(e) => {
+        setOption(e.target.value as T);
+      }}
+      sx={{ width }}
+      error={isError}
+      helperText={isError ? 'Required *' : ''}
+    >
+      {options.map((opt) => {
+        return (
+          <MenuItem key={opt as string} value={opt as string}>
+            {opt as string}
+          </MenuItem>
+        );
+      })}
+    </TextField>
   );
 }
 
