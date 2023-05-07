@@ -22,7 +22,7 @@ function TypeSelect({
       options={types}
       error={error}
       label="Type"
-      width={100}
+      width={90}
     />
   );
 }

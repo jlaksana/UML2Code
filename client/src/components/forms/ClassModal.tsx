@@ -10,9 +10,10 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import '../../styles/FormModals.css';
-import { Attribute, Constant, Klass } from '../../types';
+import { Attribute, Constant, Klass, Method } from '../../types';
 import AttributesInput from './inputs/AttributesInput';
 import ConstantsInput from './inputs/ConstantsInput';
+import MethodsInput from './inputs/MethodsInput';
 
 type ClassModalProps = {
   open: boolean;
@@ -25,6 +26,7 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
   const [isAbstract, setIsAbstract] = useState(false);
   const [constants, setConstants] = useState<Constant[]>([]);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
+  const [methods, setMethods] = useState<Method[]>([]);
   const [error, setError] = useState(false);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -38,6 +40,7 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
     setIsAbstract(false);
     setConstants([]);
     setAttributes([]);
+    setMethods([]);
   };
 
   const removeWhiteSpace = (str: string) => {
@@ -45,43 +48,19 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
   };
 
   const handleSubmit = () => {
-    let isError = false;
-    // validate all fields have no white space or empty
-    const validatedConstants: Constant[] = constants.map((constant) => {
-      const constName = removeWhiteSpace(constant.name);
-      if (constName === '' || constant.type === '') {
-        isError = true;
-      }
-      return {
-        id: constant.id,
-        name: constName,
-        type: constant.type,
-      };
-    });
-    const validatedAttributes: Attribute[] = attributes.map((attribute) => {
-      const attrName = removeWhiteSpace(attribute.name);
-      if (attrName === '' || attribute.type === '') {
-        isError = true;
-      }
-      return {
-        id: attribute.id,
-        name: attrName,
-        type: attribute.type,
-        visibility: attribute.visibility,
-      };
-    });
-
-    if (isError === false) {
-      const klass: Klass = {
-        name: removeWhiteSpace(name),
-        isAbstract,
-        constants: validatedConstants,
-        attributes: validatedAttributes,
-      };
+    const klass: Klass = {
+      name: removeWhiteSpace(name),
+      isAbstract,
+      constants,
+      attributes,
+      methods,
+    };
+    try {
+      // fetch()
       console.log(klass);
       handleClose();
       clearFields();
-    } else {
+    } catch (err) {
       setError(true);
     }
   };
@@ -146,7 +125,11 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
               />
             </TabPanel>
             <TabPanel value="3" sx={{ padding: 0, paddingTop: '1em' }}>
-              Methods Section
+              <MethodsInput
+                methods={methods}
+                setMethods={setMethods}
+                error={error}
+              />
             </TabPanel>
           </TabContext>
         </div>

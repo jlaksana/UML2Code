@@ -16,6 +16,7 @@ export type Klass = {
   isAbstract: boolean;
   constants: Constant[];
   attributes: Attribute[];
+  methods: Method[];
 };
 
 export type Interface = {
@@ -37,4 +38,12 @@ export type Attribute = {
   name: string;
   type: DataType;
   visibility: Visibility;
+};
+
+export type Method = {
+  id: number;
+  name: string;
+  returnType: string;
+  visibility: Visibility;
+  isStatic: boolean;
 };

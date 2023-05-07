@@ -35,10 +35,15 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 }
 .remove-button {
   height: 40px;
   font-size: 1em;
   align-self: self-end;
+}
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
 }

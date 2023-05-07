@@ -67,7 +67,7 @@ function AttributeField({
         }
         error={isError}
         helperText={isError ? 'Name cannot be empty' : ''}
-        sx={{ width: 150 }}
+        sx={{ width: 170 }}
       />
       <IconButton
         className="remove-button"
@@ -148,7 +148,7 @@ function AttributesInput({
       <Button
         variant="text"
         startIcon={<AddRoundedIcon />}
-        onClick={() => addAttribute()}
+        onClick={addAttribute}
       >
         Add
       </Button>

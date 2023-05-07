@@ -39,7 +39,7 @@ function ConstantField({
         }
         error={isError}
         helperText={isError ? 'Name cannot be empty' : ''}
-        sx={{ width: 220 }}
+        sx={{ width: 245 }}
       />
       <IconButton
         className="remove-button"
@@ -113,7 +113,7 @@ function ConstantsInput({
       <Button
         variant="text"
         startIcon={<AddRoundedIcon />}
-        onClick={() => addConstant()}
+        onClick={addConstant}
       >
         Add
       </Button>
