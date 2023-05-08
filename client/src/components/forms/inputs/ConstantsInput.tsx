@@ -99,11 +99,10 @@ function ConstantsInput({
   return (
     <div className="field-list">
       {constants.map((constant) => {
-        const { id } = constant;
         return (
           <ConstantField
             constant={constant}
-            key={id}
+            key={constant.id}
             updateConstant={updateConstant}
             removeConstant={removeConstant}
             error={error}

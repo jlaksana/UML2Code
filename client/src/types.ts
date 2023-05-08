@@ -25,6 +25,7 @@ export type Interface = {
 
 export type Enum = {
   name: string;
+  values: EnumValue[];
 };
 
 export type Constant = {
@@ -46,4 +47,9 @@ export type Method = {
   returnType: string;
   visibility: Visibility;
   isStatic: boolean;
+};
+
+export type EnumValue = {
+  id: number;
+  name: string;
 };

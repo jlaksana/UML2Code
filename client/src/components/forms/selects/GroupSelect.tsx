@@ -53,9 +53,11 @@ function GroupSelect({
   const enums: Enum[] = [
     {
       name: 'enum',
+      values: [],
     },
     {
       name: 'enum2',
+      values: [],
     },
   ];
   const isError = error && !option;

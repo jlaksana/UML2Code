@@ -167,11 +167,10 @@ function MethodsInput({ methods, setMethods, error }: MethodsInputProps) {
   return (
     <div className="field-list">
       {methods.map((method) => {
-        const { id } = method;
         return (
           <MethodField
             method={method}
-            key={id}
+            key={method.id}
             updateMethod={updateMethod}
             removeMethod={removeMethod}
             error={error}

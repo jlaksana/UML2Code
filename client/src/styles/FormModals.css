@@ -26,6 +26,7 @@
   flex-direction: column;
   align-items: start;
   max-height: 340px;
+  width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   gap: 25px;
@@ -36,6 +37,7 @@
   flex-direction: row;
   align-items: center;
   gap: 15px;
+  width: 100%;
 }
 .remove-button {
   height: 40px;

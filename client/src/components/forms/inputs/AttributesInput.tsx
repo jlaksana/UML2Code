@@ -134,11 +134,10 @@ function AttributesInput({
   return (
     <div className="field-list">
       {attributes.map((attribute) => {
-        const { id } = attribute;
         return (
           <AttributeField
             attribute={attribute}
-            key={id}
+            key={attribute.id}
             updateAttribute={updateAttribute}
             removeAttribute={removeAttribute}
             error={error}
