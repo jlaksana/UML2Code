@@ -1,4 +1,5 @@
 import { DiagramModel } from '../models/diagram.model';
+import { getNextSequence } from '../utils';
 
 const findDiagramById = async (id: string) => {
   const idRegex = /^\d{4}$/;
@@ -8,10 +9,9 @@ const findDiagramById = async (id: string) => {
   return { id: diagram._id };
 };
 
-// const createDiagram = async () => {
-//   const diagram = await DiagramModel.create({ _id: 1000 });
-//   return { id: diagram?._id };
-// };
+const createDiagram = async () => {
+  const diagram = await DiagramModel.create({ _id: await getNextSequence() });
+  return { id: diagram._id };
+};
 
-// eslint-disable-next-line import/prefer-default-export
-export { findDiagramById };
+export { findDiagramById, createDiagram };

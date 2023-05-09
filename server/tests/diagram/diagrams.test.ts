@@ -1,7 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import request from 'supertest';
 import app from '../../src/app';
-import { findDiagramById } from '../../src/controllers/diagramController';
+import {
+  createDiagram,
+  findDiagramById,
+} from '../../src/controllers/diagramController';
 
 jest.mock('../../src/controllers/diagramController');
 
@@ -50,5 +53,38 @@ describe('GET /api/diagram/:id', () => {
     // Check that the response status is 404 and the response body contains the error message
     expect(res.statusCode).toEqual(404);
     expect(res.body.message).toEqual('Diagram not found');
+  });
+});
+
+describe('POST /api/diagram', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('should return a diagram object if the diagram is created successfully', async () => {
+    // Mock the createDiagram function to return a sample diagram object
+    const mockDiagram = { id: '1000' };
+    (createDiagram as jest.Mock).mockResolvedValueOnce(mockDiagram);
+
+    // Send a POST request to the route
+    const res = await request(app).post('/api/diagram');
+
+    // Check that the response status is 201 and the response body matches the mock diagram object
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toEqual(mockDiagram);
+  });
+
+  it('should return a 400 error if the diagram is not created successfully', async () => {
+    // Mock the createDiagram function to throw an error
+    (createDiagram as jest.Mock).mockRejectedValueOnce(
+      new Error('Could not create a diagram')
+    );
+
+    // Send a POST request to the route
+    const res = await request(app).post('/api/diagram');
+
+    // Check that the response status is 400 and the response body contains the error message
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toEqual('Could not create a diagram');
   });
 });

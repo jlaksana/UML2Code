@@ -1,5 +1,8 @@
 import express from 'express';
-import { findDiagramById } from '../controllers/diagramController';
+import {
+  createDiagram,
+  findDiagramById,
+} from '../controllers/diagramController';
 import { getErrorMessage } from '../utils';
 
 const router = express.Router();
@@ -34,13 +37,14 @@ router.get('/:id', async (req, res) => {
  *  "id": "1000",
  * }
  */
-// router.post('/', async (req, res) => {
-//   try {
-//     const result = await createDiagram();
-//     res.status(201).json(result);
-//   } catch {
-//     res.status(400).json({ message: 'Could not create a diagram' });
-//   }
-// });
+router.post('/', async (req, res) => {
+  try {
+    const result = await createDiagram();
+    res.status(201).json(result);
+  } catch (e) {
+    console.log(getErrorMessage(e));
+    res.status(400).json({ message: 'Could not create a diagram' });
+  }
+});
 
 export default router;

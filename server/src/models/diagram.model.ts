@@ -22,4 +22,11 @@ const schema = new Schema<Diagram>(
 
 const DiagramModel = model<Diagram>('Diagram', schema);
 
-export { diagramSchema, Diagram, DiagramModel };
+const counterSchema = new Schema({
+  _id: { type: String, required: true },
+  seq: { type: Number, min: 1000, max: 9999 },
+});
+
+const CounterModel = model('Counter', counterSchema);
+
+export { diagramSchema, Diagram, DiagramModel, CounterModel };

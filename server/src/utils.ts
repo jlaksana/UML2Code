@@ -1,7 +1,22 @@
+import { CounterModel } from './models/diagram.model';
+
 function getErrorMessage(error: unknown) {
   if (error instanceof Error) return error.message;
   return String(error);
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export { getErrorMessage };
+async function getNextSequence() {
+  const id = 'diagramId';
+  const ret = await CounterModel.findByIdAndUpdate(
+    id,
+    { $inc: { seq: 1 } },
+    { new: true }
+  );
+  if (!ret) {
+    await CounterModel.create({ _id: id, seq: 1000 });
+    return 1000;
+  }
+  return ret.seq;
+}
+
+export { getErrorMessage, getNextSequence };
