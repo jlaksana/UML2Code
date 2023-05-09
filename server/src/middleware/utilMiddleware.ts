@@ -13,12 +13,21 @@ const loggerMiddleware = (
   next();
 };
 
-const errorHandlerMiddleware = (error: Error, req: Request, res: Response) => {
-  console.error(error);
-
-  res.status(500).json({
-    message: 'Internal server error. Try again later.',
-  });
+const errorHandlerMiddleware = (
+  error: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  next();
+  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  res.status(statusCode);
+  if (statusCode === 500) {
+    console.error(error);
+    res.status(500).json({
+      message: 'Internal server error. Try again later.',
+    });
+  }
 };
 
 const limiter = rateLimit({
