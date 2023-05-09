@@ -1,3 +1,4 @@
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import {
   Box,
@@ -7,6 +8,7 @@ import {
   Modal,
   Tab,
   TextField,
+  Tooltip,
 } from '@mui/material';
 import { useState } from 'react';
 import '../../styles/FormModals.css';
@@ -65,6 +67,10 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
     }
   };
 
+  const classHelperText = `Classes are the building blocks of your program. 
+  They contain a name and could have constants, attributes, and methods. If abstract, check the Abstract box.\n
+  Notes: Constants are always static, attributes are recommended as private, and you cannot specify parameters for methods.`;
+
   return (
     <Modal
       open={open}
@@ -74,7 +80,12 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
     >
       <div className="modal-content">
         <div>
-          <h2>Create Class</h2>
+          <h2>
+            Create Class&nbsp;
+            <Tooltip title={classHelperText}>
+              <InfoOutlinedIcon fontSize="small" />
+            </Tooltip>
+          </h2>
           <TextField
             variant="standard"
             label="Class Name"
