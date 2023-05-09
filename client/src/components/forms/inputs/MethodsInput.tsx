@@ -6,6 +6,7 @@ import {
   FormControlLabel,
   IconButton,
   TextField,
+  Tooltip,
 } from '@mui/material';
 import { Method, Visibility } from '../../../types';
 import GroupSelect from '../selects/GroupSelect';
@@ -103,15 +104,17 @@ function MethodField({
           }
         />
       </div>
-      <IconButton
-        className="remove-button"
-        aria-label="delete method"
-        color="error"
-        onClick={() => removeMethod(method.id)}
-        sx={{ alignSelf: 'center' }}
-      >
-        <RemoveCircleOutlineRoundedIcon />
-      </IconButton>
+      <Tooltip title="Delete" placement="right">
+        <IconButton
+          className="remove-button"
+          aria-label="delete method"
+          color="error"
+          onClick={() => removeMethod(method.id)}
+          sx={{ alignSelf: 'center' }}
+        >
+          <RemoveCircleOutlineRoundedIcon />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 }

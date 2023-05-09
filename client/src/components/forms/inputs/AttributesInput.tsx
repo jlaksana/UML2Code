@@ -1,6 +1,6 @@
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
-import { Button, IconButton, TextField } from '@mui/material';
+import { Button, IconButton, TextField, Tooltip } from '@mui/material';
 import '../../../styles/FormModals.css';
 import { Attribute, DataType, Visibility } from '../../../types';
 import TypeSelect from '../selects/TypeSelect';
@@ -69,14 +69,16 @@ function AttributeField({
         helperText={isError ? 'Name cannot be empty' : ''}
         sx={{ width: 170 }}
       />
-      <IconButton
-        className="remove-button"
-        aria-label="delete attribute"
-        color="error"
-        onClick={() => removeAttribute(attribute.id)}
-      >
-        <RemoveCircleOutlineRoundedIcon />
-      </IconButton>
+      <Tooltip title="Delete" placement="right">
+        <IconButton
+          className="remove-button"
+          aria-label="delete attribute"
+          color="error"
+          onClick={() => removeAttribute(attribute.id)}
+        >
+          <RemoveCircleOutlineRoundedIcon />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
-import { Button, IconButton, TextField } from '@mui/material';
+import { Button, IconButton, TextField, Tooltip } from '@mui/material';
 import '../../../styles/FormModals.css';
 import { Constant, DataType } from '../../../types';
 import TypeSelect from '../selects/TypeSelect';
@@ -41,14 +41,16 @@ function ConstantField({
         helperText={isError ? 'Name cannot be empty' : ''}
         sx={{ width: 245 }}
       />
-      <IconButton
-        className="remove-button"
-        aria-label="delete constant"
-        color="error"
-        onClick={() => removeConstant(constant.id)}
-      >
-        <RemoveCircleOutlineRoundedIcon />
-      </IconButton>
+      <Tooltip title="Delete" placement="right">
+        <IconButton
+          className="remove-button"
+          aria-label="delete constant"
+          color="error"
+          onClick={() => removeConstant(constant.id)}
+        >
+          <RemoveCircleOutlineRoundedIcon />
+        </IconButton>
+      </Tooltip>
     </div>
   );
 }
