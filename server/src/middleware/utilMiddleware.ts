@@ -6,33 +6,16 @@ const loggerMiddleware = (
   res: Response,
   next: NextFunction
 ): void => {
-  console.log(`Route: ${req.url}`);
+  console.log(`Route: ${req.method} ${req.url}`);
   res.on('finish', () => {
-    console.log(`Finished with Status Code: ${res.statusCode}`);
+    console.log(`Status Code: ${res.statusCode}`);
   });
   next();
 };
 
-const errorHandlerMiddleware = (
-  error: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  next();
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  res.status(statusCode);
-  if (statusCode === 500) {
-    console.error(error);
-    res.status(500).json({
-      message: 'Internal server error. Try again later.',
-    });
-  }
-};
-
 const limiter = rateLimit({
-  windowMs: 60 * 1000, // 15 minutes
-  max: 1000, // limit each IP to 100 requests per windowMs
+  windowMs: 60 * 1000,
+  max: 1000, // limit each IP to 1000 requests per minute
 });
 
-export { loggerMiddleware, errorHandlerMiddleware, limiter };
+export { loggerMiddleware, limiter };

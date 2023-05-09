@@ -2,11 +2,7 @@ import compression from 'compression';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import {
-  errorHandlerMiddleware,
-  limiter,
-  loggerMiddleware,
-} from './middleware/utilMiddleware';
+import { limiter, loggerMiddleware } from './middleware/utilMiddleware';
 import diagramRouter from './routes/diagrams';
 
 dotenv.config();
@@ -19,7 +15,6 @@ app.use(cors());
 app.use(compression());
 app.use(limiter);
 app.use(loggerMiddleware);
-app.use(errorHandlerMiddleware);
 
 // Routes
 app.use('/api/diagram', diagramRouter);
