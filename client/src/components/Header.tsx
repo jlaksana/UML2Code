@@ -13,7 +13,7 @@ function Header() {
       <div className="left">
         <Tooltip title="Return home" placement="right">
           <Link to="/">
-            <img src={logo} className="logo2" alt="logo" />
+            <img src={logo} className="logo" alt="logo" />
           </Link>
         </Tooltip>
       </div>
@@ -22,16 +22,12 @@ function Header() {
       </div>
       <div className="right">
         <Tooltip title="Share or print">
-          <Button variant="contained" startIcon={<ShareIcon />} size="large">
+          <Button variant="contained" startIcon={<ShareIcon />}>
             Share
           </Button>
         </Tooltip>
         <Tooltip title="Generate code">
-          <Button
-            variant="contained"
-            startIcon={<CodeRoundedIcon />}
-            size="large"
-          >
+          <Button variant="contained" startIcon={<CodeRoundedIcon />}>
             Code
           </Button>
         </Tooltip>

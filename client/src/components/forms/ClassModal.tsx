@@ -33,7 +33,7 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
     setTabValue(newValue);
   };
 
-  const clearFields = () => {
+  const close = () => {
     setError(false);
     setTabValue('1');
     setName('');
@@ -41,6 +41,7 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
     setConstants([]);
     setAttributes([]);
     setMethods([]);
+    handleClose();
   };
 
   const removeWhiteSpace = (str: string) => {
@@ -58,8 +59,7 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
     try {
       // fetch()
       console.log(klass);
-      handleClose();
-      clearFields();
+      close();
     } catch (err) {
       setError(true);
     }
@@ -68,10 +68,7 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
   return (
     <Modal
       open={open}
-      onClose={() => {
-        clearFields();
-        handleClose();
-      }}
+      onClose={handleClose}
       aria-labelledby="Class Form"
       aria-describedby="Specify the contents of a class"
     >
@@ -134,13 +131,7 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
           </TabContext>
         </div>
         <div className="buttons">
-          <Button
-            variant="text"
-            onClick={() => {
-              clearFields();
-              handleClose();
-            }}
-          >
+          <Button variant="text" onClick={close}>
             Cancel
           </Button>
           <Button variant="text" onClick={handleSubmit}>

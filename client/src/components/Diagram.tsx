@@ -47,7 +47,7 @@ function Diagram() {
   );
 
   return (
-    <div style={{ width: '100%', height: '88vh' }}>
+    <div className="diagram">
       <ReactFlow
         nodes={nodes}
         onNodesChange={onNodesChange}
