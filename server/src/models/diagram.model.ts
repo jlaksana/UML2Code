@@ -22,6 +22,7 @@ const schema = new Schema<Diagram>(
 
 const DiagramModel = model<Diagram>('Diagram', schema);
 
+// Counter schema to generate unique diagram id
 const counterSchema = new Schema({
   _id: { type: String, required: true },
   seq: { type: Number, min: 1000, max: 9999 },
