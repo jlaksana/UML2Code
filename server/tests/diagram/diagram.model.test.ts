@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
-import { DiagramModel } from '../src/models/diagram.model';
+import { DiagramModel } from '../../src/models/diagram.model';
 
 describe('Diagram Schema', () => {
   let mongoServer: MongoMemoryServer;
