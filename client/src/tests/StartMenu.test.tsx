@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-no-undef */
 import { cleanup, fireEvent, render, waitFor } from '@testing-library/react';
+import axios from 'axios';
 import { BrowserRouter } from 'react-router-dom';
-import { describe, expect, it, vi } from 'vitest';
+import { Mock, describe, expect, it, vi } from 'vitest';
 import App from '../App';
 import NotFound from '../components/NotFound';
 
@@ -14,10 +15,19 @@ const ResizeObserverMock = vi.fn(() => ({
 
 vi.stubGlobal('ResizeObserver', ResizeObserverMock);
 
+vi.mock('axios');
+
 describe('StartMenu', () => {
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
+    vi.clearAllMocks();
+  });
 
   it('displays error text when an invalid ID is entered', async () => {
+    (axios.get as Mock).mockRejectedValue({
+      response: { data: { message: 'Invalid Diagram id' } },
+    });
+
     const { getByLabelText, getByText } = render(
       <BrowserRouter>
         <App />
@@ -30,11 +40,13 @@ describe('StartMenu', () => {
     fireEvent.click(goButton);
 
     await waitFor(() => {
-      expect(getByText('Invalid ID')).toBeInTheDocument();
+      expect(getByText('Invalid Diagram id')).toBeInTheDocument();
     });
   });
 
   it('redirects to a valid diagram', async () => {
+    (axios.get as Mock).mockResolvedValue({ data: { id: '1234' } });
+
     const { getByLabelText, getByText, getByAltText } = render(
       <BrowserRouter>
         <App />
@@ -55,6 +67,8 @@ describe('StartMenu', () => {
   });
 
   it('click create new and redirects to editor', async () => {
+    (axios.post as Mock).mockResolvedValue({ data: { id: '1234' } });
+
     const { getByText } = render(
       <BrowserRouter>
         <App />

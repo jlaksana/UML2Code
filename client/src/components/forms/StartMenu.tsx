@@ -1,5 +1,6 @@
 import LoadingButton from '@mui/lab/LoadingButton';
 import { TextField } from '@mui/material';
+import axios from 'axios';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/UML2.png';
@@ -8,22 +9,38 @@ import '../../styles/StartMenu.css';
 function StartMenu() {
   const id = useRef<HTMLInputElement>();
   const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   // Handles entering an existing diagram ID
   const handleGo = async () => {
-    const idRegex = /^\d{4}$/;
     setLoading(true);
     setError(false);
-    if (id.current?.value && idRegex.test(id.current.value)) {
-      // call api to check if diagram exists
-      // console.log(id);
-      // redirect to editor
-      navigate(`/${id.current.value}`);
+    if (id.current?.value) {
+      // call api to get diagram
+      await axios
+        .get(
+          `${import.meta.env.VITE_API_URL}/api/diagram/${id.current.value}`,
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json;charset=UTF-8',
+            },
+            timeout: 5000,
+          }
+        )
+        .then(({ data }) => {
+          navigate(`/${data.id}`);
+        })
+        .catch((err) => {
+          setError(true);
+          setErrorMessage(err.response.data.message);
+        });
     } else {
       setError(true);
+      setErrorMessage('Please enter a diagram ID');
     }
     setLoading(false);
   };
@@ -31,8 +48,17 @@ function StartMenu() {
   const handleCreate = async () => {
     setLoading(true);
     // call api to create new diagram
-    // redirect to editor
-    navigate(`/1234`);
+    await axios
+      .post(`${import.meta.env.VITE_API_URL}/api/diagram`)
+      .then(({ data }) => {
+        // redirect to editor
+        navigate(`/${data.id}`);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(true);
+        setErrorMessage(err.response.data.message);
+      });
   };
 
   return (
@@ -46,7 +72,7 @@ function StartMenu() {
         variant="standard"
         fullWidth
         error={error}
-        helperText={error ? 'Invalid ID' : ''}
+        helperText={error ? errorMessage : ''}
       />
       <LoadingButton
         variant="contained"
