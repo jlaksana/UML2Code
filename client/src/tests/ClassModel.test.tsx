@@ -49,9 +49,12 @@ describe('ClassModal', () => {
 
   test('calls handleClose and creates class when OK button is clicked', () => {
     const handleCloseMock = vi.fn();
-    const { getByText } = render(
+    const { getByText, getByLabelText } = render(
       <ClassModal open handleClose={handleCloseMock} />
     );
+
+    const nameInput = getByLabelText('Class Name');
+    fireEvent.change(nameInput, { target: { value: 'Class 1' } });
 
     const OKButton = getByText('OK');
     fireEvent.click(OKButton);
@@ -60,17 +63,17 @@ describe('ClassModal', () => {
     expect(handleCloseMock).toHaveBeenCalled();
   });
 
+  test('shows error message when name is not specified', () => {
+    const { getByText } = render(<ClassModal open handleClose={() => {}} />);
+
+    const OKButton = getByText('OK');
+    fireEvent.click(OKButton);
+
+    const errorMessage = getByText('No field can be empty');
+    expect(errorMessage).toBeInTheDocument();
+  });
+
   // TODO: uncomment these tests when backend is implemented
-  // test('shows error message when name is not specified', () => {
-  //   const { getByText } = render(<ClassModal open handleClose={() => {}} />);
-
-  //   const OKButton = getByText('OK');
-  //   fireEvent.click(OKButton);
-
-  //   const errorMessage = getByText('No field can be empty');
-  //   expect(errorMessage).toBeInTheDocument();
-  // });
-
   // test('shows error message when name is not unique', () => {
   //   const { getByText, getByLabelText } = render(
   //     <ClassModal open handleClose={() => {}} />
