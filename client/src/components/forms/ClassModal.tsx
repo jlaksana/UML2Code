@@ -51,18 +51,63 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
   };
 
   const handleSubmit = () => {
+    setError(false);
+    let isError = false;
+    if (!name) {
+      setError(true);
+      return;
+    }
+    // check if every constant field is filled out. error if not
+    const verifiedConstants = constants.map((constant) => {
+      if (!constant.name || !constant.type) {
+        isError = true;
+      }
+      return {
+        id: constant.id,
+        name: removeWhiteSpace(constant.name),
+        type: constant.type,
+      };
+    });
+
+    // check if every attribute field is filled out. error if not
+    const verifiedAttributes = attributes.map((attribute) => {
+      if (!attribute.name || !attribute.type || !attribute.visibility) {
+        isError = true;
+      }
+      return {
+        id: attribute.id,
+        name: removeWhiteSpace(attribute.name),
+        type: attribute.type,
+        visibility: attribute.visibility,
+      };
+    });
+
+    // check if every method field is filled out. error if not
+    const verifiedMethods = methods.map((method) => {
+      if (!method.name || !method.returnType || !method.visibility) {
+        isError = true;
+      }
+      return {
+        id: method.id,
+        name: removeWhiteSpace(method.name),
+        returnType: method.returnType,
+        visibility: method.visibility,
+        isStatic: method.isStatic,
+      };
+    });
+
     const klass: Klass = {
       name: removeWhiteSpace(name),
       isAbstract,
-      constants,
-      attributes,
-      methods,
+      constants: verifiedConstants,
+      attributes: verifiedAttributes,
+      methods: verifiedMethods,
     };
-    try {
+    if (!isError) {
       // fetch()
       console.log(klass);
       close();
-    } catch (err) {
+    } else {
       setError(true);
     }
   };
