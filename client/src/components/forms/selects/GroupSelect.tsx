@@ -75,6 +75,7 @@ function GroupSelect({
       sx={{ width }}
       error={isError}
       helperText={isError ? 'Required *' : ''}
+      SelectProps={{ MenuProps: { PaperProps: { sx: { maxHeight: 400 } } } }}
     >
       {includePrimitives && <ListSubheader>Primitives</ListSubheader>}
       {includePrimitives &&
