@@ -1,6 +1,6 @@
 // import { useParams } from 'react-router-dom';
 import AddNewSpeedDial from './AddNewSpeedDial';
-import Diagram from './Diagram';
+import Diagram from './diagram/Diagram';
 import Header from './Header';
 
 function Editor() {
