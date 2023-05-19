@@ -10,8 +10,11 @@ export type DataType =
 
 export type Visibility = '+' | '—' | '#';
 
+export type Entity = Klass | Interface | Enum;
+
 // TODO: add more to these defintions
 export type Klass = {
+  id: string;
   name: string;
   isAbstract: boolean;
   constants: Constant[];
@@ -20,10 +23,12 @@ export type Klass = {
 };
 
 export type Interface = {
+  id: string;
   name: string;
 };
 
 export type Enum = {
+  id: string;
   name: string;
   values: EnumValue[];
 };
@@ -52,4 +57,21 @@ export type Method = {
 export type EnumValue = {
   id: number;
   name: string;
+};
+
+export type EntityAction = KlassAction | InterfaceAction | EnumAction;
+
+type KlassAction = {
+  type: 'ADD_KLASS' | 'DELETE_KLASS' | 'UPDATE_KLASS';
+  payload: Klass;
+};
+
+type InterfaceAction = {
+  type: 'ADD_INTERFACE' | 'DELETE_INTERFACE' | 'UPDATE_INTERFACE';
+  payload: Interface;
+};
+
+type EnumAction = {
+  type: 'ADD_ENUM' | 'DELETE_ENUM' | 'UPDATE_ENUM';
+  payload: Enum;
 };

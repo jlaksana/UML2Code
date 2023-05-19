@@ -10,7 +10,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Routes>
         <Route path="/" element={<StartMenu />} />
-        <Route path="/:id" element={<Editor />} />
+        <Route path="/:diagramId" element={<Editor />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ThemeProvider>

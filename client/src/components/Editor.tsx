@@ -1,17 +1,20 @@
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AddNewSpeedDial from './AddNewSpeedDial';
-import Diagram from './diagram/Diagram';
 import Header from './Header';
+import { EntitiesProvider } from './context/EntitiesContext';
+import Diagram from './diagram/Diagram';
 
 function Editor() {
-  // const { id } = useParams();
+  const { diagramId } = useParams();
 
   return (
-    <div className="editor">
-      <Header />
-      <AddNewSpeedDial />
-      <Diagram />
-    </div>
+    <EntitiesProvider diagramId={diagramId}>
+      <div className="editor">
+        <Header />
+        <AddNewSpeedDial />
+        <Diagram />
+      </div>
+    </EntitiesProvider>
   );
 }
 

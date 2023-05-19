@@ -6,7 +6,7 @@ import logo from '../assets/UML2.png';
 import '../styles/Header.css';
 
 function Header() {
-  const { id } = useParams();
+  const { diagramId } = useParams();
 
   return (
     <div className="header">
@@ -18,7 +18,7 @@ function Header() {
         </Tooltip>
       </div>
       <div className="center">
-        <span>ID: {id}</span>
+        <span>ID: {diagramId}</span>
       </div>
       <div className="right">
         <Tooltip title="Share or print">

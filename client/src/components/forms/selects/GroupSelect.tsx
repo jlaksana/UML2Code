@@ -28,6 +28,7 @@ function GroupSelect({
   // TODO: get classes, interfaces, enums from context
   const classes: Klass[] = [
     {
+      id: '1',
       name: 'class1',
       isAbstract: false,
       constants: [],
@@ -35,6 +36,7 @@ function GroupSelect({
       methods: [],
     },
     {
+      id: '2',
       name: 'class2',
       isAbstract: false,
       constants: [],
@@ -44,18 +46,22 @@ function GroupSelect({
   ];
   const interfaces: Interface[] = [
     {
+      id: '1',
       name: 'interface',
     },
     {
+      id: '2',
       name: 'interface2',
     },
   ];
   const enums: Enum[] = [
     {
+      id: '1',
       name: 'enum',
       values: [],
     },
     {
+      id: '2',
       name: 'enum2',
       values: [],
     },
