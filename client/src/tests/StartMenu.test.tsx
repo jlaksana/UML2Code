@@ -6,15 +6,6 @@ import { Mock, describe, expect, it, vi } from 'vitest';
 import App from '../App';
 import NotFound from '../components/NotFound';
 
-// mock ResizeObserver to get around vitest not supporting it
-const ResizeObserverMock = vi.fn(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}));
-
-vi.stubGlobal('ResizeObserver', ResizeObserverMock);
-
 vi.mock('axios');
 
 describe('StartMenu', () => {
