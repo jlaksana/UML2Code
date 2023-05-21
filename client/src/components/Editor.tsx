@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
+import { EntitiesProvider } from '../context/EntitiesContext';
 import AddNewSpeedDial from './AddNewSpeedDial';
 import Header from './Header';
-import { EntitiesProvider } from './context/EntitiesContext';
 import Diagram from './diagram/Diagram';
 
 function Editor() {

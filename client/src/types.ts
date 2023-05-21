@@ -1,3 +1,5 @@
+import { Node } from 'reactflow';
+
 export type DataType =
   | ''
   | 'int'
@@ -10,16 +12,16 @@ export type DataType =
 
 export type Visibility = '+' | '—' | '#';
 
-export type Entity = Klass | Interface | Enum;
+// Entity is a node in the graph where its data can be a class, interface, or enum
+export type Entity = Node<Klass | Interface | Enum>;
 
 // TODO: add more to these defintions
 export type Klass = {
-  id: string;
   name: string;
   isAbstract: boolean;
-  constants: Constant[];
-  attributes: Attribute[];
-  methods: Method[];
+  constants?: Constant[];
+  attributes?: Attribute[];
+  methods?: Method[];
 };
 
 export type Interface = {
@@ -33,6 +35,7 @@ export type Enum = {
   values: EnumValue[];
 };
 
+// field type definitions
 export type Constant = {
   id: number;
   name: string;
@@ -59,19 +62,29 @@ export type EnumValue = {
   name: string;
 };
 
-export type EntityAction = KlassAction | InterfaceAction | EnumAction;
+// reducer action definitions
+export type EntityAction =
+  | KlassAction
+  | InterfaceAction
+  | EnumAction
+  | NodeAction;
 
 type KlassAction = {
   type: 'ADD_KLASS' | 'DELETE_KLASS' | 'UPDATE_KLASS';
-  payload: Klass;
+  payload: Entity;
 };
 
 type InterfaceAction = {
   type: 'ADD_INTERFACE' | 'DELETE_INTERFACE' | 'UPDATE_INTERFACE';
-  payload: Interface;
+  payload: Entity;
 };
 
 type EnumAction = {
   type: 'ADD_ENUM' | 'DELETE_ENUM' | 'UPDATE_ENUM';
-  payload: Enum;
+  payload: Entity;
+};
+
+type NodeAction = {
+  type: 'UPDATE_NODES';
+  payload: Entity[];
 };

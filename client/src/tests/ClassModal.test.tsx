@@ -3,7 +3,22 @@ import { vi } from 'vitest';
 import ClassModal from '../components/forms/ClassModal';
 
 describe('ClassModal', () => {
-  afterEach(cleanup);
+  beforeEach(() => {
+    vi.mock('../context/EntitiesContext', () => {
+      return {
+        useEntitiesDispatch: () => vi.fn(),
+      };
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+    vi.resetAllMocks();
+  });
+
+  afterAll(() => {
+    vi.resetAllMocks();
+  });
 
   test('renders correctly', () => {
     const { getByText, getByLabelText } = render(
@@ -49,6 +64,7 @@ describe('ClassModal', () => {
 
   test('calls handleClose and creates class when OK button is clicked', () => {
     const handleCloseMock = vi.fn();
+
     const { getByText, getByLabelText } = render(
       <ClassModal open handleClose={handleCloseMock} />
     );
@@ -58,7 +74,6 @@ describe('ClassModal', () => {
 
     const OKButton = getByText('OK');
     fireEvent.click(OKButton);
-    // TODO: test that class is created
 
     expect(handleCloseMock).toHaveBeenCalled();
   });

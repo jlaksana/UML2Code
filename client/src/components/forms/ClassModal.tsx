@@ -11,8 +11,9 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useState } from 'react';
+import { useEntitiesDispatch } from '../../context/EntitiesContext';
 import '../../styles/FormModals.css';
-import { Attribute, Constant, Klass, Method } from '../../types';
+import { Attribute, Constant, Entity, Klass, Method } from '../../types';
 import AttributesInput from './inputs/AttributesInput';
 import ConstantsInput from './inputs/ConstantsInput';
 import MethodsInput from './inputs/MethodsInput';
@@ -30,6 +31,8 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [methods, setMethods] = useState<Method[]>([]);
   const [error, setError] = useState(false);
+
+  const entitiesDispatch = useEntitiesDispatch();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabValue(newValue);
@@ -96,16 +99,23 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
       };
     });
 
-    const klass: Klass = {
-      name: removeWhiteSpace(name),
-      isAbstract,
-      constants: verifiedConstants,
-      attributes: verifiedAttributes,
-      methods: verifiedMethods,
-    };
     if (!isError) {
-      // fetch()
-      console.log(klass);
+      const klass: Klass = {
+        name: removeWhiteSpace(name),
+        isAbstract,
+        constants: verifiedConstants,
+        attributes: verifiedAttributes,
+        methods: verifiedMethods,
+      };
+      // fetch() post request to server
+      // ! temporary klass node, will be replaced by response from server
+      const klassNode: Entity = {
+        id: klass.name,
+        type: 'class',
+        position: { x: 0, y: 0 },
+        data: klass,
+      };
+      entitiesDispatch({ type: 'ADD_KLASS', payload: klassNode });
       close();
     } else {
       setError(true);

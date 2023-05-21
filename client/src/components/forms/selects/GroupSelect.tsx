@@ -26,24 +26,7 @@ function GroupSelect({
   includeEnums = false,
 }: GroupSelectProps) {
   // TODO: get classes, interfaces, enums from context
-  const classes: Klass[] = [
-    {
-      id: '1',
-      name: 'class1',
-      isAbstract: false,
-      constants: [],
-      attributes: [],
-      methods: [],
-    },
-    {
-      id: '2',
-      name: 'class2',
-      isAbstract: false,
-      constants: [],
-      attributes: [],
-      methods: [],
-    },
-  ];
+  const classes: Klass[] = [];
   const interfaces: Interface[] = [
     {
       id: '1',
