@@ -5,6 +5,7 @@ import ReactFlow, {
   Controls,
   Edge,
   EdgeChange,
+  MiniMap,
   NodeChange,
   applyEdgeChanges,
   applyNodeChanges,
@@ -15,9 +16,21 @@ import {
   useEntitiesDispatch,
 } from '../../context/EntitiesContext';
 import '../../styles/Editor.css';
+import { Entity } from '../../types';
 import ClassNode from './nodes/ClassNode';
 
+// define node types and their components
 const nodeTypes = { class: ClassNode };
+
+// handle colors for minimap
+const nodeColor = (node: Entity) => {
+  switch (node.type) {
+    case 'class':
+      return '#ffefff';
+    default:
+      return '#ff0072';
+  }
+};
 
 // ! for testing purposes only
 const initialEdges: Edge[] = [
@@ -31,13 +44,24 @@ function Diagram() {
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
-      entitiesDispatch({
-        type: 'UPDATE_NODES',
-        payload: applyNodeChanges(changes, entities),
-      });
+      const newEntities = applyNodeChanges(changes, entities);
+      if (
+        changes.length === 1 &&
+        changes[0].type === 'position' &&
+        changes[0].dragging === false
+      ) {
+        // user stopped dragging a node
+        entitiesDispatch({ type: 'END_UPDATE_NODES', payload: newEntities });
+      } else {
+        entitiesDispatch({
+          type: 'UPDATE_NODES',
+          payload: applyNodeChanges(changes, entities),
+        });
+      }
     },
     [entities, entitiesDispatch]
   );
+
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) =>
       setEdges((eds) => applyEdgeChanges(changes, eds)),
@@ -55,6 +79,7 @@ function Diagram() {
       >
         <Background color="#444" variant={'dots' as BackgroundVariant} />
         <Controls style={{ flexDirection: 'column', gap: 0, margin: '3em' }} />
+        <MiniMap pannable zoomable position="top-right" nodeColor={nodeColor} />
       </ReactFlow>
     </div>
   );

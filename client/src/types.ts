@@ -15,7 +15,6 @@ export type Visibility = '+' | '—' | '#';
 // Entity is a node in the graph where its data can be a class, interface, or enum
 export type Entity = Node<Klass | Interface | Enum>;
 
-// TODO: add more to these defintions
 export type Klass = {
   name: string;
   isAbstract: boolean;
@@ -24,6 +23,7 @@ export type Klass = {
   methods?: Method[];
 };
 
+// TODO: add more to these defintions
 export type Interface = {
   id: string;
   name: string;
@@ -71,7 +71,8 @@ export type EntityAction =
 
 type KlassAction = {
   type: 'ADD_KLASS' | 'DELETE_KLASS' | 'UPDATE_KLASS';
-  payload: Entity;
+  payload: Klass;
+  id?: string;
 };
 
 type InterfaceAction = {
@@ -85,6 +86,6 @@ type EnumAction = {
 };
 
 type NodeAction = {
-  type: 'UPDATE_NODES';
+  type: 'UPDATE_NODES' | 'END_UPDATE_NODES';
   payload: Entity[];
 };

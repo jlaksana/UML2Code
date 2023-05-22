@@ -13,7 +13,7 @@ import {
 import { useState } from 'react';
 import { useEntitiesDispatch } from '../../context/EntitiesContext';
 import '../../styles/FormModals.css';
-import { Attribute, Constant, Entity, Klass, Method } from '../../types';
+import { Attribute, Constant, Klass, Method } from '../../types';
 import AttributesInput from './inputs/AttributesInput';
 import ConstantsInput from './inputs/ConstantsInput';
 import MethodsInput from './inputs/MethodsInput';
@@ -21,15 +21,20 @@ import MethodsInput from './inputs/MethodsInput';
 type ClassModalProps = {
   open: boolean;
   handleClose: () => void;
+  // defined only when editing existing class
+  id?: string;
+  data?: Klass;
 };
 
-function ClassModal({ open, handleClose }: ClassModalProps) {
+function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
   const [tabValue, setTabValue] = useState('1');
-  const [name, setName] = useState('');
-  const [isAbstract, setIsAbstract] = useState(false);
-  const [constants, setConstants] = useState<Constant[]>([]);
-  const [attributes, setAttributes] = useState<Attribute[]>([]);
-  const [methods, setMethods] = useState<Method[]>([]);
+  const [name, setName] = useState(data?.name || '');
+  const [isAbstract, setIsAbstract] = useState(data?.isAbstract || false);
+  const [constants, setConstants] = useState<Constant[]>(data?.constants || []);
+  const [attributes, setAttributes] = useState<Attribute[]>(
+    data?.attributes || []
+  );
+  const [methods, setMethods] = useState<Method[]>(data?.methods || []);
   const [error, setError] = useState(false);
 
   const entitiesDispatch = useEntitiesDispatch();
@@ -39,13 +44,17 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
   };
 
   const close = () => {
+    // reset all fields
+    // dont reset if editing
+    if (!id) {
+      setTabValue('1');
+      setName('');
+      setIsAbstract(false);
+      setConstants([]);
+      setAttributes([]);
+      setMethods([]);
+    }
     setError(false);
-    setTabValue('1');
-    setName('');
-    setIsAbstract(false);
-    setConstants([]);
-    setAttributes([]);
-    setMethods([]);
     handleClose();
   };
 
@@ -107,15 +116,13 @@ function ClassModal({ open, handleClose }: ClassModalProps) {
         attributes: verifiedAttributes,
         methods: verifiedMethods,
       };
-      // fetch() post request to server
-      // ! temporary klass node, will be replaced by response from server
-      const klassNode: Entity = {
-        id: klass.name,
-        type: 'class',
-        position: { x: 0, y: 0 },
-        data: klass,
-      };
-      entitiesDispatch({ type: 'ADD_KLASS', payload: klassNode });
+      if (id) {
+        // editing existing class
+        entitiesDispatch({ type: 'UPDATE_KLASS', payload: klass, id });
+      } else {
+        // adding new class
+        entitiesDispatch({ type: 'ADD_KLASS', payload: klass });
+      }
       close();
     } else {
       setError(true);

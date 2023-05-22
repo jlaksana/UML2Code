@@ -1,13 +1,39 @@
-import { memo } from 'react';
-import { Handle, NodeProps, Position } from 'reactflow';
+import { Button } from '@mui/material';
+import { memo, useState } from 'react';
+import { Handle, NodeProps, NodeToolbar, Position } from 'reactflow';
+import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/Node.css';
 import { Attribute, Constant, Klass, Method } from '../../../types';
+import ClassModal from '../../forms/ClassModal';
 
-function ClassNode({ data }: NodeProps<Klass>) {
+function ClassNode({ id, data }: NodeProps<Klass>) {
+  const [editOpen, setEditOpen] = useState(false);
+  const entitiesDispatch = useEntitiesDispatch();
+
+  const handleDelete = () => {
+    entitiesDispatch({ type: 'DELETE_KLASS', payload: data, id });
+  };
   return (
     <>
       <Handle id="a" type="target" position={Position.Top} />
       <Handle id="b" type="target" position={Position.Left} />
+      <NodeToolbar className="node-toolbar">
+        <Button
+          variant="contained"
+          size="small"
+          onClick={() => setEditOpen(true)}
+        >
+          Edit
+        </Button>
+        <Button
+          variant="contained"
+          color="error"
+          size="small"
+          onClick={handleDelete}
+        >
+          Delete
+        </Button>
+      </NodeToolbar>
       <div className="node">
         <div className="node-header">
           {data.isAbstract && (
@@ -45,6 +71,12 @@ function ClassNode({ data }: NodeProps<Klass>) {
       </div>
       <Handle id="c" type="source" position={Position.Right} />
       <Handle id="d" type="source" position={Position.Bottom} />
+      <ClassModal
+        open={editOpen}
+        handleClose={() => setEditOpen(false)}
+        id={id}
+        data={data}
+      />
     </>
   );
 }
