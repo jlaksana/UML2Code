@@ -24,24 +24,22 @@ beforeAll(async () => {
 
   // Create test entities
   const testEntity1 = await EntityModel.create({
-    variant: 'class',
-    name: 'TestClass',
-    x: 0,
-    y: 0,
     diagramId: testDiagramId.toString(),
-    attributes: [],
-    methods: [],
+    type: 'class',
+    position: { x: 10, y: 20 },
+    data: {
+      name: 'TestClass',
+    },
   });
   testEntity1Id = testEntity1._id;
 
   const testEntity2 = await EntityModel.create({
-    variant: 'class',
-    name: 'TestAnotherClass',
-    x: 0,
-    y: 0,
     diagramId: testDiagramId.toString(),
-    attributes: [],
-    methods: [],
+    type: 'class',
+    position: { x: 10, y: 20 },
+    data: {
+      name: 'AnotherTestClass',
+    },
   });
   testEntity2Id = testEntity2._id;
 });
