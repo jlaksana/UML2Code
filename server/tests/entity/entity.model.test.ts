@@ -1,7 +1,7 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
-import { Diagram, DiagramModel } from '../src/models/diagram.model';
-import { EntityModel } from '../src/models/entity.model';
+import { Diagram, DiagramModel } from '../../src/models/diagram.model';
+import { EntityModel } from '../../src/models/entity.model';
 
 describe('Entity Schema', () => {
   let mongoServer: MongoMemoryServer;

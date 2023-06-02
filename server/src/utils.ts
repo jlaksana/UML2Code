@@ -1,11 +1,11 @@
 import { CounterModel } from './models/diagram.model';
 
-function getErrorMessage(error: unknown) {
+export function getErrorMessage(error: unknown) {
   if (error instanceof Error) return error.message;
   return String(error);
 }
 
-async function getNextSequence() {
+export async function getNextSequence() {
   const id = 'diagramId';
   const ret = await CounterModel.findByIdAndUpdate(
     id,
@@ -19,4 +19,6 @@ async function getNextSequence() {
   return ret.seq;
 }
 
-export { getErrorMessage, getNextSequence };
+export function removeWhitespace(str: string) {
+  return str.replace(/\s/g, '');
+}

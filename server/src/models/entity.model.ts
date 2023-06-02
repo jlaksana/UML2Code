@@ -4,37 +4,38 @@ import { DiagramModel } from './diagram.model';
 
 const entityConstant = z.object({
   id: z.number(),
-  name: z.string(),
+  name: z.string().min(1),
   type: z.enum(['int', 'string', 'char', 'bool', 'float', 'double']),
 });
 
 const entityAttribute = z.object({
   id: z.number(),
-  name: z.string(),
-  visibility: z.enum(['+', '-', '#']),
+  name: z.string().min(1),
+  visibility: z.enum(['+', '—', '#']),
   type: z.enum(['int', 'string', 'char', 'bool', 'float', 'double']),
-  isConstant: z.boolean(),
 });
 
 const entityMethod = z.object({
   id: z.number(),
-  name: z.string(),
+  name: z.string().min(1),
   returnType: z.string(),
-  visibility: z.enum(['+', '-', '#']),
+  visibility: z.enum(['+', '—', '#']),
   isStatic: z.boolean(),
+});
+
+const entityData = z.object({
+  name: z.string().min(1),
+  isAbstract: z.boolean().optional(),
+  constants: z.array(entityConstant).optional(),
+  attributes: z.array(entityAttribute).optional(),
+  methods: z.array(entityMethod).optional(),
 });
 
 const entitySchema = z.object({
   diagramId: z.number().min(1000).max(9999),
   type: z.enum(['class', 'interface', 'enum', 'abstract']),
   position: z.object({ x: z.number(), y: z.number() }),
-  data: z.object({
-    name: z.string(),
-    isAbstract: z.boolean().optional(),
-    constants: z.array(entityConstant).optional(),
-    attributes: z.array(entityAttribute).optional(),
-    methods: z.array(entityMethod).optional(),
-  }),
+  data: entityData,
 });
 
 type Entity = z.infer<typeof entitySchema> & Document;
@@ -55,6 +56,7 @@ const schema = new Schema<Entity>({
     isAbstract: { type: Boolean, default: false },
     constants: [
       {
+        _id: false,
         id: { type: Number, required: true },
         name: { type: String, required: true },
         type: {
@@ -66,24 +68,25 @@ const schema = new Schema<Entity>({
     ],
     attributes: [
       {
+        _id: false,
         id: { type: Number, required: true },
         name: { type: String, required: true },
-        visibility: { type: String, enum: ['+', '-', '#'], required: true },
+        visibility: { type: String, enum: ['+', '—', '#'], required: true },
         type: {
           type: String,
           enum: ['int', 'string', 'char', 'bool', 'float', 'double'],
           required: true,
         },
-        isConstant: { type: Boolean, default: false },
       },
     ],
     methods: [
       {
+        _id: false,
         id: { type: Number, required: true },
         name: { type: String, required: true },
         isStatic: { type: Boolean, default: false },
-        visibility: { type: String, enum: ['+', '-', '#'], required: true },
-        retType: {
+        visibility: { type: String, enum: ['+', '—', '#'], required: true },
+        returnType: {
           type: String,
           required: true,
         },
@@ -100,4 +103,4 @@ schema.path('diagramId').validate(async (value) => {
 
 const EntityModel = model<Entity>('Entity', schema);
 
-export { entitySchema, Entity, EntityModel };
+export { entitySchema, Entity, EntityModel, entityData };
