@@ -1,8 +1,8 @@
 import { Dispatch, createContext, useContext, useReducer } from 'react';
-import { Entity, EntityAction } from '../types';
-import entitiesReducer from './EntitiesReducer';
+import { Entity, NodeData } from '../types';
+import entitiesReducer, { EntityAction } from './EntitiesReducer';
 
-const EntitiesContext = createContext<Entity[] | null>(null);
+const EntitiesContext = createContext<Entity<NodeData>[] | null>(null);
 const EntitiesDispatchContext = createContext<Dispatch<EntityAction> | null>(
   null
 );
@@ -62,7 +62,7 @@ export function useEntitiesDispatch() {
 }
 
 // ! FOR TESTING PURPOSES ONLY
-const testInitialEntities: Entity[] = [
+const testInitialEntities: Entity<NodeData>[] = [
   {
     id: '1',
     type: 'class',

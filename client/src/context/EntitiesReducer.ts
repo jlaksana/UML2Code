@@ -1,26 +1,46 @@
-import { Entity, EntityAction } from '../types';
+import { Entity, Enum, Interface, Klass, NodeData } from '../types';
+
+export type EntityAction =
+  | KlassAction
+  | InterfaceAction
+  | EnumAction
+  | NodeAction;
+
+type KlassAction = {
+  type: 'ADD_KLASS' | 'DELETE_KLASS' | 'UPDATE_KLASS';
+  payload: Entity<Klass>;
+  id?: string;
+};
+
+type InterfaceAction = {
+  type: 'ADD_INTERFACE' | 'DELETE_INTERFACE' | 'UPDATE_INTERFACE';
+  payload: Entity<Interface>;
+};
+
+type EnumAction = {
+  type: 'ADD_ENUM' | 'DELETE_ENUM' | 'UPDATE_ENUM';
+  payload: Entity<Enum>;
+};
+
+type NodeAction = {
+  type: 'UPDATE_NODES' | 'END_UPDATE_NODES';
+  payload: Entity<NodeData>[];
+};
 
 export default function entitiesReducer(
-  entities: Entity[],
+  entities: Entity<NodeData>[],
   action: EntityAction
-): Entity[] {
+): Entity<NodeData>[] {
   switch (action.type) {
     // class actions
     case 'ADD_KLASS': {
-      // TODO: post to server here
-      const newKlass = {
-        id: action.payload.name,
-        type: 'class',
-        position: { x: 0, y: 0 },
-        data: action.payload,
-      };
-      return [...entities, newKlass];
+      return [...entities, action.payload];
     }
     case 'DELETE_KLASS':
       return entities.filter((entity) => entity.id !== action.id);
     case 'UPDATE_KLASS':
       return entities.map((entity) =>
-        entity.id === action.id ? { ...entity, data: action.payload } : entity
+        entity.id === action.id ? action.payload : entity
       );
     // TODO interface actions
     // TODO enum actions
