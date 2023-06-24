@@ -8,7 +8,7 @@ export type EntityAction =
 
 type KlassAction = {
   type: 'ADD_KLASS' | 'DELETE_KLASS' | 'UPDATE_KLASS';
-  payload: Entity<Klass>;
+  payload: Entity<Klass> | null;
   id?: string;
 };
 
@@ -34,14 +34,16 @@ export default function entitiesReducer(
   switch (action.type) {
     // class actions
     case 'ADD_KLASS': {
+      if (!action.payload) return entities;
       return [...entities, action.payload];
     }
     case 'DELETE_KLASS':
       return entities.filter((entity) => entity.id !== action.id);
     case 'UPDATE_KLASS':
+      if (!action.payload) return entities;
       return entities.map((entity) =>
         entity.id === action.id ? action.payload : entity
-      );
+      ) as Entity<NodeData>[];
     // TODO interface actions
     // TODO enum actions
     // use to update node positions

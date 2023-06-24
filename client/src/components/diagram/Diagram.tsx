@@ -16,14 +16,14 @@ import {
   useEntitiesDispatch,
 } from '../../context/EntitiesContext';
 import '../../styles/Editor.css';
-import { Entity } from '../../types';
+import { Entity, NodeData } from '../../types';
 import ClassNode from './nodes/ClassNode';
 
 // define node types and their components
 const nodeTypes = { class: ClassNode };
 
 // handle colors for minimap
-const nodeColor = (node: Entity) => {
+const nodeColor = (node: Entity<NodeData>) => {
   switch (node.type) {
     case 'class':
       return '#ffefff';

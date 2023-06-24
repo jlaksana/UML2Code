@@ -11,8 +11,9 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
   const entitiesDispatch = useEntitiesDispatch();
 
   const handleDelete = () => {
-    entitiesDispatch({ type: 'DELETE_KLASS', payload: data, id });
+    entitiesDispatch({ type: 'DELETE_KLASS', payload: null, id });
   };
+
   return (
     <>
       <Handle id="a" type="target" position={Position.Top} />
