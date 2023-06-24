@@ -24,6 +24,7 @@ router.get('/:id', async (req, res) => {
     res.status(200).json(result);
   } catch (e) {
     res.status(404).json({ message: getErrorMessage(e) });
+    console.log(getErrorMessage(e));
   }
 });
 
@@ -42,8 +43,8 @@ router.post('/', async (req, res) => {
     const result = await createDiagram();
     res.status(201).json(result);
   } catch (e) {
-    console.log(getErrorMessage(e));
     res.status(400).json({ message: 'Could not create a diagram' });
+    console.log(getErrorMessage(e));
   }
 });
 

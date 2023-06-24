@@ -1,12 +1,9 @@
 import compression from 'compression';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import express from 'express';
 import { limiter, loggerMiddleware } from './middleware/utilMiddleware';
 import classRouter from './routes/classes';
 import diagramRouter from './routes/diagrams';
-
-dotenv.config();
 
 const app = express();
 
