@@ -10,10 +10,12 @@ import {
   TextField,
   Tooltip,
 } from '@mui/material';
+import axios from 'axios';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../context/EntitiesContext';
 import '../../styles/FormModals.css';
-import { Attribute, Constant, Klass, Method } from '../../types';
+import { Attribute, Constant, Entity, Klass, Method } from '../../types';
 import AttributesInput from './inputs/AttributesInput';
 import ConstantsInput from './inputs/ConstantsInput';
 import MethodsInput from './inputs/MethodsInput';
@@ -36,8 +38,11 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
   );
   const [methods, setMethods] = useState<Method[]>(data?.methods || []);
   const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('No fields can be empty');
 
   const entitiesDispatch = useEntitiesDispatch();
+
+  const { diagramId } = useParams();
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabValue(newValue);
@@ -62,7 +67,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
     return str.replace(/\s/g, '');
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setError(false);
     let isError = false;
     if (!name) {
@@ -118,12 +123,29 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
       };
       if (id) {
         // editing existing class
-        entitiesDispatch({ type: 'UPDATE_KLASS', payload: klass, id });
+        // TODO payload should be an entity after calling api
+        // entitiesDispatch({ type: 'UPDATE_KLASS', payload: klass, id });
+        close();
       } else {
         // adding new class
-        entitiesDispatch({ type: 'ADD_KLASS', payload: klass });
+        await axios
+          .post(`/api/class?diagramId=${diagramId}`, klass, {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json;charset=UTF-8',
+            },
+            timeout: 5000,
+          })
+          .then((res) => {
+            const newKlass = res.data as Entity<Klass>;
+            entitiesDispatch({ type: 'ADD_KLASS', payload: newKlass });
+            close();
+          })
+          .catch((err) => {
+            setError(true);
+            setErrorMessage(err.response.data.message);
+          });
       }
-      close();
     } else {
       setError(true);
     }
@@ -155,7 +177,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
             onChange={(e) => setName(e.target.value)}
             fullWidth
             error={error}
-            helperText={error ? 'No field can be empty' : ''}
+            helperText={error ? errorMessage : ''}
           />
           <FormControlLabel
             control={

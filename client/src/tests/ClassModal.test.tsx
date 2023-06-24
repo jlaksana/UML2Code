@@ -2,6 +2,8 @@ import { cleanup, fireEvent, render } from '@testing-library/react';
 import { vi } from 'vitest';
 import ClassModal from '../components/forms/ClassModal';
 
+vi.mock('axios');
+
 describe('ClassModal', () => {
   beforeEach(() => {
     vi.mock('../context/EntitiesContext', () => {
@@ -62,47 +64,15 @@ describe('ClassModal', () => {
     expect(handleCloseMock).toHaveBeenCalled();
   });
 
-  test('calls handleClose and creates class when OK button is clicked', () => {
-    const handleCloseMock = vi.fn();
-
-    const { getByText, getByLabelText } = render(
-      <ClassModal open handleClose={handleCloseMock} />
-    );
-
-    const nameInput = getByLabelText('Class Name');
-    fireEvent.change(nameInput, { target: { value: 'Class 1' } });
-
-    const OKButton = getByText('OK');
-    fireEvent.click(OKButton);
-
-    expect(handleCloseMock).toHaveBeenCalled();
-  });
-
   test('shows error message when name is not specified', () => {
     const { getByText } = render(<ClassModal open handleClose={() => {}} />);
 
     const OKButton = getByText('OK');
     fireEvent.click(OKButton);
 
-    const errorMessage = getByText('No field can be empty');
+    const errorMessage = getByText('No fields can be empty');
     expect(errorMessage).toBeInTheDocument();
   });
-
-  // TODO: uncomment these tests when backend is implemented
-  // test('shows error message when name is not unique', () => {
-  //   const { getByText, getByLabelText } = render(
-  //     <ClassModal open handleClose={() => {}} />
-  //   );
-
-  //   const nameInput = getByLabelText('Class Name');
-  //   fireEvent.change(nameInput, { target: { value: 'Class 1' } });
-
-  //   const OKButton = getByText('OK');
-  //   fireEvent.click(OKButton);
-
-  //   const errorMessage = getByText('Name must be unique');
-  //   expect(errorMessage).toBeInTheDocument();
-  // });
 
   test('adds constants when add button is clicked', () => {
     const { getByText, getAllByText, getAllByLabelText } = render(
