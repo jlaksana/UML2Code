@@ -9,8 +9,12 @@ const createClass = async (data: unknown, diagramId: string) => {
     throw new Error('Invalid class. Ensure all fields are present and valid');
   } else {
     // query for the diagram
-    const diagram = await DiagramModel.findById(diagramId);
-    if (!diagram) {
+    try {
+      const diagram = await DiagramModel.findById(diagramId);
+      if (!diagram) {
+        throw new Error();
+      }
+    } catch (e) {
       throw new Error(
         `Could not find a diagram with the given id: ${diagramId}`
       );

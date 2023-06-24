@@ -122,6 +122,17 @@ describe('createClass', () => {
     );
   });
 
+  it('should not create a class without a valid diagramId string', async () => {
+    const data = {
+      name: 'Circle',
+      isAbstract: false,
+    };
+
+    expect(createClass(data, 'invalid')).rejects.toThrow(
+      'Could not find a diagram with the given id: invalid'
+    );
+  });
+
   it('should not create a class with a duplicate name in a diagram', async () => {
     // test data
     const data = {
