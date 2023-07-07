@@ -8,9 +8,11 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import { useState } from 'react';
 import ClassModal from './forms/ClassModal';
+import InterfaceModal from './forms/InterfaceModal';
 
 function AddNewSpeedDial() {
   const [classOpen, setClassOpen] = useState(false);
+  const [interfaceOpen, setInterfaceOpen] = useState(false);
 
   const actions = [
     { icon: <CreditCardSharpIcon />, name: 'Class', actionType: 'Class' },
@@ -33,6 +35,7 @@ function AddNewSpeedDial() {
         setClassOpen(true);
         break;
       case 'Interface':
+        setInterfaceOpen(true);
         break;
       case 'Enumeration':
         break;
@@ -64,6 +67,10 @@ function AddNewSpeedDial() {
         </SpeedDial>
       </Tooltip>
       <ClassModal open={classOpen} handleClose={() => setClassOpen(false)} />
+      <InterfaceModal
+        open={interfaceOpen}
+        handleClose={() => setInterfaceOpen(false)}
+      />
     </>
   );
 }
