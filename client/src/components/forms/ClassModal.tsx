@@ -28,6 +28,14 @@ type ClassModalProps = {
   data?: Klass;
 };
 
+const removeWhiteSpace = (str: string) => {
+  return str.replace(/\s/g, '');
+};
+
+const classHelperText = `Classes are the building blocks of your program. 
+  They contain a name and could have constants, attributes, and methods. If abstract, check the Abstract box.\n
+  Notes: Constants are always static, attributes are recommended as private, and you cannot specify parameters for methods.`;
+
 function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
   const [tabValue, setTabValue] = useState('1');
   const [name, setName] = useState(data?.name || '');
@@ -61,10 +69,6 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
     }
     setError(false);
     handleClose();
-  };
-
-  const removeWhiteSpace = (str: string) => {
-    return str.replace(/\s/g, '');
   };
 
   const handleSubmit = async () => {
@@ -148,12 +152,9 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
       }
     } else {
       setError(true);
+      setErrorMessage('No fields can be empty');
     }
   };
-
-  const classHelperText = `Classes are the building blocks of your program. 
-  They contain a name and could have constants, attributes, and methods. If abstract, check the Abstract box.\n
-  Notes: Constants are always static, attributes are recommended as private, and you cannot specify parameters for methods.`;
 
   return (
     <Modal
@@ -165,7 +166,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
       <div className="modal-content">
         <div>
           <h2>
-            Create Class&nbsp;
+            {id ? 'Edit' : 'Create'} Class&nbsp;
             <Tooltip title={classHelperText}>
               <InfoOutlinedIcon fontSize="small" />
             </Tooltip>

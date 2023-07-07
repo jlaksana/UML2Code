@@ -18,10 +18,6 @@ describe('ClassModal', () => {
     vi.resetAllMocks();
   });
 
-  afterAll(() => {
-    vi.resetAllMocks();
-  });
-
   test('renders correctly', () => {
     const { getByText, getByLabelText } = render(
       <ClassModal open handleClose={() => {}} />
