@@ -111,28 +111,33 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
         // }
       } else {
         // create
-        // try {
-        //   const res = await axios.post(
-        //     `/api/interfaces?diagramId=${diagramId}`,
-        //     interfaceData,
-        //     {
-        //       headers: {
-        //         Accept: 'application/json',
-        //         'Content-Type': 'application/json;charset=UTF-8',
-        //       },
-        //       timeout: 5000,
-        //     }
-        //   );
-        //   const newInterface = res.data as Entity<Interface>;
-        //   entitiesDispatch({
-        //     type: 'ADD_INTERFACE',
-        //     payload: newInterface,
-        //   });
-        //   close();
-        // } catch (err: any) {
-        //   setError(true);
-        //   setErrorMessage(err.response.data.message);
-        // }
+        try {
+          // const res = await axios.post(
+          //   `/api/interfaces?diagramId=${diagramId}`,
+          //   interfaceData,
+          //   {
+          //     headers: {
+          //       Accept: 'application/json',
+          //       'Content-Type': 'application/json;charset=UTF-8',
+          //     },
+          //     timeout: 5000,
+          //   }
+          // );
+          // const newInterface = res.data as Entity<Interface>;
+          entitiesDispatch({
+            type: 'ADD_INTERFACE',
+            payload: {
+              id: '10',
+              position: { x: 0, y: 0 },
+              type: 'interface',
+              data: interfaceData,
+            },
+          });
+          close();
+        } catch (err: any) {
+          setError(true);
+          setErrorMessage(err.response.data.message);
+        }
       }
     }
   };

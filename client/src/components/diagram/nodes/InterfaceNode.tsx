@@ -1,17 +1,16 @@
 import { Button } from '@mui/material';
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import { Handle, NodeProps, NodeToolbar, Position } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
-import '../../../styles/Node.css';
-import { Attribute, Constant, Klass, Method } from '../../../types';
-import ClassModal from '../../forms/modals/ClassModal';
+import { Constant, Interface, Method } from '../../../types';
+import InterfaceModal from '../../forms/modals/InterfaceModal';
 
-function ClassNode({ id, data }: NodeProps<Klass>) {
+function InterfaceNode({ id, data }: NodeProps<Interface>) {
   const [editOpen, setEditOpen] = useState(false);
   const entitiesDispatch = useEntitiesDispatch();
 
   const handleDelete = () => {
-    entitiesDispatch({ type: 'DELETE_KLASS', payload: null, id });
+    entitiesDispatch({ type: 'DELETE_INTERFACE', payload: null, id });
   };
 
   return (
@@ -35,11 +34,9 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
           Delete
         </Button>
       </NodeToolbar>
-      <div className="node" style={{ backgroundColor: '#D4F1F4' }}>
+      <div className="node" style={{ backgroundColor: '#b1f3b1' }}>
         <div className="node-header">
-          {data.isAbstract && (
-            <div className="node-supertitle">{'<abstract>'}</div>
-          )}
+          <div className="node-supertitle">{'<interface>'}</div>
           <div className="node-title">{data.name}</div>
         </div>
         <hr />
@@ -49,12 +46,6 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
               data.constants.map((constant: Constant) => (
                 <div className="node-attribute" key={constant.id}>
                   {`+ ${constant.name}: ${constant.type} <static>`}
-                </div>
-              ))}
-            {data.attributes &&
-              data.attributes.map((attribute: Attribute) => (
-                <div className="node-attribute" key={attribute.id}>
-                  {attribute.visibility} {attribute.name}: {attribute.type}
                 </div>
               ))}
           </div>
@@ -72,7 +63,7 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
       </div>
       <Handle id="c" type="source" position={Position.Right} />
       <Handle id="d" type="source" position={Position.Bottom} />
-      <ClassModal
+      <InterfaceModal
         open={editOpen}
         handleClose={() => setEditOpen(false)}
         id={id}
@@ -82,4 +73,4 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
   );
 }
 
-export default memo(ClassNode);
+export default InterfaceNode;

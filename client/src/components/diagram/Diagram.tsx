@@ -18,17 +18,20 @@ import {
 import '../../styles/Editor.css';
 import { Entity, NodeData } from '../../types';
 import ClassNode from './nodes/ClassNode';
+import InterfaceNode from './nodes/InterfaceNode';
 
 // define node types and their components
-const nodeTypes = { class: ClassNode };
+const nodeTypes = { class: ClassNode, interface: InterfaceNode };
 
 // handle colors for minimap
 const nodeColor = (node: Entity<NodeData>) => {
   switch (node.type) {
     case 'class':
-      return '#ffefff';
+      return '#D4F1F4';
+    case 'interface':
+      return '#b1f3b1';
     default:
-      return '#ff0072';
+      return '#ffffff';
   }
 };
 

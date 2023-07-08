@@ -65,7 +65,7 @@ export function useEntitiesDispatch() {
 const testInitialEntities: Entity<NodeData>[] = [
   {
     id: '1',
-    type: 'class',
+    type: 'interface',
     position: { x: 100, y: 100 },
     data: {
       name: 'Shape',
@@ -73,10 +73,6 @@ const testInitialEntities: Entity<NodeData>[] = [
       constants: [
         { id: 1, name: 'PI', type: 'double' },
         { id: 2, name: 'E', type: 'double' },
-      ],
-      attributes: [
-        { id: 1, name: 'xPos', type: 'int', visibility: '—' },
-        { id: 2, name: 'yPos', type: 'int', visibility: '—' },
       ],
       methods: [
         {

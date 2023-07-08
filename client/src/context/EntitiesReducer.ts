@@ -14,7 +14,8 @@ type KlassAction = {
 
 type InterfaceAction = {
   type: 'ADD_INTERFACE' | 'DELETE_INTERFACE' | 'UPDATE_INTERFACE';
-  payload: Entity<Interface>;
+  payload: Entity<Interface> | null;
+  id?: string;
 };
 
 type EnumAction = {
@@ -44,7 +45,17 @@ export default function entitiesReducer(
       return entities.map((entity) =>
         entity.id === action.id ? action.payload : entity
       ) as Entity<NodeData>[];
-    // TODO interface actions
+    // interface actions
+    case 'ADD_INTERFACE':
+      if (!action.payload) return entities;
+      return [...entities, action.payload];
+    case 'DELETE_INTERFACE':
+      return entities.filter((entity) => entity.id !== action.id);
+    case 'UPDATE_INTERFACE':
+      if (!action.payload) return entities;
+      return entities.map((entity) =>
+        entity.id === action.id ? action.payload : entity
+      ) as Entity<NodeData>[];
     // TODO enum actions
     // use to update node positions
     case 'UPDATE_NODES':
