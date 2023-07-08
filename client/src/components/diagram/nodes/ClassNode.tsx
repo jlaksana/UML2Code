@@ -4,7 +4,7 @@ import { Handle, NodeProps, NodeToolbar, Position } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/Node.css';
 import { Attribute, Constant, Klass, Method } from '../../../types';
-import ClassModal from '../../forms/ClassModal';
+import ClassModal from '../../forms/modals/ClassModal';
 
 function ClassNode({ id, data }: NodeProps<Klass>) {
   const [editOpen, setEditOpen] = useState(false);

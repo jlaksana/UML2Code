@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import { vi } from 'vitest';
-import ClassModal from '../components/forms/ClassModal';
+import ClassModal from '../components/forms/modals/ClassModal';
 
 vi.mock('axios');
 
