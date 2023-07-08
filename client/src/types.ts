@@ -26,15 +26,12 @@ export type Klass = {
 };
 
 export type Interface = {
-  id: string;
   name: string;
   constants?: Constant[];
   methods?: Method[];
 };
 
-// TODO: add more to these defintions
 export type Enum = {
-  id: string;
   name: string;
   values: EnumValue[];
 };

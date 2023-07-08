@@ -7,12 +7,14 @@ import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import { useState } from 'react';
-import ClassModal from './forms/ClassModal';
-import InterfaceModal from './forms/InterfaceModal';
+import ClassModal from './forms/modals/ClassModal';
+import EnumModal from './forms/modals/EnumModal';
+import InterfaceModal from './forms/modals/InterfaceModal';
 
 function AddNewSpeedDial() {
   const [classOpen, setClassOpen] = useState(false);
   const [interfaceOpen, setInterfaceOpen] = useState(false);
+  const [enumOpen, setEnumOpen] = useState(false);
 
   const actions = [
     { icon: <CreditCardSharpIcon />, name: 'Class', actionType: 'Class' },
@@ -38,6 +40,7 @@ function AddNewSpeedDial() {
         setInterfaceOpen(true);
         break;
       case 'Enumeration':
+        setEnumOpen(true);
         break;
       case 'Relationship':
         break;
@@ -71,6 +74,7 @@ function AddNewSpeedDial() {
         open={interfaceOpen}
         handleClose={() => setInterfaceOpen(false)}
       />
+      <EnumModal open={enumOpen} handleClose={() => setEnumOpen(false)} />
     </>
   );
 }

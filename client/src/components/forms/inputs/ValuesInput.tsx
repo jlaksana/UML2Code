@@ -33,7 +33,7 @@ function ValueField({
       />
       <IconButton
         className="remove-button"
-        aria-label="delete constant"
+        aria-label="delete value"
         color="error"
         onClick={() => removeValue(value.id)}
       >

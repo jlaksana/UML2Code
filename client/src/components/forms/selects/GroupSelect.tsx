@@ -29,22 +29,18 @@ function GroupSelect({
   const classes: Klass[] = [];
   const interfaces: Interface[] = [
     {
-      id: '1',
       name: 'interface',
     },
     {
-      id: '2',
       name: 'interface2',
     },
   ];
   const enums: Enum[] = [
     {
-      id: '1',
       name: 'enum',
       values: [],
     },
     {
-      id: '2',
       name: 'enum2',
       values: [],
     },
