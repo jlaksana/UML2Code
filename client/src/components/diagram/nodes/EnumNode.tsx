@@ -2,16 +2,15 @@ import { Button } from '@mui/material';
 import { useState } from 'react';
 import { Handle, NodeProps, NodeToolbar, Position } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
-import '../../../styles/Node.css';
-import { Constant, Interface, Method } from '../../../types';
-import InterfaceModal from '../../forms/modals/InterfaceModal';
+import { Enum, EnumValue } from '../../../types';
+import EnumModal from '../../forms/modals/EnumModal';
 
-function InterfaceNode({ id, data }: NodeProps<Interface>) {
+function EnumNode({ id, data }: NodeProps<Enum>) {
   const [editOpen, setEditOpen] = useState(false);
   const entitiesDispatch = useEntitiesDispatch();
 
   const handleDelete = () => {
-    entitiesDispatch({ type: 'DELETE_INTERFACE', payload: null, id });
+    entitiesDispatch({ type: 'DELETE_ENUM', payload: null, id });
   };
 
   return (
@@ -35,28 +34,19 @@ function InterfaceNode({ id, data }: NodeProps<Interface>) {
           Delete
         </Button>
       </NodeToolbar>
-      <div className="node" style={{ backgroundColor: '#b1f3b1' }}>
+      <div className="node" style={{ backgroundColor: '#ffcccb' }}>
         <div className="node-header">
-          <div className="node-supertitle">{'<interface>'}</div>
+          <div className="node-supertitle">{'<enum>'}</div>
+
           <div className="node-title">{data.name}</div>
         </div>
         <hr />
         <div className="node-body">
           <div className="node-attributes">
-            {data.constants &&
-              data.constants.map((constant: Constant) => (
+            {data.values &&
+              data.values.map((constant: EnumValue) => (
                 <div className="node-attribute" key={constant.id}>
-                  {`+ ${constant.name}: ${constant.type} <static>`}
-                </div>
-              ))}
-          </div>
-          <hr />
-          <div className="node-methods">
-            {data.methods &&
-              data.methods.map((method: Method) => (
-                <div className="node-method" key={method.id}>
-                  {method.visibility} {method.name}(): {method.returnType}{' '}
-                  {method.isStatic ? '<static>' : ''}
+                  {constant.name}
                 </div>
               ))}
           </div>
@@ -64,7 +54,7 @@ function InterfaceNode({ id, data }: NodeProps<Interface>) {
       </div>
       <Handle id="c" type="source" position={Position.Right} />
       <Handle id="d" type="source" position={Position.Bottom} />
-      <InterfaceModal
+      <EnumModal
         open={editOpen}
         handleClose={() => setEditOpen(false)}
         id={id}
@@ -74,4 +64,4 @@ function InterfaceNode({ id, data }: NodeProps<Interface>) {
   );
 }
 
-export default InterfaceNode;
+export default EnumNode;

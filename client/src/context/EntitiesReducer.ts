@@ -20,7 +20,8 @@ type InterfaceAction = {
 
 type EnumAction = {
   type: 'ADD_ENUM' | 'DELETE_ENUM' | 'UPDATE_ENUM';
-  payload: Entity<Enum>;
+  payload: Entity<Enum> | null;
+  id?: string;
 };
 
 type NodeAction = {
@@ -33,31 +34,25 @@ export default function entitiesReducer(
   action: EntityAction
 ): Entity<NodeData>[] {
   switch (action.type) {
-    // class actions
-    case 'ADD_KLASS': {
-      if (!action.payload) return entities;
-      return [...entities, action.payload];
-    }
-    case 'DELETE_KLASS':
-      return entities.filter((entity) => entity.id !== action.id);
-    case 'UPDATE_KLASS':
-      if (!action.payload) return entities;
-      return entities.map((entity) =>
-        entity.id === action.id ? action.payload : entity
-      ) as Entity<NodeData>[];
-    // interface actions
+    // add actions
+    case 'ADD_KLASS':
     case 'ADD_INTERFACE':
+    case 'ADD_ENUM':
       if (!action.payload) return entities;
       return [...entities, action.payload];
+    // delete actions
+    case 'DELETE_KLASS':
     case 'DELETE_INTERFACE':
+    case 'DELETE_ENUM':
       return entities.filter((entity) => entity.id !== action.id);
+    // update actions
+    case 'UPDATE_KLASS':
     case 'UPDATE_INTERFACE':
+    case 'UPDATE_ENUM':
       if (!action.payload) return entities;
       return entities.map((entity) =>
         entity.id === action.id ? action.payload : entity
       ) as Entity<NodeData>[];
-    // TODO enum actions
-    // use to update node positions
     case 'UPDATE_NODES':
       // this case handles when the user is dragging a node or any other change
       // that does not require updating the node positions in the database
@@ -67,6 +62,6 @@ export default function entitiesReducer(
       // it is used to update the node positions in the database
       return action.payload;
     default:
-      throw new Error(`Unhandled action type: ${action.type}`);
+      throw new Error(`Unhandled action type: ${action}`);
   }
 }

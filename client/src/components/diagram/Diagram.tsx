@@ -18,10 +18,15 @@ import {
 import '../../styles/Editor.css';
 import { Entity, NodeData } from '../../types';
 import ClassNode from './nodes/ClassNode';
+import EnumNode from './nodes/EnumNode';
 import InterfaceNode from './nodes/InterfaceNode';
 
 // define node types and their components
-const nodeTypes = { class: ClassNode, interface: InterfaceNode };
+const nodeTypes = {
+  class: ClassNode,
+  interface: InterfaceNode,
+  enum: EnumNode,
+};
 
 // handle colors for minimap
 const nodeColor = (node: Entity<NodeData>) => {
@@ -30,6 +35,8 @@ const nodeColor = (node: Entity<NodeData>) => {
       return '#D4F1F4';
     case 'interface':
       return '#b1f3b1';
+    case 'enum':
+      return '#ffcccb';
     default:
       return '#ffffff';
   }

@@ -157,4 +157,17 @@ const testInitialEntities: Entity<NodeData>[] = [
       ],
     },
   },
+  {
+    id: '3',
+    type: 'enum',
+    position: { x: 100, y: 500 },
+    data: {
+      name: 'Color',
+      values: [
+        { id: 1, name: 'RED' },
+        { id: 2, name: 'GREEN' },
+        { id: 3, name: 'BLUE' },
+      ],
+    },
+  },
 ];
