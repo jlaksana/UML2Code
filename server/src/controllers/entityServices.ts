@@ -2,6 +2,21 @@ import { DiagramModel } from '../models/diagram.model';
 import { Entity, EntityModel, entityData } from '../models/entity.model';
 import { removeWhitespace } from '../utils';
 
+// validate that the entity name is unique in the diagram
+const validateDuplicateEntity = async (name: string, diagramId: string) => {
+  const strippedName = removeWhitespace(name);
+  const count = await EntityModel.countDocuments({
+    diagramId,
+    'data.name': strippedName,
+  });
+  if (count > 0) {
+    throw new Error(
+      `An entity with the name "${name}" already exists in the diagram`
+    );
+  }
+  return strippedName;
+};
+
 // validate data to be a valid entity and diagram id to be an existing diagram
 const validateEntity = async (data: unknown, diagramId: string) => {
   const parseResult = entityData.safeParse(data);
@@ -22,17 +37,7 @@ const validateEntity = async (data: unknown, diagramId: string) => {
     }
   }
 
-  // query entities with the same name and diagram
-  const name = removeWhitespace(parseResult.data.name);
-  const count = await EntityModel.countDocuments({
-    diagramId,
-    'data.name': name,
-  });
-  if (count > 0) {
-    throw new Error(
-      `An entity with the name "${name}" already exists in the diagram`
-    );
-  }
+  await validateDuplicateEntity(parseResult.data.name, diagramId);
 
   return parseResult.data;
 };
@@ -49,4 +54,4 @@ const reformatEntity = (entity: Entity) => {
   return reformattedEntity;
 };
 
-export { reformatEntity, validateEntity };
+export { reformatEntity, validateDuplicateEntity, validateEntity };

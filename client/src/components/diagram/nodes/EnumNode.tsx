@@ -36,7 +36,7 @@ function EnumNode({ id, data }: NodeProps<Enum>) {
       </NodeToolbar>
       <div className="node" style={{ backgroundColor: '#ffcccb' }}>
         <div className="node-header">
-          <div className="node-supertitle">{'<enum>'}</div>
+          <div className="node-supertitle">{'<enumeration>'}</div>
 
           <div className="node-title">{data.name}</div>
         </div>

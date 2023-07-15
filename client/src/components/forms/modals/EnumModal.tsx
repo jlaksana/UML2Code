@@ -1,11 +1,12 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Button, Modal, Tab, TextField, Tooltip } from '@mui/material';
+import axios from 'axios';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/FormModals.css';
-import { Enum, EnumValue } from '../../../types';
+import { Entity, Enum, EnumValue } from '../../../types';
 import ValuesInput from '../inputs/ValuesInput';
 
 type EnumModalProps = {
@@ -70,15 +71,30 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
         name: removeWhiteSpace(name),
         values: verifiedValues,
       };
-      console.log(enumer);
       if (id) {
         // editing
         close();
       } else {
         // creating
-        // axios call
-        // entitiesDispatch({ type: 'ADD_ENUM', payload: enum });
-        close();
+        try {
+          const res = await axios.post(
+            `/api/enum?diagramId=${diagramId}`,
+            enumer,
+            {
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+              timeout: 5000,
+            }
+          );
+          const newEnum = (await res.data) as Entity<Enum>;
+          entitiesDispatch({ type: 'ADD_ENUM', payload: newEnum });
+          close();
+        } catch (err: any) {
+          setError(true);
+          setErrorMessage(err.response.data.message);
+        }
       }
     }
   };
