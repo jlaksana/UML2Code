@@ -96,7 +96,7 @@ describe('createClass', () => {
     };
 
     expect(createClass(data, diagramId)).rejects.toThrow(
-      'Invalid class. Ensure all fields are present and valid'
+      'Invalid - Ensure all fields are present and valid'
     );
   });
 
@@ -107,7 +107,7 @@ describe('createClass', () => {
     };
 
     expect(createClass(data, diagramId)).rejects.toThrow(
-      'Invalid class. Ensure all fields are present and valid'
+      'Invalid - Ensure all fields are present and valid'
     );
   });
 

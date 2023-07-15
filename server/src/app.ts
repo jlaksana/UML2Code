@@ -4,6 +4,7 @@ import express from 'express';
 import { limiter, loggerMiddleware } from './middleware/utilMiddleware';
 import classRouter from './routes/classes';
 import diagramRouter from './routes/diagrams';
+import interfaceRouter from './routes/interfaces';
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(loggerMiddleware);
 // Routes
 app.use('/api/diagram', diagramRouter);
 app.use('/api/class', classRouter);
+app.use('/api/interface', interfaceRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello World from UML2Code API!');

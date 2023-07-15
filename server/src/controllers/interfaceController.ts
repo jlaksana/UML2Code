@@ -2,24 +2,22 @@ import { EntityModel } from '../models/entity.model';
 import { removeWhitespace } from '../utils';
 import { reformatEntity, validateEntity } from './entityServices';
 
-const createClass = async (data: unknown, diagramId: string) => {
+const createInterface = async (data: unknown, diagramId: string) => {
   const validatedData = await validateEntity(data, diagramId);
 
+  if (validatedData.attributes) {
+    throw new Error('Invalid - Ensure all fields are present and valid');
+  }
+
   try {
-    // create a new entity while removing whitespace from all names
     const entity = new EntityModel({
       diagramId,
-      type: 'class',
+      type: 'interface',
       data: {
         name: removeWhitespace(validatedData.name),
-        isAbstract: validatedData.isAbstract || false,
         constants: validatedData.constants?.map((constant) => ({
           ...constant,
           name: removeWhitespace(constant.name),
-        })),
-        attributes: validatedData.attributes?.map((attribute) => ({
-          ...attribute,
-          name: removeWhitespace(attribute.name),
         })),
         methods: validatedData.methods?.map((method) => ({
           ...method,
@@ -29,13 +27,16 @@ const createClass = async (data: unknown, diagramId: string) => {
     });
     await entity.save();
 
-    return reformatEntity(entity);
+    // reformat the entity for client
+    const reformattedEntity = reformatEntity(entity);
+    delete reformattedEntity.data.attributes;
+    delete reformattedEntity.data.isAbstract;
+    return reformattedEntity;
   } catch (e) {
-    // could not create a class in database
     console.log(e);
-    throw new Error('Could not create a class');
+    throw new Error('Could not create an interface');
   }
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export { createClass };
+export { createInterface };

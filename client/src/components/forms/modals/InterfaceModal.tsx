@@ -1,11 +1,12 @@
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Button, Modal, Tab, TextField, Tooltip } from '@mui/material';
+import axios from 'axios';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/FormModals.css';
-import { Constant, Interface, Method } from '../../../types';
+import { Constant, Entity, Interface, Method } from '../../../types';
 import ConstantsInput from '../inputs/ConstantsInput';
 import MethodsInput from '../inputs/MethodsInput';
 
@@ -112,26 +113,21 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
       } else {
         // create
         try {
-          // const res = await axios.post(
-          //   `/api/interfaces?diagramId=${diagramId}`,
-          //   interfaceData,
-          //   {
-          //     headers: {
-          //       Accept: 'application/json',
-          //       'Content-Type': 'application/json;charset=UTF-8',
-          //     },
-          //     timeout: 5000,
-          //   }
-          // );
-          // const newInterface = res.data as Entity<Interface>;
+          const res = await axios.post(
+            `/api/interface?diagramId=${diagramId}`,
+            interfaceData,
+            {
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8',
+              },
+              timeout: 5000,
+            }
+          );
+          const newInterface = res.data as Entity<Interface>;
           entitiesDispatch({
             type: 'ADD_INTERFACE',
-            payload: {
-              id: '10',
-              position: { x: 0, y: 0 },
-              type: 'interface',
-              data: interfaceData,
-            },
+            payload: newInterface,
           });
           close();
         } catch (err: any) {

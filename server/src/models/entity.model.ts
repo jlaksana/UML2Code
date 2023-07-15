@@ -103,4 +103,4 @@ schema.path('diagramId').validate(async (value) => {
 
 const EntityModel = model<Entity>('Entity', schema);
 
-export { entitySchema, Entity, EntityModel, entityData };
+export { Entity, EntityModel, entityData, entitySchema };
