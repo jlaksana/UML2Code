@@ -15,7 +15,6 @@ type AttributeFieldProps = {
     visibility: Visibility
   ) => void;
   removeAttribute: (index: number) => void;
-  error: boolean;
 };
 
 // Individual attribute field
@@ -23,10 +22,7 @@ function AttributeField({
   attribute,
   updateAttribute,
   removeAttribute,
-  error,
 }: AttributeFieldProps) {
-  const isError = error && (attribute.name === '' || attribute.type === '');
-
   return (
     <div className="field-line">
       <VisibilitySelect
@@ -39,7 +35,6 @@ function AttributeField({
             newVisibility
           )
         }
-        error={isError}
       />
       <TypeSelect
         option={attribute.type}
@@ -51,7 +46,6 @@ function AttributeField({
             attribute.visibility
           )
         }
-        error={isError}
       />
       <TextField
         label="Name"
@@ -65,8 +59,7 @@ function AttributeField({
             attribute.visibility
           )
         }
-        error={isError}
-        helperText={isError ? 'Name cannot be empty' : ''}
+        required
         sx={{ width: 170 }}
       />
       <Tooltip title="Delete" placement="right">
@@ -86,15 +79,10 @@ function AttributeField({
 type AttributesInputProps = {
   attributes: Attribute[];
   setAttributes: React.Dispatch<React.SetStateAction<Attribute[]>>;
-  error: boolean;
 };
 
 // List of attributes
-function AttributesInput({
-  attributes,
-  setAttributes,
-  error,
-}: AttributesInputProps) {
+function AttributesInput({ attributes, setAttributes }: AttributesInputProps) {
   const addAttribute = () => {
     const newId =
       attributes.length === 0 ? 0 : attributes[attributes.length - 1].id + 1;
@@ -142,7 +130,6 @@ function AttributesInput({
             key={attribute.id}
             updateAttribute={updateAttribute}
             removeAttribute={removeAttribute}
-            error={error}
           />
         );
       })}

@@ -73,86 +73,47 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
 
   const handleSubmit = async () => {
     setError(false);
-    let isError = false;
-    if (!name) {
-      setError(true);
-      return;
-    }
-    // check if every constant field is filled out. error if not
-    const verifiedConstants = constants.map((constant) => {
-      if (!constant.name || !constant.type) {
-        isError = true;
-      }
-      return {
-        id: constant.id,
+
+    const klass: Klass = {
+      name: removeWhiteSpace(name),
+      isAbstract,
+      constants: constants.map((constant) => ({
+        ...constant,
         name: removeWhiteSpace(constant.name),
-        type: constant.type,
-      };
-    });
-
-    // check if every attribute field is filled out. error if not
-    const verifiedAttributes = attributes.map((attribute) => {
-      if (!attribute.name || !attribute.type || !attribute.visibility) {
-        isError = true;
-      }
-      return {
-        id: attribute.id,
+      })),
+      attributes: attributes.map((attribute) => ({
+        ...attribute,
         name: removeWhiteSpace(attribute.name),
-        type: attribute.type,
-        visibility: attribute.visibility,
-      };
-    });
-
-    // check if every method field is filled out. error if not
-    const verifiedMethods = methods.map((method) => {
-      if (!method.name || !method.returnType || !method.visibility) {
-        isError = true;
-      }
-      return {
-        id: method.id,
+      })),
+      methods: methods.map((method) => ({
+        ...method,
         name: removeWhiteSpace(method.name),
-        returnType: method.returnType,
-        visibility: method.visibility,
-        isStatic: method.isStatic,
-      };
-    });
-
-    if (!isError) {
-      const klass: Klass = {
-        name: removeWhiteSpace(name),
-        isAbstract,
-        constants: verifiedConstants,
-        attributes: verifiedAttributes,
-        methods: verifiedMethods,
-      };
-      if (id) {
-        // editing existing class
-        // TODO payload should be an entity after calling api
-        // entitiesDispatch({ type: 'UPDATE_KLASS', payload: klass, id });
-        close();
-      } else {
-        // adding new class
-        await axios
-          .post(`/api/class?diagramId=${diagramId}`, klass, {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json;charset=UTF-8',
-            },
-            timeout: 5000,
-          })
-          .then((res) => {
-            const newKlass = res.data as Entity<Klass>;
-            entitiesDispatch({ type: 'ADD_KLASS', payload: newKlass });
-            close();
-          })
-          .catch((err) => {
-            setError(true);
-            setErrorMessage(err.response.data.message);
-          });
-      }
+      })),
+    };
+    if (id) {
+      // editing existing class
+      // TODO payload should be an entity after calling api
+      // entitiesDispatch({ type: 'UPDATE_KLASS', payload: klass, id });
+      close();
     } else {
-      setError(true);
-      setErrorMessage('No fields can be empty');
+      // adding new class
+      await axios
+        .post(`/api/class?diagramId=${diagramId}`, klass, {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+          timeout: 5000,
+        })
+        .then((res) => {
+          const newKlass = res.data as Entity<Klass>;
+          entitiesDispatch({ type: 'ADD_KLASS', payload: newKlass });
+          close();
+        })
+        .catch((err) => {
+          setError(true);
+          setErrorMessage(err.response.data.message);
+        });
     }
   };
 
@@ -163,7 +124,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
       aria-labelledby="Class Form"
       aria-describedby="Specify the contents of a class"
     >
-      <div className="modal-content">
+      <form className="modal-content" onSubmit={handleSubmit}>
         <div>
           <h2>
             {id ? 'Edit' : 'Create'} Class&nbsp;
@@ -177,6 +138,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             fullWidth
+            required
             error={error}
             helperText={error ? errorMessage : ''}
           />
@@ -207,22 +169,16 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
               <ConstantsInput
                 constants={constants}
                 setConstants={setConstants}
-                error={error}
               />
             </TabPanel>
             <TabPanel value="2" sx={{ padding: 0, paddingTop: '1em' }}>
               <AttributesInput
                 attributes={attributes}
                 setAttributes={setAttributes}
-                error={error}
               />
             </TabPanel>
             <TabPanel value="3" sx={{ padding: 0, paddingTop: '1em' }}>
-              <MethodsInput
-                methods={methods}
-                setMethods={setMethods}
-                error={error}
-              />
+              <MethodsInput methods={methods} setMethods={setMethods} />
             </TabPanel>
           </TabContext>
         </div>
@@ -230,11 +186,11 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
           <Button variant="text" onClick={close}>
             Cancel
           </Button>
-          <Button variant="text" onClick={handleSubmit}>
+          <Button variant="text" type="submit">
             OK
           </Button>
         </div>
-      </div>
+      </form>
     </Modal>
   );
 }

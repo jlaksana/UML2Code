@@ -22,18 +22,10 @@ type MethodFieldProps = {
     isStatic: boolean
   ) => void;
   removeMethod: (index: number) => void;
-  error: boolean;
 };
 
 // Individual method field
-function MethodField({
-  method,
-  updateMethod,
-  removeMethod,
-  error,
-}: MethodFieldProps) {
-  const isError = error && (method.name === '' || method.returnType === '');
-
+function MethodField({ method, updateMethod, removeMethod }: MethodFieldProps) {
   return (
     <div className="field-line">
       <div className="wrap">
@@ -48,7 +40,6 @@ function MethodField({
               method.isStatic
             )
           }
-          error={isError}
         />
         <TextField
           label="Name"
@@ -63,8 +54,7 @@ function MethodField({
               method.isStatic
             )
           }
-          error={isError}
-          helperText={isError ? 'Name cannot be empty' : ''}
+          required
           sx={{ width: 270 }}
         />
         <GroupSelect
@@ -79,7 +69,6 @@ function MethodField({
               method.isStatic
             )
           }
-          error={error}
           width={150}
           includePrimitives
           includeClasses
@@ -122,11 +111,10 @@ function MethodField({
 type MethodsInputProps = {
   methods: Method[];
   setMethods: React.Dispatch<React.SetStateAction<Method[]>>;
-  error: boolean;
 };
 
 // Methods input field
-function MethodsInput({ methods, setMethods, error }: MethodsInputProps) {
+function MethodsInput({ methods, setMethods }: MethodsInputProps) {
   const addMethod = () => {
     const newId = methods.length === 0 ? 0 : methods[methods.length - 1].id + 1;
 
@@ -176,7 +164,6 @@ function MethodsInput({ methods, setMethods, error }: MethodsInputProps) {
             key={method.id}
             updateMethod={updateMethod}
             removeMethod={removeMethod}
-            error={error}
           />
         );
       })}

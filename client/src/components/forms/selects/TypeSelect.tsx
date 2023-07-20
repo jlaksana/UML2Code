@@ -10,17 +10,12 @@ export const types: DataType[] = [
   'string',
 ];
 
-function TypeSelect({
-  option,
-  setOption,
-  error,
-}: GenericSelectProps<DataType>) {
+function TypeSelect({ option, setOption }: GenericSelectProps<DataType>) {
   return (
     <GenericSelect
       option={option}
       setOption={setOption}
       options={types}
-      error={error}
       label="Type"
       width={90}
     />

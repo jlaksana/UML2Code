@@ -26,7 +26,7 @@ describe('EnumModal', () => {
     const title = getByText('Create Enumeration');
     expect(title).toBeInTheDocument();
 
-    const nameInput = getByLabelText('Enum Name');
+    const nameInput = getByLabelText('Enum Name *');
     expect(nameInput).toBeInTheDocument();
 
     const valuesTab = getByText('Values');
@@ -51,18 +51,6 @@ describe('EnumModal', () => {
     expect(handleCloseMock).toHaveBeenCalled();
   });
 
-  test('shows error message when name is not specified', () => {
-    const { getByText, getByLabelText } = render(
-      <EnumModal open handleClose={() => {}} />
-    );
-
-    const OKButton = getByText('OK');
-    fireEvent.click(OKButton);
-
-    const errorMessage = getByText('No fields can be empty');
-    expect(errorMessage).toBeInTheDocument();
-  });
-
   test('adds values when add button is clicked', () => {
     const { getByText, getByLabelText } = render(
       <EnumModal open handleClose={() => {}} />
@@ -74,7 +62,7 @@ describe('EnumModal', () => {
     const valueInput = getByLabelText('Values');
     expect(valueInput).toBeInTheDocument();
 
-    const nameInput = getByLabelText('Name');
+    const nameInput = getByLabelText('Name *');
     fireEvent.change(nameInput, { target: { value: 'Value 1' } });
   });
 
@@ -88,7 +76,7 @@ describe('EnumModal', () => {
     const valueInput = getByLabelText('Values');
     expect(valueInput).toBeInTheDocument();
 
-    const nameInput = getByLabelText('Name');
+    const nameInput = getByLabelText('Name *');
     fireEvent.change(nameInput, { target: { value: 'Value 1' } });
 
     fireEvent.click(addButton);
@@ -96,6 +84,6 @@ describe('EnumModal', () => {
     const removeButton = getAllByRole('button', { name: 'delete value' });
     fireEvent.click(removeButton[0]);
 
-    expect(getAllByLabelText('Name')).toHaveLength(1);
+    expect(getAllByLabelText('Name *')).toHaveLength(1);
   });
 });

@@ -4,7 +4,6 @@ import { MenuItem, TextField } from '@mui/material';
 export type GenericSelectProps<T> = {
   option: T;
   setOption: (option: T) => void;
-  error: boolean;
 };
 
 // props that are specific to this generic select component
@@ -18,25 +17,21 @@ function GenericSelect<T>({
   option,
   setOption,
   options,
-  error,
   label,
   width = 300,
 }: GenericSelectOnlyProps<T>) {
-  const isError = error && !option;
-
   return (
     <TextField
       id={`${label}-select`}
       variant="standard"
       select
+      required
       label={label}
       value={option}
       onChange={(e) => {
         setOption(e.target.value as T);
       }}
       sx={{ width }}
-      error={isError}
-      helperText={isError ? 'Required *' : ''}
     >
       {options.map((opt) => {
         return (

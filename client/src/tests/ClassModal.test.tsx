@@ -26,7 +26,7 @@ describe('ClassModal', () => {
     const title = getByText('Create Class');
     expect(title).toBeInTheDocument();
 
-    const nameInput = getByLabelText('Class Name');
+    const nameInput = getByLabelText('Class Name *');
     expect(nameInput).toBeInTheDocument();
 
     const abstractCheckbox = getByLabelText('Abstract');
@@ -60,16 +60,6 @@ describe('ClassModal', () => {
     expect(handleCloseMock).toHaveBeenCalled();
   });
 
-  test('shows error message when name is not specified', () => {
-    const { getByText } = render(<ClassModal open handleClose={() => {}} />);
-
-    const OKButton = getByText('OK');
-    fireEvent.click(OKButton);
-
-    const errorMessage = getByText('No fields can be empty');
-    expect(errorMessage).toBeInTheDocument();
-  });
-
   test('adds constants when add button is clicked', () => {
     const { getByText, getAllByText, getAllByLabelText } = render(
       <ClassModal open handleClose={() => {}} />
@@ -81,20 +71,20 @@ describe('ClassModal', () => {
     const addButton = getByText('Add');
     fireEvent.click(addButton);
 
-    const nameInput = getAllByLabelText('Name');
+    const nameInput = getAllByLabelText('Name *');
     fireEvent.change(nameInput[0], { target: { value: 'Constant 1' } });
 
-    const typeInput = getAllByLabelText('Type');
+    const typeInput = getAllByLabelText('Type *');
     fireEvent.mouseDown(typeInput[0]);
     const typeMenuItem = getByText('int');
     fireEvent.click(typeMenuItem);
 
     fireEvent.click(addButton);
 
-    const nameInput2 = getAllByLabelText('Name');
+    const nameInput2 = getAllByLabelText('Name *');
     fireEvent.change(nameInput2[1], { target: { value: 'Constant 2' } });
 
-    const typeInput2 = getAllByLabelText('Type');
+    const typeInput2 = getAllByLabelText('Type *');
     fireEvent.mouseDown(typeInput2[1]);
     const typeMenuItem2 = getAllByText('string');
     fireEvent.click(typeMenuItem2[1]);
@@ -113,10 +103,10 @@ describe('ClassModal', () => {
     const addButton = getByText('Add');
     fireEvent.click(addButton);
 
-    const nameInput = getAllByLabelText('Name');
+    const nameInput = getAllByLabelText('Name *');
     fireEvent.change(nameInput[0], { target: { value: 'Constant 1' } });
 
-    const typeInput = getAllByLabelText('Type');
+    const typeInput = getAllByLabelText('Type *');
     fireEvent.mouseDown(typeInput[0]);
     const typeMenuItem = getByText('int');
     fireEvent.click(typeMenuItem);
@@ -126,8 +116,8 @@ describe('ClassModal', () => {
     const deleteButtons = getAllByRole('button', { name: 'delete constant' });
     fireEvent.click(deleteButtons[0]);
 
-    expect(getAllByLabelText('Name')).toHaveLength(1);
-    expect(getAllByLabelText('Type')).toHaveLength(1);
+    expect(getAllByLabelText('Name *')).toHaveLength(1);
+    expect(getAllByLabelText('Type *')).toHaveLength(1);
   });
 
   test('adds attributes when add button is clicked', () => {
@@ -141,25 +131,25 @@ describe('ClassModal', () => {
     const addButton = getByText('Add');
     fireEvent.click(addButton);
 
-    const nameInput = getAllByLabelText('Name');
+    const nameInput = getAllByLabelText('Name *');
     fireEvent.change(nameInput[0], { target: { value: 'Attribute 1' } });
 
-    const typeInput = getAllByLabelText('Type');
+    const typeInput = getAllByLabelText('Type *');
     fireEvent.mouseDown(typeInput[0]);
     const typeMenuItem = getByText('int');
     fireEvent.click(typeMenuItem);
 
-    const visibilityInput = getAllByLabelText('Visibility');
+    const visibilityInput = getAllByLabelText('Visibility *');
     fireEvent.mouseDown(visibilityInput[0]);
     const visibilityMenuItem = getByText('+');
     fireEvent.click(visibilityMenuItem);
 
     fireEvent.click(addButton);
 
-    const nameInput2 = getAllByLabelText('Name');
+    const nameInput2 = getAllByLabelText('Name *');
     fireEvent.change(nameInput2[1], { target: { value: 'Attribute 2' } });
 
-    const typeInput2 = getAllByLabelText('Type');
+    const typeInput2 = getAllByLabelText('Type *');
     fireEvent.mouseDown(typeInput2[1]);
     const typeMenuItem2 = getAllByText('string');
     fireEvent.click(typeMenuItem2[1]);
@@ -178,10 +168,10 @@ describe('ClassModal', () => {
     const addButton = getByText('Add');
     fireEvent.click(addButton);
 
-    const nameInput = getAllByLabelText('Name');
+    const nameInput = getAllByLabelText('Name *');
     fireEvent.change(nameInput[0], { target: { value: 'Attribute 1' } });
 
-    const typeInput = getAllByLabelText('Type');
+    const typeInput = getAllByLabelText('Type *');
     fireEvent.mouseDown(typeInput[0]);
     const typeMenuItem = getByText('int');
     fireEvent.click(typeMenuItem);
@@ -191,8 +181,8 @@ describe('ClassModal', () => {
     const deleteButtons = getAllByRole('button', { name: 'delete attribute' });
     fireEvent.click(deleteButtons[0]);
 
-    expect(getAllByLabelText('Name')).toHaveLength(1);
-    expect(getAllByLabelText('Type')).toHaveLength(1);
+    expect(getAllByLabelText('Name *')).toHaveLength(1);
+    expect(getAllByLabelText('Type *')).toHaveLength(1);
   });
 
   test('adds methods when add button is clicked', () => {
@@ -206,15 +196,15 @@ describe('ClassModal', () => {
     const addButton = getByText('Add');
     fireEvent.click(addButton);
 
-    const nameInput = getAllByLabelText('Name');
+    const nameInput = getAllByLabelText('Name *');
     fireEvent.change(nameInput[0], { target: { value: 'Method 1' } });
 
-    const returnInput = getAllByLabelText('Returns');
+    const returnInput = getAllByLabelText('Returns *');
     fireEvent.mouseDown(returnInput[0]);
     const returnMenuItem = getByText('int');
     fireEvent.click(returnMenuItem);
 
-    const visibilityInput = getAllByLabelText('Visibility');
+    const visibilityInput = getAllByLabelText('Visibility *');
     fireEvent.mouseDown(visibilityInput[0]);
     const visibilityMenuItem = getByText('#');
     fireEvent.click(visibilityMenuItem);
@@ -224,10 +214,10 @@ describe('ClassModal', () => {
 
     fireEvent.click(addButton);
 
-    const nameInput2 = getAllByLabelText('Name');
+    const nameInput2 = getAllByLabelText('Name *');
     fireEvent.change(nameInput2[1], { target: { value: 'Method 2' } });
 
-    const returnInput2 = getAllByLabelText('Returns');
+    const returnInput2 = getAllByLabelText('Returns *');
     fireEvent.mouseDown(returnInput2[1]);
     const returnMenuItem2 = getAllByText('string');
     fireEvent.click(returnMenuItem2[1]);
@@ -246,10 +236,10 @@ describe('ClassModal', () => {
     const addButton = getByText('Add');
     fireEvent.click(addButton);
 
-    const nameInput = getAllByLabelText('Name');
+    const nameInput = getAllByLabelText('Name *');
     fireEvent.change(nameInput[0], { target: { value: 'Method 1' } });
 
-    const returnInput = getAllByLabelText('Returns');
+    const returnInput = getAllByLabelText('Returns *');
     fireEvent.mouseDown(returnInput[0]);
     const returnMenuItem = getByText('int');
     fireEvent.click(returnMenuItem);
@@ -259,7 +249,7 @@ describe('ClassModal', () => {
     const deleteButtons = getAllByRole('button', { name: 'delete method' });
     fireEvent.click(deleteButtons[0]);
 
-    expect(getAllByLabelText('Name')).toHaveLength(1);
-    expect(getAllByLabelText('Returns')).toHaveLength(1);
+    expect(getAllByLabelText('Name *')).toHaveLength(1);
+    expect(getAllByLabelText('Returns *')).toHaveLength(1);
   });
 });

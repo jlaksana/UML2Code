@@ -26,7 +26,7 @@ describe('InterfaceModal', () => {
     const title = getByText('Create Interface');
     expect(title).toBeInTheDocument();
 
-    const nameInput = getByLabelText('Interface Name');
+    const nameInput = getByLabelText('Interface Name *');
     expect(nameInput).toBeInTheDocument();
 
     const constantsTab = getByText('Constants');
@@ -54,18 +54,6 @@ describe('InterfaceModal', () => {
     expect(handleCloseMock).toHaveBeenCalledTimes(1);
   });
 
-  test('shows error when name is empty', () => {
-    const { getByText } = render(
-      <InterfaceModal open handleClose={() => {}} />
-    );
-
-    const OKButton = getByText('OK');
-    fireEvent.click(OKButton);
-
-    const error = getByText('No fields can be empty');
-    expect(error).toBeInTheDocument();
-  });
-
   test('adds constants when add button is clicked', () => {
     const { getByText, getAllByText, getAllByLabelText } = render(
       <InterfaceModal open handleClose={() => {}} />
@@ -77,20 +65,20 @@ describe('InterfaceModal', () => {
     const addButton = getByText('Add');
     fireEvent.click(addButton);
 
-    const nameInput = getAllByLabelText('Name');
+    const nameInput = getAllByLabelText('Name *');
     fireEvent.change(nameInput[0], { target: { value: 'Constant 1' } });
 
-    const typeInput = getAllByLabelText('Type');
+    const typeInput = getAllByLabelText('Type *');
     fireEvent.mouseDown(typeInput[0]);
     const typeMenuItem = getByText('int');
     fireEvent.click(typeMenuItem);
 
     fireEvent.click(addButton);
 
-    const nameInput2 = getAllByLabelText('Name');
+    const nameInput2 = getAllByLabelText('Name *');
     fireEvent.change(nameInput2[1], { target: { value: 'Constant 2' } });
 
-    const typeInput2 = getAllByLabelText('Type');
+    const typeInput2 = getAllByLabelText('Type *');
     fireEvent.mouseDown(typeInput2[1]);
     const typeMenuItem2 = getAllByText('string');
     fireEvent.click(typeMenuItem2[1]);
@@ -109,15 +97,15 @@ describe('InterfaceModal', () => {
     const addButton = getByText('Add');
     fireEvent.click(addButton);
 
-    const nameInput = getAllByLabelText('Name');
+    const nameInput = getAllByLabelText('Name *');
     fireEvent.change(nameInput[0], { target: { value: 'Method 1' } });
 
-    const returnInput = getAllByLabelText('Returns');
+    const returnInput = getAllByLabelText('Returns *');
     fireEvent.mouseDown(returnInput[0]);
     const returnMenuItem = getByText('int');
     fireEvent.click(returnMenuItem);
 
-    const visibilityInput = getAllByLabelText('Visibility');
+    const visibilityInput = getAllByLabelText('Visibility *');
     fireEvent.mouseDown(visibilityInput[0]);
     const visibilityMenuItem = getByText('#');
     fireEvent.click(visibilityMenuItem);
@@ -127,10 +115,10 @@ describe('InterfaceModal', () => {
 
     fireEvent.click(addButton);
 
-    const nameInput2 = getAllByLabelText('Name');
+    const nameInput2 = getAllByLabelText('Name *');
     fireEvent.change(nameInput2[1], { target: { value: 'Method 2' } });
 
-    const returnInput2 = getAllByLabelText('Returns');
+    const returnInput2 = getAllByLabelText('Returns *');
     fireEvent.mouseDown(returnInput2[1]);
     const returnMenuItem2 = getAllByText('string');
     fireEvent.click(returnMenuItem2[1]);

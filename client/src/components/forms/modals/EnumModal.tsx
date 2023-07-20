@@ -106,7 +106,7 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
       aria-labelledby="Enum Form"
       aria-describedby="Specify the contents of a enum"
     >
-      <div className="modal-content">
+      <form className="modal-content" onSubmit={handleSubmit}>
         <div>
           <h2>
             {id ? 'Edit' : 'Create'} Enumeration&nbsp;
@@ -120,6 +120,7 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             fullWidth
+            required
             error={error}
             helperText={error ? errorMessage : ''}
           />
@@ -132,11 +133,7 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
               </TabList>
             </Box>
             <TabPanel value="1" sx={{ padding: 0, paddingTop: '1em' }}>
-              <ValuesInput
-                values={values}
-                setValues={setValues}
-                error={error}
-              />
+              <ValuesInput values={values} setValues={setValues} />
             </TabPanel>
           </TabContext>
         </div>
@@ -144,11 +141,11 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
           <Button variant="text" onClick={close}>
             Cancel
           </Button>
-          <Button variant="text" onClick={handleSubmit}>
+          <Button variant="text" type="submit">
             OK
           </Button>
         </div>
-      </div>
+      </form>
     </Modal>
   );
 }

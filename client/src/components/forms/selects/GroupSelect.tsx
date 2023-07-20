@@ -5,7 +5,6 @@ import { types } from './TypeSelect';
 interface GroupSelectProps {
   option: string;
   setOption: (option: string) => void;
-  error: boolean;
   label: string;
   width?: number;
   includePrimitives?: boolean;
@@ -17,7 +16,6 @@ interface GroupSelectProps {
 function GroupSelect({
   option,
   setOption,
-  error,
   label,
   width = 300,
   includePrimitives = false,
@@ -45,7 +43,6 @@ function GroupSelect({
       values: [],
     },
   ];
-  const isError = error && !option;
 
   return (
     <TextField
@@ -58,8 +55,7 @@ function GroupSelect({
         setOption(e.target.value);
       }}
       sx={{ width }}
-      error={isError}
-      helperText={isError ? 'Required *' : ''}
+      required
       SelectProps={{ MenuProps: { PaperProps: { sx: { maxHeight: 400 } } } }}
     >
       {includePrimitives && <ListSubheader>Primitives</ListSubheader>}

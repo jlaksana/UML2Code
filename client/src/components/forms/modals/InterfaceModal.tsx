@@ -56,84 +56,54 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
 
   const handleSubmit = async () => {
     setError(false);
-    let isError = false;
-    if (!name) {
-      setError(true);
-      return;
-    }
 
-    // check if every constant field is filled out. error if not
-    const verifiedConstants = constants.map((constant) => {
-      if (!constant.name || !constant.type) {
-        isError = true;
-      }
-      return {
-        id: constant.id,
+    const interfaceData = {
+      name: removeWhiteSpace(name),
+      constants: constants.map((constant) => ({
+        ...constant,
         name: removeWhiteSpace(constant.name),
-        type: constant.type,
-      };
-    });
-
-    // check if every method field is filled out. error if not
-    const verifiedMethods = methods.map((method) => {
-      if (!method.name || !method.returnType || !method.visibility) {
-        isError = true;
-      }
-      return {
-        id: method.id,
+      })),
+      methods: methods.map((method) => ({
+        ...method,
         name: removeWhiteSpace(method.name),
-        returnType: method.returnType,
-        visibility: method.visibility,
-        isStatic: method.isStatic,
-      };
-    });
-
-    if (isError) {
-      setError(true);
-      setErrorMessage('No fields can be empty');
+      })),
+    };
+    if (id) {
+      // edit
+      // try {
+      //   const res = await axios.put(`/api/interfaces/${id}`, interfaceData);
+      //   const updatedInterface = res.data;
+      //   entitiesDispatch({
+      //     type: 'UPDATE_INTERFACE',
+      //     payload: { diagramId, interfaceId: id, interfaceData: updatedInterface },
+      //   });
+      //   close();
+      // } catch (err) {
+      //   console.log(err);
+      // }
     } else {
-      const interfaceData = {
-        name: removeWhiteSpace(name),
-        constants: verifiedConstants,
-        methods: verifiedMethods,
-      };
-      if (id) {
-        // edit
-        // try {
-        //   const res = await axios.put(`/api/interfaces/${id}`, interfaceData);
-        //   const updatedInterface = res.data;
-        //   entitiesDispatch({
-        //     type: 'UPDATE_INTERFACE',
-        //     payload: { diagramId, interfaceId: id, interfaceData: updatedInterface },
-        //   });
-        //   close();
-        // } catch (err) {
-        //   console.log(err);
-        // }
-      } else {
-        // create
-        try {
-          const res = await axios.post(
-            `/api/interface?diagramId=${diagramId}`,
-            interfaceData,
-            {
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json;charset=UTF-8',
-              },
-              timeout: 5000,
-            }
-          );
-          const newInterface = res.data as Entity<Interface>;
-          entitiesDispatch({
-            type: 'ADD_INTERFACE',
-            payload: newInterface,
-          });
-          close();
-        } catch (err: any) {
-          setError(true);
-          setErrorMessage(err.response.data.message);
-        }
+      // create
+      try {
+        const res = await axios.post(
+          `/api/interface?diagramId=${diagramId}`,
+          interfaceData,
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json;charset=UTF-8',
+            },
+            timeout: 5000,
+          }
+        );
+        const newInterface = res.data as Entity<Interface>;
+        entitiesDispatch({
+          type: 'ADD_INTERFACE',
+          payload: newInterface,
+        });
+        close();
+      } catch (err: any) {
+        setError(true);
+        setErrorMessage(err.response.data.message);
       }
     }
   };
@@ -145,7 +115,7 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
       aria-labelledby="Interface Form"
       aria-describedby="Specify the contents of an interface"
     >
-      <div className="modal-content">
+      <form className="modal-content" onSubmit={handleSubmit}>
         <div>
           <h2>
             {id ? 'Edit' : 'Create'} Interface&nbsp;
@@ -159,6 +129,7 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             fullWidth
+            required
             error={error}
             helperText={error ? errorMessage : ''}
           />
@@ -178,15 +149,10 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
               <ConstantsInput
                 constants={constants}
                 setConstants={setConstants}
-                error={error}
               />
             </TabPanel>
             <TabPanel value="3" sx={{ padding: 0, paddingTop: '1em' }}>
-              <MethodsInput
-                methods={methods}
-                setMethods={setMethods}
-                error={error}
-              />
+              <MethodsInput methods={methods} setMethods={setMethods} />
             </TabPanel>
           </TabContext>
         </div>
@@ -194,11 +160,11 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
           <Button variant="text" onClick={close}>
             Cancel
           </Button>
-          <Button variant="text" onClick={handleSubmit}>
+          <Button variant="text" type="submit">
             OK
           </Button>
         </div>
-      </div>
+      </form>
     </Modal>
   );
 }

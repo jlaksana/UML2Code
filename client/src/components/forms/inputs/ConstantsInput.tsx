@@ -9,7 +9,6 @@ type ConstantFieldProps = {
   constant: Constant;
   updateConstant: (id: number, name: string, type: DataType) => void;
   removeConstant: (index: number) => void;
-  error: boolean;
 };
 
 // Individual constant field
@@ -17,10 +16,7 @@ function ConstantField({
   constant,
   updateConstant,
   removeConstant,
-  error,
 }: ConstantFieldProps) {
-  const isError = error && (constant.name === '' || constant.type === '');
-
   return (
     <div className="field-line">
       <TypeSelect
@@ -28,7 +24,6 @@ function ConstantField({
         setOption={(newType) =>
           updateConstant(constant.id, constant.name, newType)
         }
-        error={isError}
       />
       <TextField
         label="Name"
@@ -37,8 +32,7 @@ function ConstantField({
         onChange={(e) =>
           updateConstant(constant.id, e.target.value, constant.type)
         }
-        error={isError}
-        helperText={isError ? 'Name cannot be empty' : ''}
+        required
         sx={{ width: 245 }}
       />
       <Tooltip title="Delete" placement="right">
@@ -58,15 +52,10 @@ function ConstantField({
 type ConstantsInputProps = {
   constants: Constant[];
   setConstants: React.Dispatch<React.SetStateAction<Constant[]>>;
-  error: boolean;
 };
 
 // List of constant fields
-function ConstantsInput({
-  constants,
-  setConstants,
-  error,
-}: ConstantsInputProps) {
+function ConstantsInput({ constants, setConstants }: ConstantsInputProps) {
   const addConstant = () => {
     const newId =
       constants.length === 0 ? 0 : constants[constants.length - 1].id + 1;
@@ -107,7 +96,6 @@ function ConstantsInput({
             key={constant.id}
             updateConstant={updateConstant}
             removeConstant={removeConstant}
-            error={error}
           />
         );
       })}

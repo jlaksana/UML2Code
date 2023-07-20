@@ -8,18 +8,10 @@ type ValueFieldProps = {
   value: EnumValue;
   updateValue: (id: number, name: string) => void;
   removeValue: (index: number) => void;
-  error: boolean;
 };
 
 // Individual value field
-function ValueField({
-  value,
-  updateValue,
-  removeValue,
-  error,
-}: ValueFieldProps) {
-  const isError = error && value.name === '';
-
+function ValueField({ value, updateValue, removeValue }: ValueFieldProps) {
   return (
     <div className="field-line">
       <TextField
@@ -27,8 +19,7 @@ function ValueField({
         variant="standard"
         value={value.name}
         onChange={(e) => updateValue(value.id, e.target.value)}
-        error={isError}
-        helperText={isError ? 'Name cannot be empty' : ''}
+        required
         fullWidth
       />
       <IconButton
@@ -46,15 +37,10 @@ function ValueField({
 type ValuesInputProps = {
   values: EnumValue[];
   setValues: React.Dispatch<React.SetStateAction<EnumValue[]>>;
-  error: boolean;
 };
 
 // Input for enum values
-export default function ValuesInput({
-  values,
-  setValues,
-  error,
-}: ValuesInputProps) {
+export default function ValuesInput({ values, setValues }: ValuesInputProps) {
   const addValue = () => {
     const id = values.length === 0 ? 0 : values[values.length - 1].id + 1;
     setValues((prevValues) => [...prevValues, { id, name: '' }]);
@@ -79,7 +65,6 @@ export default function ValuesInput({
           value={value}
           updateValue={updateValue}
           removeValue={removeValue}
-          error={error}
         />
       ))}
       <Button variant="text" startIcon={<AddRoundedIcon />} onClick={addValue}>
