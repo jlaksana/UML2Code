@@ -46,55 +46,33 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
   };
 
   const handleSubmit = async () => {
-    setError(false);
-    let isError = false;
-    if (!name) {
-      setError(true);
-      return;
-    }
-    // check if every value field is filled
-    const verifiedValues = values.map((value) => {
-      if (!value.name) {
-        isError = true;
-      }
-      return {
-        id: value.id,
-        name: removeWhiteSpace(value.name),
-      };
-    });
-
-    if (isError) {
-      setError(true);
-      setErrorMessage('No fields can be empty');
+    const enumer = {
+      name: removeWhiteSpace(name),
+      values: values.map((v) => ({ ...v, name: removeWhiteSpace(v.name) })),
+    };
+    if (id) {
+      // editing
+      close();
     } else {
-      const enumer = {
-        name: removeWhiteSpace(name),
-        values: verifiedValues,
-      };
-      if (id) {
-        // editing
+      // creating
+      try {
+        const res = await axios.post(
+          `/api/enum?diagramId=${diagramId}`,
+          enumer,
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            timeout: 5000,
+          }
+        );
+        const newEnum = (await res.data) as Entity<Enum>;
+        entitiesDispatch({ type: 'ADD_ENUM', payload: newEnum });
         close();
-      } else {
-        // creating
-        try {
-          const res = await axios.post(
-            `/api/enum?diagramId=${diagramId}`,
-            enumer,
-            {
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-              timeout: 5000,
-            }
-          );
-          const newEnum = (await res.data) as Entity<Enum>;
-          entitiesDispatch({ type: 'ADD_ENUM', payload: newEnum });
-          close();
-        } catch (err: any) {
-          setError(true);
-          setErrorMessage(err.response.data.message);
-        }
+      } catch (err: any) {
+        setError(true);
+        setErrorMessage(err.response.data.message);
       }
     }
   };
