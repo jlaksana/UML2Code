@@ -1,9 +1,13 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
+import { createClass } from '../../src/controllers/classController';
 import {
   createDiagram,
   findDiagramById,
+  getDiagramContents,
 } from '../../src/controllers/diagramController';
+import { createEnum } from '../../src/controllers/enumController';
+import { createInterface } from '../../src/controllers/interfaceController';
 import { CounterModel, DiagramModel } from '../../src/models/diagram.model';
 
 let mongoServer: MongoMemoryServer;
@@ -73,4 +77,73 @@ describe('findDiagramById', () => {
   it('should not find a diagram with a non-existent id', async () => {
     expect(findDiagramById('9999')).rejects.toThrow('Diagram not found');
   });
+});
+
+describe('getDiagramContents', () => {
+  beforeEach(async () => {
+    await createDiagram();
+  });
+
+  afterEach(async () => {
+    await DiagramModel.deleteMany({});
+    await CounterModel.deleteMany({});
+  });
+
+  it('should be able to get the contents of a diagram', async () => {
+    const contents = await getDiagramContents('1000');
+    expect(contents).not.toBeNull();
+    expect(contents.diagramId).toEqual(1000);
+    expect(contents.entities).not.toBeNull();
+    expect(contents.entities.classes).not.toBeNull();
+    expect(contents.entities.classes.length).toEqual(0);
+    expect(contents.entities.interfaces).not.toBeNull();
+    expect(contents.entities.interfaces.length).toEqual(0);
+    expect(contents.entities.enums).not.toBeNull();
+    expect(contents.entities.enums.length).toEqual(0);
+    expect(contents.relationships).not.toBeNull();
+    expect(contents.relationships.length).toEqual(0);
+  });
+
+  it('should not get the contents of a diagram with an invalid id', async () => {
+    expect(getDiagramContents('999')).rejects.toThrow('Invalid Diagram id');
+  });
+
+  it('should not get the contents of a diagram with a non-existent id', async () => {
+    expect(getDiagramContents('9999')).rejects.toThrow('Diagram not found');
+  });
+
+  it('should be able to get the contents of a diagram with entities', async () => {
+    const testClass = {
+      name: 'classtest',
+      isAbstract: false,
+      constants: [],
+      attributes: [],
+      methods: [],
+    };
+    await createClass(testClass, '1000');
+    const testInterface = { name: 'interfacetest', constants: [], methods: [] };
+    await createInterface(
+      { name: 'interfacetest', constants: [], methods: [] },
+      '1000'
+    );
+    const testEnum = {
+      name: 'Colorenum',
+      values: [
+        { id: 1, name: 'RED' },
+        { id: 2, name: 'BLUE' },
+      ],
+    };
+    await createEnum(testEnum, '1000');
+
+    const contents = await getDiagramContents('1000');
+    console.log(contents);
+    expect(contents).not.toBeNull();
+    expect(contents.diagramId).toEqual(1000);
+    expect(contents.entities).not.toBeNull();
+    expect(contents.entities.classes[0].data).toEqual(testClass);
+    expect(contents.entities.interfaces[0].data).toEqual(testInterface);
+    expect(contents.entities.enums[0].data).toEqual(testEnum);
+  });
+
+  // TODO test relationships
 });

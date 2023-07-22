@@ -2,6 +2,7 @@ import express from 'express';
 import {
   createDiagram,
   findDiagramById,
+  getDiagramContents,
 } from '../controllers/diagramController';
 import { getErrorMessage } from '../utils';
 
@@ -21,6 +22,32 @@ const router = express.Router();
 router.get('/:id', async (req, res) => {
   try {
     const result = await findDiagramById(req.params.id);
+    res.status(200).json(result);
+  } catch (e) {
+    res.status(404).json({ message: getErrorMessage(e) });
+    console.log(getErrorMessage(e));
+  }
+});
+
+/* GET diagram contents by id.
+ * @route GET /api/diagram/:id/contents
+ * @access Public
+ * @returns {object} 200 - Diagram contents object
+ * @returns {Error}  404 - Diagram not found
+ * @returns {Error}  404 - Invalid Diagram id
+ * @example response - 200 - Diagram contents object
+ * {
+ *  "diagramId": "1000",
+ *  "entities": {
+ *   "classes": []
+ *  "interfaces": []
+ *  "enums": []
+ * },
+ * "relationships": []
+ */
+router.get('/:id/contents', async (req, res) => {
+  try {
+    const result = await getDiagramContents(req.params.id);
     res.status(200).json(result);
   } catch (e) {
     res.status(404).json({ message: getErrorMessage(e) });
