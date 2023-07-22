@@ -25,7 +25,7 @@ type EnumAction = {
 };
 
 type NodeAction = {
-  type: 'UPDATE_NODES' | 'END_UPDATE_NODES';
+  type: 'SET_NODES' | 'UPDATE_NODES' | 'END_UPDATE_NODES';
   payload: Entity<NodeData>[];
 };
 
@@ -53,6 +53,10 @@ export default function entitiesReducer(
       return entities.map((entity) =>
         entity.id === action.id ? action.payload : entity
       ) as Entity<NodeData>[];
+    // node actions
+    case 'SET_NODES':
+      // this case handles when the user first loads the diagram
+      return action.payload;
     case 'UPDATE_NODES':
       // this case handles when the user is dragging a node or any other change
       // that does not require updating the node positions in the database

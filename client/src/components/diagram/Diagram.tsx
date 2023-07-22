@@ -1,4 +1,6 @@
-import { useCallback, useState } from 'react';
+import axios from 'axios';
+import { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -51,6 +53,23 @@ function Diagram() {
   const entities = useEntities();
   const entitiesDispatch = useEntitiesDispatch();
   const [edges, setEdges] = useState(initialEdges);
+
+  const { diagramId } = useParams();
+
+  useEffect(() => {
+    const fetchDiagramContents = async () => {
+      try {
+        const res = await axios.get(`/api/diagram/${diagramId}/contents`);
+        entitiesDispatch({ type: 'SET_NODES', payload: res.data.entities });
+        // TODO set edges here
+      } catch (e) {
+        console.error(e);
+        // TODO toast error
+      }
+    };
+
+    fetchDiagramContents();
+  }, [diagramId, entitiesDispatch]);
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
