@@ -37,7 +37,7 @@ const getDiagramContents = async (id: string) => {
 
   return {
     diagramId: diagram.id,
-    entities: { classes, interfaces, enums },
+    entities: [...classes, ...interfaces, ...enums],
     relationships: [],
   };
 };

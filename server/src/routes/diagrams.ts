@@ -38,11 +38,7 @@ router.get('/:id', async (req, res) => {
  * @example response - 200 - Diagram contents object
  * {
  *  "diagramId": "1000",
- *  "entities": {
- *   "classes": []
- *  "interfaces": []
- *  "enums": []
- * },
+ *  "entities": [],
  * "relationships": []
  */
 router.get('/:id/contents', async (req, res) => {

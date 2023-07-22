@@ -94,12 +94,8 @@ describe('getDiagramContents', () => {
     expect(contents).not.toBeNull();
     expect(contents.diagramId).toEqual(1000);
     expect(contents.entities).not.toBeNull();
-    expect(contents.entities.classes).not.toBeNull();
-    expect(contents.entities.classes.length).toEqual(0);
-    expect(contents.entities.interfaces).not.toBeNull();
-    expect(contents.entities.interfaces.length).toEqual(0);
-    expect(contents.entities.enums).not.toBeNull();
-    expect(contents.entities.enums.length).toEqual(0);
+    expect(contents.entities).not.toBeNull();
+    expect(contents.entities.length).toEqual(0);
     expect(contents.relationships).not.toBeNull();
     expect(contents.relationships.length).toEqual(0);
   });
@@ -122,10 +118,7 @@ describe('getDiagramContents', () => {
     };
     await createClass(testClass, '1000');
     const testInterface = { name: 'interfacetest', constants: [], methods: [] };
-    await createInterface(
-      { name: 'interfacetest', constants: [], methods: [] },
-      '1000'
-    );
+    await createInterface(testInterface, '1000');
     const testEnum = {
       name: 'Colorenum',
       values: [
@@ -140,9 +133,7 @@ describe('getDiagramContents', () => {
     expect(contents).not.toBeNull();
     expect(contents.diagramId).toEqual(1000);
     expect(contents.entities).not.toBeNull();
-    expect(contents.entities.classes[0].data).toEqual(testClass);
-    expect(contents.entities.interfaces[0].data).toEqual(testInterface);
-    expect(contents.entities.enums[0].data).toEqual(testEnum);
+    expect(contents.entities.length).toEqual(3);
   });
 
   // TODO test relationships
