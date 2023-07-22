@@ -1,6 +1,6 @@
 import { EntityModel } from '../models/entity.model';
 import { removeWhitespace } from '../utils';
-import { reformatEntity, validateEntity } from './entityServices';
+import { reformatClass, validateEntity } from './entityServices';
 
 const createClass = async (data: unknown, diagramId: string) => {
   const validatedData = await validateEntity(data, diagramId);
@@ -29,7 +29,7 @@ const createClass = async (data: unknown, diagramId: string) => {
     });
     await entity.save();
 
-    return reformatEntity(entity);
+    return reformatClass(entity);
   } catch (e) {
     // could not create a class in database
     console.log(e);

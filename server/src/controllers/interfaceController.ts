@@ -1,6 +1,6 @@
 import { EntityModel } from '../models/entity.model';
 import { removeWhitespace } from '../utils';
-import { reformatEntity, validateEntity } from './entityServices';
+import { reformatInterface, validateEntity } from './entityServices';
 
 const createInterface = async (data: unknown, diagramId: string) => {
   const validatedData = await validateEntity(data, diagramId);
@@ -28,10 +28,7 @@ const createInterface = async (data: unknown, diagramId: string) => {
     await entity.save();
 
     // reformat the entity for client
-    const reformattedEntity = reformatEntity(entity);
-    delete reformattedEntity.data.attributes;
-    delete reformattedEntity.data.isAbstract;
-    return reformattedEntity;
+    return reformatInterface(entity);
   } catch (e) {
     console.log(e);
     throw new Error('Could not create an interface');

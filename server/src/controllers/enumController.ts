@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { DiagramModel } from '../models/diagram.model';
 import { EntityModel } from '../models/entity.model';
 import { removeWhitespace } from '../utils';
-import { reformatEntity, validateDuplicateEntity } from './entityServices';
+import { reformatEnum, validateDuplicateEntity } from './entityServices';
 
 const enumData = z.object({
   name: z.string().nonempty(),
@@ -48,20 +48,7 @@ const createEnum = async (data: unknown, diagramId: string) => {
     });
     await entity.save();
 
-    // reformat the entity for client
-    const reformattedEntity = reformatEntity(entity);
-    reformattedEntity.data.values =
-      reformattedEntity.data.constants.map(
-        (constant: { id: number; name: string }) => ({
-          id: constant.id,
-          name: constant.name,
-        })
-      ) || [];
-    delete reformattedEntity.data.constants;
-    delete reformattedEntity.data.attributes;
-    delete reformattedEntity.data.methods;
-    delete reformattedEntity.data.isAbstract;
-    return reformattedEntity;
+    return reformatEnum(entity);
   } catch (e) {
     console.log(e);
     throw new Error('Could not create an enum');

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import pick from 'lodash.pick';
 import { DiagramModel } from '../models/diagram.model';
 import { Entity, EntityModel, entityData } from '../models/entity.model';
 import { removeWhitespace } from '../utils';
@@ -42,16 +44,68 @@ const validateEntity = async (data: unknown, diagramId: string) => {
   return parseResult.data;
 };
 
-const reformatEntity = (entity: Entity) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const reformattedEntity: any = entity.toObject();
+// reformat the entity from the database to expected format for a class
+const reformatClass = (entity: Entity) => {
+  const reformattedClass: any = entity.toObject();
   // rename _id to id
-  reformattedEntity.id = reformattedEntity._id;
-  delete reformattedEntity._id;
-  delete reformattedEntity.__v;
-  delete reformattedEntity.diagramId;
+  reformattedClass.id = reformattedClass._id;
 
-  return reformattedEntity;
+  // remove _id from all subdocuments
+  reformattedClass.data = {
+    ...reformattedClass.data,
+    constants: reformattedClass.data.constants.map((constant: any) =>
+      pick(constant, ['id', 'name', 'type'])
+    ),
+    attributes: reformattedClass.data.attributes.map((attribute: any) =>
+      pick(attribute, ['id', 'name', 'type', 'visibility'])
+    ),
+    methods: reformattedClass.data.methods.map((method: any) =>
+      pick(method, ['id', 'name', 'returnType', 'visibility', 'isStatic'])
+    ),
+  };
+
+  return pick(reformattedClass, ['id', 'type', 'position', 'data']);
 };
 
-export { reformatEntity, validateDuplicateEntity, validateEntity };
+const reformatInterface = (entity: Entity) => {
+  const reformattedInterface: any = entity.toObject();
+  // rename _id to id
+  reformattedInterface.id = reformattedInterface._id;
+
+  // remove _id from all subdocuments
+  reformattedInterface.data = {
+    name: reformattedInterface.data.name,
+    constants: reformattedInterface.data.constants.map((constant: any) =>
+      pick(constant, ['id', 'name', 'type'])
+    ),
+    methods: reformattedInterface.data.methods.map((method: any) =>
+      pick(method, ['id', 'name', 'returnType', 'visibility', 'isStatic'])
+    ),
+  };
+
+  return pick(reformattedInterface, ['id', 'type', 'position', 'data']);
+};
+
+const reformatEnum = (entity: Entity) => {
+  const reformattedEnum: any = entity.toObject();
+  // rename _id to id
+  reformattedEnum.id = reformattedEnum._id;
+
+  // remove _id from all subdocuments
+  reformattedEnum.data = {
+    name: reformattedEnum.data.name,
+    values: reformattedEnum.data.constants.map((constant: any) =>
+      pick(constant, ['id', 'name'])
+    ),
+  };
+
+  return pick(reformattedEnum, ['id', 'type', 'position', 'data']);
+};
+
+export {
+  reformatClass,
+  reformatEnum,
+  reformatInterface,
+  validateDuplicateEntity,
+  validateEntity,
+};
