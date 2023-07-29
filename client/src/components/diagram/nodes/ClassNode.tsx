@@ -1,4 +1,5 @@
 import { Button } from '@mui/material';
+import axios from 'axios';
 import { memo, useState } from 'react';
 import { Handle, NodeProps, NodeToolbar, Position } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
@@ -10,7 +11,8 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
   const [editOpen, setEditOpen] = useState(false);
   const entitiesDispatch = useEntitiesDispatch();
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    await axios.delete(`/api/class/${id}`);
     entitiesDispatch({ type: 'DELETE_KLASS', payload: null, id });
   };
 

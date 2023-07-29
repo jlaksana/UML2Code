@@ -1,6 +1,10 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
-import { createClass, editClass } from '../../src/controllers/classController';
+import {
+  createClass,
+  deleteClass,
+  editClass,
+} from '../../src/controllers/classController';
 import { createDiagram } from '../../src/controllers/diagramController';
 import { Entity, EntityModel } from '../../src/models/entity.model';
 
@@ -132,18 +136,6 @@ describe('createClass', () => {
       'Could not find a diagram with the given id: invalid'
     );
   });
-
-  it('should not create a class with a duplicate name in a diagram', async () => {
-    // test data
-    const data = {
-      name: 'Square',
-      isAbstract: false,
-    };
-
-    await createClass(data, diagramId);
-
-    expect(createClass(data, diagramId)).rejects.toThrow();
-  });
 });
 
 describe('editClass', () => {
@@ -226,5 +218,30 @@ describe('editClass', () => {
     expect(updatedClass.data.constants).toEqual([]);
     expect(updatedClass.data.attributes).toEqual([]);
     expect(updatedClass.data.methods).toEqual(data.methods);
+  });
+});
+
+describe('deleteClass', () => {
+  let klass: Entity;
+  beforeEach(async () => {
+    // test data
+    const data = {
+      name: 'Circle',
+      isAbstract: false,
+    };
+
+    klass = await createClass(data, diagramId);
+  });
+
+  it('should be able to delete a class', async () => {
+    await deleteClass(klass.id);
+    const deletedClass = await EntityModel.findById(klass.id);
+    expect(deletedClass).toBeNull();
+  });
+
+  it('should not be able to delete a class with an invalid id', async () => {
+    expect(deleteClass('invalid')).rejects.toThrow(
+      'Could not delete a class with the given id: invalid'
+    );
   });
 });

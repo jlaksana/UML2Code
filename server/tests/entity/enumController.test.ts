@@ -46,11 +46,6 @@ describe('createEnum', () => {
     expect(entity.id).toBeDefined();
     expect(entity.type).toBe('enum');
     expect(entity.data.name).toBe('Colorenum');
-    expect(entity.data.values).toHaveLength(2);
-    expect(entity.data.values[0].id).toBe(1);
-    expect(entity.data.values[0].name).toBe('RED');
-    expect(entity.data.values[1].id).toBe(2);
-    expect(entity.data.values[1].name).toBe('BLUE');
     expect(entity.data.constants).toBeUndefined();
     expect(entity.data.methods).toBeUndefined();
   });

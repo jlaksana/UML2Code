@@ -63,4 +63,15 @@ const editClass = async (classId: string, diagramId: string, data: unknown) => {
   }
 };
 
-export { createClass, editClass };
+const deleteClass = async (classId: string) => {
+  try {
+    const klass = await EntityModel.findByIdAndDelete(classId);
+    if (!klass) {
+      throw new Error();
+    }
+  } catch (e) {
+    throw new Error(`Could not delete a class with the given id: ${classId}`);
+  }
+};
+
+export { createClass, deleteClass, editClass };
