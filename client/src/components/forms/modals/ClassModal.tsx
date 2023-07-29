@@ -106,7 +106,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
           }
         );
         const updatedKlass = res.data as Entity<Klass>;
-        entitiesDispatch({ type: 'UPDATE_KLASS', payload: updatedKlass });
+        entitiesDispatch({ type: 'UPDATE_KLASS', payload: updatedKlass, id });
         close();
       } catch (err: any) {
         setError(true);
