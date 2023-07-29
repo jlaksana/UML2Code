@@ -1,9 +1,14 @@
 import { EntityModel } from '../models/entity.model';
 import { removeWhitespace } from '../utils';
-import { reformatInterface, validateEntity } from './entityServices';
+import {
+  reformatInterface,
+  validateDuplicateEntity,
+  validateEntity,
+} from './entityServices';
 
 const createInterface = async (data: unknown, diagramId: string) => {
   const validatedData = await validateEntity(data, diagramId);
+  await validateDuplicateEntity(validatedData.name, diagramId, null);
 
   if (validatedData.attributes) {
     throw new Error('Invalid - Ensure all fields are present and valid');

@@ -5,12 +5,26 @@ import { Entity, EntityModel, entityData } from '../models/entity.model';
 import { removeWhitespace } from '../utils';
 
 // validate that the entity name is unique in the diagram
-const validateDuplicateEntity = async (name: string, diagramId: string) => {
+const validateDuplicateEntity = async (
+  name: string,
+  diagramId: string,
+  entityId: string | null
+) => {
   const strippedName = removeWhitespace(name);
-  const count = await EntityModel.countDocuments({
-    diagramId,
-    'data.name': strippedName,
-  });
+  let count;
+  if (entityId) {
+    // if editing an entity, allow the name to be the same as the current name
+    count = await EntityModel.countDocuments({
+      diagramId,
+      'data.name': strippedName,
+      _id: { $ne: entityId },
+    });
+  } else {
+    count = await EntityModel.countDocuments({
+      diagramId,
+      'data.name': strippedName,
+    });
+  }
   if (count > 0) {
     throw new Error(
       `An entity with the name "${name}" already exists in the diagram`
@@ -39,8 +53,6 @@ const validateEntity = async (data: unknown, diagramId: string) => {
     }
   }
 
-  await validateDuplicateEntity(parseResult.data.name, diagramId);
-
   return parseResult.data;
 };
 
@@ -64,7 +76,7 @@ const reformatClass = (entity: Entity) => {
     ),
   };
 
-  return pick(reformattedClass, ['id', 'type', 'position', 'data']);
+  return pick(reformattedClass, ['id', 'type', 'position', 'data']) as Entity;
 };
 
 const reformatInterface = (entity: Entity) => {
@@ -83,7 +95,12 @@ const reformatInterface = (entity: Entity) => {
     ),
   };
 
-  return pick(reformattedInterface, ['id', 'type', 'position', 'data']);
+  return pick(reformattedInterface, [
+    'id',
+    'type',
+    'position',
+    'data',
+  ]) as Entity;
 };
 
 const reformatEnum = (entity: Entity) => {
@@ -99,7 +116,7 @@ const reformatEnum = (entity: Entity) => {
     ),
   };
 
-  return pick(reformattedEnum, ['id', 'type', 'position', 'data']);
+  return pick(reformattedEnum, ['id', 'type', 'position', 'data']) as Entity;
 };
 
 export {

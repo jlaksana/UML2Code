@@ -31,7 +31,11 @@ const createEnum = async (data: unknown, diagramId: string) => {
     }
   }
 
-  const name = await validateDuplicateEntity(parseResult.data.name, diagramId);
+  const name = await validateDuplicateEntity(
+    parseResult.data.name,
+    diagramId,
+    null
+  );
 
   try {
     const entity = new EntityModel({

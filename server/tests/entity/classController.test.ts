@@ -1,8 +1,8 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
-import { createClass } from '../../src/controllers/classController';
+import { createClass, editClass } from '../../src/controllers/classController';
 import { createDiagram } from '../../src/controllers/diagramController';
-import { EntityModel } from '../../src/models/entity.model';
+import { Entity, EntityModel } from '../../src/models/entity.model';
 
 let mongoServer: MongoMemoryServer;
 let diagramId: string;
@@ -143,5 +143,88 @@ describe('createClass', () => {
     await createClass(data, diagramId);
 
     expect(createClass(data, diagramId)).rejects.toThrow();
+  });
+});
+
+describe('editClass', () => {
+  let klass: Entity;
+  beforeEach(async () => {
+    // test data
+    const data = {
+      name: 'Circle',
+      isAbstract: false,
+    };
+
+    klass = await createClass(data, diagramId);
+  });
+
+  afterEach(async () => {
+    await EntityModel.deleteMany({});
+  });
+
+  it('should be able to edit a class', async () => {
+    const data = {
+      name: 'Square',
+      isAbstract: true,
+    };
+
+    const updatedClass = await editClass(klass.id, diagramId, data);
+    expect(updatedClass).not.toBeNull();
+    expect(updatedClass.id).toEqual(klass.id);
+    expect(updatedClass.data.name).toEqual('Square');
+    expect(updatedClass.data.isAbstract).toEqual(true);
+    expect(updatedClass.data.constants).toEqual([]);
+    expect(updatedClass.data.attributes).toEqual([]);
+    expect(updatedClass.data.methods).toEqual([]);
+    expect(updatedClass).not.toHaveProperty('diagramId');
+    expect(updatedClass).not.toHaveProperty('_id');
+    expect(updatedClass).not.toHaveProperty('__v');
+  });
+
+  it('should not be able to edit a class with an empty name', async () => {
+    const data = {
+      name: '',
+      isAbstract: false,
+    };
+
+    expect(editClass(klass.id, diagramId, data)).rejects.toThrow(
+      'Invalid - Ensure all fields are present and valid'
+    );
+  });
+
+  it('should not be able to edit a class without a valid diagramId', async () => {
+    const data = {
+      name: 'Square',
+      isAbstract: false,
+    };
+
+    expect(editClass(klass.id, '999', data)).rejects.toThrow(
+      'Could not find a diagram with the given id: 999'
+    );
+  });
+
+  it('should be able to add a method to a class', async () => {
+    const data = {
+      name: 'Circle',
+      isAbstract: false,
+      methods: [
+        {
+          id: 1,
+          name: 'perimeter',
+          returnType: 'double',
+          visibility: '+',
+          isStatic: false,
+        },
+      ],
+    };
+
+    const updatedClass = await editClass(klass.id, diagramId, data);
+    expect(updatedClass).not.toBeNull();
+    expect(updatedClass.id).toEqual(klass.id);
+    expect(updatedClass.data.name).toEqual('Circle');
+    expect(updatedClass.data.isAbstract).toEqual(false);
+    expect(updatedClass.data.constants).toEqual([]);
+    expect(updatedClass.data.attributes).toEqual([]);
+    expect(updatedClass.data.methods).toEqual(data.methods);
   });
 });

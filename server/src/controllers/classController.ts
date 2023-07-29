@@ -1,9 +1,14 @@
 import { EntityModel } from '../models/entity.model';
 import { removeWhitespace } from '../utils';
-import { reformatClass, validateEntity } from './entityServices';
+import {
+  reformatClass,
+  validateDuplicateEntity,
+  validateEntity,
+} from './entityServices';
 
 const createClass = async (data: unknown, diagramId: string) => {
   const validatedData = await validateEntity(data, diagramId);
+  await validateDuplicateEntity(validatedData.name, diagramId, null);
 
   try {
     // create a new entity while removing whitespace from all names
@@ -37,5 +42,25 @@ const createClass = async (data: unknown, diagramId: string) => {
   }
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { createClass };
+const editClass = async (classId: string, diagramId: string, data: unknown) => {
+  const validatedData = await validateEntity(data, diagramId);
+  await validateDuplicateEntity(validatedData.name, diagramId, classId);
+
+  try {
+    const klass = await EntityModel.findByIdAndUpdate(
+      classId,
+      {
+        data: validatedData,
+      },
+      { new: true }
+    );
+    if (!klass) {
+      throw new Error();
+    }
+    return reformatClass(klass);
+  } catch (e) {
+    throw new Error(`Could not update a class with the given id: ${classId}`);
+  }
+};
+
+export { createClass, editClass };
