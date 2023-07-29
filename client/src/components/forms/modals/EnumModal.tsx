@@ -45,7 +45,10 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
     handleClose();
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(false);
+
     const enumer = {
       name: removeWhiteSpace(name),
       values: values.map((v) => ({ ...v, name: removeWhiteSpace(v.name) })),

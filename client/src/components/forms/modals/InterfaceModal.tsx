@@ -54,7 +54,8 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
     handleClose();
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setError(false);
 
     const interfaceData = {
