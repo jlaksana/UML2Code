@@ -71,7 +71,8 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
     handleClose();
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError(false);
 
     const klass: Klass = {
@@ -92,28 +93,46 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
     };
     if (id) {
       // editing existing class
-      // TODO payload should be an entity after calling api
-      // entitiesDispatch({ type: 'UPDATE_KLASS', payload: klass, id });
-      close();
+      try {
+        const res = await axios.put(
+          `/api/class/${id}?diagramId=${diagramId}`,
+          klass,
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json;charset=UTF-8',
+            },
+            timeout: 5000,
+          }
+        );
+        const updatedKlass = res.data as Entity<Klass>;
+        entitiesDispatch({ type: 'UPDATE_KLASS', payload: updatedKlass });
+        close();
+      } catch (err: any) {
+        setError(true);
+        setErrorMessage(err.response.data.message);
+      }
     } else {
       // adding new class
-      await axios
-        .post(`/api/class?diagramId=${diagramId}`, klass, {
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8',
-          },
-          timeout: 5000,
-        })
-        .then((res) => {
-          const newKlass = res.data as Entity<Klass>;
-          entitiesDispatch({ type: 'ADD_KLASS', payload: newKlass });
-          close();
-        })
-        .catch((err) => {
-          setError(true);
-          setErrorMessage(err.response.data.message);
-        });
+      try {
+        const res = await axios.post(
+          `/api/class?diagramId=${diagramId}`,
+          klass,
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json;charset=UTF-8',
+            },
+            timeout: 5000,
+          }
+        );
+        const newKlass = res.data as Entity<Klass>;
+        entitiesDispatch({ type: 'ADD_KLASS', payload: newKlass });
+        close();
+      } catch (err: any) {
+        setError(true);
+        setErrorMessage(err.response.data.message);
+      }
     }
   };
 

@@ -101,10 +101,11 @@ function Diagram() {
     <div className="diagram">
       <ReactFlow
         nodes={entities}
+        nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         edges={edges}
         onEdgesChange={onEdgesChange}
-        nodeTypes={nodeTypes}
+        deleteKeyCode={null}
       >
         <Background color="#444" variant={'dots' as BackgroundVariant} />
         <Controls style={{ flexDirection: 'column', gap: 0, margin: '3em' }} />
