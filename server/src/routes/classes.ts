@@ -59,6 +59,13 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+/**
+ * @route DELETE /api/class/:id
+ * @access Public
+ * @param {string} id - class id
+ * @returns status 200 if successful
+ * @returns status 400 if unsuccessful
+ */
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 

@@ -71,8 +71,14 @@ function Diagram() {
     fetchDiagramContents();
   }, [diagramId, entitiesDispatch]);
 
+  const getEntityPosition = (id: string, ents: Entity<NodeData>[]) => {
+    const entity = ents.find((e) => e.id === id);
+    if (!entity) return { x: 0, y: 0 };
+    return entity.position;
+  };
+
   const onNodesChange = useCallback(
-    (changes: NodeChange[]) => {
+    async (changes: NodeChange[]) => {
       const newEntities = applyNodeChanges(changes, entities);
       if (
         changes.length === 1 &&
@@ -80,7 +86,15 @@ function Diagram() {
         changes[0].dragging === false
       ) {
         // user stopped dragging a node
-        entitiesDispatch({ type: 'END_UPDATE_NODES', payload: newEntities });
+        try {
+          const updatedId = changes[0].id;
+          const newPos = getEntityPosition(updatedId, newEntities);
+          await axios.put(`/api/entity/${updatedId}/position`, newPos);
+          entitiesDispatch({ type: 'END_UPDATE_NODES', payload: newEntities });
+        } catch (e) {
+          console.error(e);
+          // TODO toast error
+        }
       } else {
         entitiesDispatch({
           type: 'UPDATE_NODES',

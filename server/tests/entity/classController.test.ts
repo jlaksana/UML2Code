@@ -4,6 +4,7 @@ import {
   createClass,
   deleteClass,
   editClass,
+  updatePosition,
 } from '../../src/controllers/classController';
 import { createDiagram } from '../../src/controllers/diagramController';
 import { Entity, EntityModel } from '../../src/models/entity.model';
@@ -242,6 +243,38 @@ describe('deleteClass', () => {
   it('should not be able to delete a class with an invalid id', async () => {
     expect(deleteClass('invalid')).rejects.toThrow(
       'Could not delete a class with the given id: invalid'
+    );
+  });
+});
+
+describe('updatePosition', () => {
+  let klass: Entity;
+  beforeEach(async () => {
+    // test data
+    const data = {
+      name: 'Square',
+      isAbstract: false,
+    };
+
+    klass = await createClass(data, diagramId);
+  });
+
+  afterEach(async () => {
+    await EntityModel.deleteMany({});
+  });
+
+  it('should be able to update the position of a class', async () => {
+    const position = { x: 100, y: 200 };
+    await updatePosition(klass.id, position);
+    const updatedClass = await EntityModel.findById(klass.id);
+    expect(updatedClass).not.toBeNull();
+    expect(updatedClass?.position).toEqual(position);
+  });
+
+  it('should not be able to update the position of a class with an invalid id', async () => {
+    const position = { x: 100, y: 200 };
+    expect(updatePosition('invalid', position)).rejects.toThrow(
+      'Could not update an entity position with the given id: invalid'
     );
   });
 });

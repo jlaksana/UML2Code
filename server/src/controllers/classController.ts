@@ -74,4 +74,22 @@ const deleteClass = async (classId: string) => {
   }
 };
 
-export { createClass, deleteClass, editClass };
+const updatePosition = async (
+  entityId: string,
+  position: { x: number; y: number }
+) => {
+  try {
+    const entity = await EntityModel.findByIdAndUpdate(entityId, {
+      position,
+    });
+    if (!entity) {
+      throw new Error();
+    }
+  } catch (e) {
+    throw new Error(
+      `Could not update an entity position with the given id: ${entityId}`
+    );
+  }
+};
+
+export { createClass, deleteClass, editClass, updatePosition };
