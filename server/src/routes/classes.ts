@@ -52,7 +52,7 @@ router.put('/:id', async (req, res) => {
 
   try {
     const updatedClass = await editClass(id, diagramId, req.body);
-    res.status(200).json(updatedClass);
+    res.status(204).json(updatedClass);
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));
@@ -71,7 +71,7 @@ router.delete('/:id', async (req, res) => {
 
   try {
     await deleteClass(id);
-    res.status(200).json({ message: 'OK' });
+    res.status(204).json({ message: 'OK' });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));

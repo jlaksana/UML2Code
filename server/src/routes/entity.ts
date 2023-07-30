@@ -9,7 +9,7 @@ router.put('/:id/position', async (req, res) => {
   const position = req.body;
   try {
     await updatePosition(id, position);
-    res.status(200).json({ message: 'Successfully updated position' });
+    res.status(204).json({ message: 'Successfully updated position' });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));

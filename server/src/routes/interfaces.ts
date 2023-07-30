@@ -54,7 +54,7 @@ router.put('/:id', async (req, res) => {
 
   try {
     const updatedInterface = await editInterface(id, diagramId, req.body);
-    res.status(200).json(updatedInterface);
+    res.status(204).json(updatedInterface);
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));
@@ -73,7 +73,7 @@ router.delete('/:id', async (req, res) => {
 
   try {
     await deleteInterface(id);
-    res.status(200).json({ message: 'Interface deleted' });
+    res.status(204).json({ message: 'Interface deleted' });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));
