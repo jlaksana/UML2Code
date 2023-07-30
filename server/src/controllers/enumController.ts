@@ -11,7 +11,7 @@ const enumData = z.object({
     .min(1),
 });
 
-const createEnum = async (data: unknown, diagramId: string) => {
+const validateEnum = async (data: unknown, diagramId: string) => {
   const parseResult = enumData.safeParse(data);
   if (!parseResult.success) {
     throw new Error(
@@ -30,9 +30,13 @@ const createEnum = async (data: unknown, diagramId: string) => {
       );
     }
   }
+  return parseResult.data;
+};
 
+const createEnum = async (data: unknown, diagramId: string) => {
+  const validatedEnum = await validateEnum(data, diagramId);
   const name = await validateDuplicateEntity(
-    parseResult.data.name,
+    validatedEnum.name,
     diagramId,
     null
   );
@@ -43,7 +47,7 @@ const createEnum = async (data: unknown, diagramId: string) => {
       type: 'enum',
       data: {
         name,
-        constants: parseResult.data.values.map((value) => ({
+        constants: validatedEnum.values.map((value) => ({
           id: value.id,
           name: removeWhitespace(value.name).toUpperCase(),
           type: 'string',
@@ -59,5 +63,45 @@ const createEnum = async (data: unknown, diagramId: string) => {
   }
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { createEnum };
+const editEnum = async (enumId: string, diagramId: string, data: unknown) => {
+  const validatedEnum = await validateEnum(data, diagramId);
+
+  try {
+    await validateDuplicateEntity(validatedEnum.name, diagramId, enumId);
+    const updatedEnum = await EntityModel.findByIdAndUpdate(
+      enumId,
+      {
+        data: {
+          name: validatedEnum.name,
+          constants: validatedEnum.values.map((value) => ({
+            id: value.id,
+            name: removeWhitespace(value.name).toUpperCase(),
+            type: 'string',
+          })),
+        },
+      },
+      { new: true }
+    );
+    if (!updatedEnum) {
+      throw new Error();
+    }
+    return reformatEnum(updatedEnum);
+  } catch (e) {
+    console.log(e);
+    throw new Error(`Could not update an enum with the given id: ${enumId}`);
+  }
+};
+
+const deleteEnum = async (enumId: string) => {
+  try {
+    const deletedEnum = await EntityModel.findByIdAndDelete(enumId);
+    if (!deletedEnum) {
+      throw new Error();
+    }
+  } catch (e) {
+    console.log(e);
+    throw new Error(`Could not delete an enum with the given id: ${enumId}`);
+  }
+};
+
+export { createEnum, deleteEnum, editEnum };

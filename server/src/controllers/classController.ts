@@ -44,9 +44,9 @@ const createClass = async (data: unknown, diagramId: string) => {
 
 const editClass = async (classId: string, diagramId: string, data: unknown) => {
   const validatedData = await validateEntity(data, diagramId);
-  await validateDuplicateEntity(validatedData.name, diagramId, classId);
 
   try {
+    await validateDuplicateEntity(validatedData.name, diagramId, classId);
     const klass = await EntityModel.findByIdAndUpdate(
       classId,
       {

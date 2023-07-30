@@ -116,7 +116,9 @@ const reformatEnum = (entity: Entity) => {
     ),
   };
 
-  return pick(reformattedEnum, ['id', 'type', 'position', 'data']) as Entity;
+  return pick(reformattedEnum, ['id', 'type', 'position', 'data']) as Entity & {
+    data: { values: { id: string; name: string }[] };
+  };
 };
 
 export {

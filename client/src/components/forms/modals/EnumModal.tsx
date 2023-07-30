@@ -55,7 +55,25 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
     };
     if (id) {
       // editing
-      close();
+      try {
+        const res = await axios.put(
+          `/api/enum/${id}?diagramId=${diagramId}`,
+          enumer,
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            timeout: 5000,
+          }
+        );
+        const updatedEnum = (await res.data) as Entity<Enum>;
+        entitiesDispatch({ type: 'UPDATE_ENUM', payload: updatedEnum });
+        close();
+      } catch (err: any) {
+        setError(true);
+        setErrorMessage(err.response.data.message);
+      }
     } else {
       // creating
       try {

@@ -46,9 +46,9 @@ const editInterface = async (
   data: unknown
 ) => {
   const validatedData = await validateEntity(data, diagramId);
-  await validateDuplicateEntity(validatedData.name, diagramId, interfaceId);
 
   try {
+    await validateDuplicateEntity(validatedData.name, diagramId, interfaceId);
     const updatedInterface = await EntityModel.findByIdAndUpdate(
       interfaceId,
       {

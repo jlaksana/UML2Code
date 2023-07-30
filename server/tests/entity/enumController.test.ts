@@ -1,8 +1,12 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
 import { createDiagram } from '../../src/controllers/diagramController';
-import { createEnum } from '../../src/controllers/enumController';
-import { EntityModel } from '../../src/models/entity.model';
+import {
+  createEnum,
+  deleteEnum,
+  editEnum,
+} from '../../src/controllers/enumController';
+import { Entity, EntityModel } from '../../src/models/entity.model';
 
 let mongoServer: MongoMemoryServer;
 let diagramId: string;
@@ -104,6 +108,101 @@ describe('createEnum', () => {
     };
     await expect(createEnum(data, diagramId)).rejects.toThrow(
       'Invalid - Ensure all fields are present and valid. Must have at least one value'
+    );
+  });
+});
+
+describe('editEnum', () => {
+  let enumer: Entity;
+  beforeEach(async () => {
+    const data = {
+      name: 'Color enum',
+      values: [
+        { id: 1, name: 'RED' },
+        { id: 2, name: 'BLUE' },
+      ],
+    };
+    enumer = await createEnum(data, diagramId);
+  });
+
+  afterEach(async () => {
+    await EntityModel.deleteMany({});
+  });
+
+  it('should be able to edit an enum', async () => {
+    const data = {
+      name: 'Colors',
+      values: [
+        { id: 1, name: 'RED' },
+        { id: 2, name: 'BLUE' },
+        { id: 3, name: 'GREEN' },
+      ],
+    };
+    const updatedEnum = await editEnum(enumer.id, diagramId, data);
+    expect(updatedEnum).toBeDefined();
+    expect(updatedEnum.id).toEqual(enumer.id);
+    expect(updatedEnum.type).toBe('enum');
+    expect(updatedEnum.data.name).toBe('Colors');
+    expect(updatedEnum.data.constants).toBeUndefined();
+    expect(updatedEnum.data.methods).toBeUndefined();
+    expect(updatedEnum.data.values).toHaveLength(3);
+  });
+
+  it('should throw an error if the diagram id is invalid', async () => {
+    const data = {
+      name: 'Colors',
+      values: [
+        { id: 1, name: 'RED' },
+        { id: 2, name: 'BLUE' },
+        { id: 3, name: 'GREEN' },
+      ],
+    };
+    await expect(editEnum(enumer.id, 'invalidId', data)).rejects.toThrow(
+      'Could not find a diagram with the given id: invalidId'
+    );
+  });
+
+  it('should throw an error if the enum id is invalid', async () => {
+    const data = {
+      name: 'Colors',
+      values: [
+        { id: 1, name: 'RED' },
+        { id: 2, name: 'BLUE' },
+        { id: 3, name: 'GREEN' },
+      ],
+    };
+    await expect(editEnum('invalidId', diagramId, data)).rejects.toThrow(
+      'Could not update an enum with the given id: invalidId'
+    );
+  });
+});
+
+describe('deleteEnum', () => {
+  let enumer: Entity;
+  beforeEach(async () => {
+    const data = {
+      name: 'Color enum',
+      values: [
+        { id: 1, name: 'RED' },
+        { id: 2, name: 'BLUE' },
+      ],
+    };
+    enumer = await createEnum(data, diagramId);
+  });
+
+  afterEach(async () => {
+    await EntityModel.deleteMany({});
+  });
+
+  it('should be able to delete an enum', async () => {
+    await deleteEnum(enumer.id);
+    const entity = await EntityModel.findById(enumer.id);
+    expect(entity).toBeNull();
+  });
+
+  it('should throw an error if the enum id is invalid', async () => {
+    await expect(deleteEnum('invalidId')).rejects.toThrow(
+      'Could not delete an enum with the given id: invalidId'
     );
   });
 });
