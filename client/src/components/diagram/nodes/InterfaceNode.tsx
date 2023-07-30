@@ -1,4 +1,5 @@
 import { Button } from '@mui/material';
+import axios from 'axios';
 import { useState } from 'react';
 import { Handle, NodeProps, NodeToolbar, Position } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
@@ -10,8 +11,14 @@ function InterfaceNode({ id, data }: NodeProps<Interface>) {
   const [editOpen, setEditOpen] = useState(false);
   const entitiesDispatch = useEntitiesDispatch();
 
-  const handleDelete = () => {
-    entitiesDispatch({ type: 'DELETE_INTERFACE', payload: null, id });
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/api/interface/${id}`);
+      entitiesDispatch({ type: 'DELETE_INTERFACE', payload: null, id });
+    } catch (e) {
+      // TODO error toast
+      console.error(e);
+    }
   };
 
   return (

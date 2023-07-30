@@ -12,8 +12,13 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
   const entitiesDispatch = useEntitiesDispatch();
 
   const handleDelete = async () => {
-    await axios.delete(`/api/class/${id}`);
-    entitiesDispatch({ type: 'DELETE_KLASS', payload: null, id });
+    try {
+      await axios.delete(`/api/class/${id}`);
+      entitiesDispatch({ type: 'DELETE_KLASS', payload: null, id });
+    } catch (e) {
+      // TODO error toast
+      console.error(e);
+    }
   };
 
   return (

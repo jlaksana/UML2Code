@@ -40,5 +40,47 @@ const createInterface = async (data: unknown, diagramId: string) => {
   }
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { createInterface };
+const editInterface = async (
+  interfaceId: string,
+  diagramId: string,
+  data: unknown
+) => {
+  const validatedData = await validateEntity(data, diagramId);
+  await validateDuplicateEntity(validatedData.name, diagramId, interfaceId);
+
+  try {
+    const updatedInterface = await EntityModel.findByIdAndUpdate(
+      interfaceId,
+      {
+        data: validatedData,
+      },
+      { new: true }
+    );
+    if (!updatedInterface) {
+      throw new Error();
+    }
+    return reformatInterface(updatedInterface);
+  } catch (e) {
+    console.log(e);
+    throw new Error(
+      `Could not update an interface with the given id: ${interfaceId}`
+    );
+  }
+};
+
+const deleteInterface = async (interfaceId: string) => {
+  try {
+    const deletedInterface = await EntityModel.findByIdAndDelete(interfaceId);
+    if (!deletedInterface) {
+      throw new Error();
+    }
+    return reformatInterface(deletedInterface);
+  } catch (e) {
+    console.log(e);
+    throw new Error(
+      `Could not delete an interface with the given id: ${interfaceId}`
+    );
+  }
+};
+
+export { createInterface, deleteInterface, editInterface };

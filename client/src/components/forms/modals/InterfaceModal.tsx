@@ -71,17 +71,22 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
     };
     if (id) {
       // edit
-      // try {
-      //   const res = await axios.put(`/api/interfaces/${id}`, interfaceData);
-      //   const updatedInterface = res.data;
-      //   entitiesDispatch({
-      //     type: 'UPDATE_INTERFACE',
-      //     payload: { diagramId, interfaceId: id, interfaceData: updatedInterface },
-      //   });
-      //   close();
-      // } catch (err) {
-      //   console.log(err);
-      // }
+      try {
+        const res = await axios.put(
+          `/api/interface/${id}?diagramId=${diagramId}`,
+          interfaceData
+        );
+        const updatedInterface = res.data as Entity<Interface>;
+        entitiesDispatch({
+          type: 'UPDATE_INTERFACE',
+          payload: updatedInterface,
+          id,
+        });
+        close();
+      } catch (err: any) {
+        setError(true);
+        setErrorMessage(err.response.data.message);
+      }
     } else {
       // create
       try {

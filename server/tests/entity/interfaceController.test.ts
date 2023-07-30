@@ -1,7 +1,11 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
 import { createDiagram } from '../../src/controllers/diagramController';
-import { createInterface } from '../../src/controllers/interfaceController';
+import {
+  createInterface,
+  deleteInterface,
+  editInterface,
+} from '../../src/controllers/interfaceController';
 import { EntityModel } from '../../src/models/entity.model';
 
 let mongoServer: MongoMemoryServer;
@@ -134,6 +138,137 @@ describe('createInterface', () => {
     await createInterface(data, diagramId);
     await expect(createInterface(data, diagramId)).rejects.toThrow(
       'An entity with the name "Shape" already exists in the diagram'
+    );
+  });
+});
+
+describe('editInterface', () => {
+  let interfaceId: string;
+
+  beforeEach(async () => {
+    const data = {
+      name: 'Shape',
+      constants: [
+        { id: 1, name: 'PI', type: 'double' },
+        { id: 2, name: 'E', type: 'double' },
+      ],
+      methods: [
+        {
+          id: 1,
+          name: 'getXPos',
+          returnType: 'int',
+          visibility: '+',
+          isStatic: false,
+        },
+        {
+          id: 2,
+          name: 'getYPos',
+          returnType: 'int',
+          visibility: '+',
+          isStatic: false,
+        },
+      ],
+    };
+
+    const createdInterface = await createInterface(data, diagramId);
+    interfaceId = createdInterface.id;
+  });
+
+  afterEach(async () => {
+    await EntityModel.deleteMany({});
+  });
+
+  it('should be able to edit an interface', async () => {
+    const data = {
+      name: 'Shape',
+      constants: [
+        { id: 1, name: 'PI', type: 'double' },
+        { id: 2, name: 'E', type: 'double' },
+        { id: 3, name: 'G', type: 'double' },
+      ],
+      methods: [
+        {
+          id: 1,
+          name: 'getXPos',
+          returnType: 'int',
+          visibility: '+',
+          isStatic: false,
+        },
+        {
+          id: 2,
+          name: 'getYPos',
+          returnType: 'int',
+          visibility: '+',
+          isStatic: false,
+        },
+        {
+          id: 3,
+          name: 'setXPos',
+          returnType: 'void',
+          visibility: '+',
+          isStatic: false,
+        },
+      ],
+    };
+
+    const editedInterface = await editInterface(interfaceId, diagramId, data);
+    expect(editedInterface).not.toBeNull();
+    expect(editedInterface.data.name).toBe('Shape');
+    expect(editedInterface.data.constants).toEqual(data.constants);
+    expect(editedInterface.data.methods).toEqual(data.methods);
+    expect(editedInterface.data.attributes).toBeUndefined();
+  });
+
+  it('should not edit an interface with an empty name', async () => {
+    const data = {
+      name: '',
+      constants: [
+        { id: 1, name: 'PI', type: 'double' },
+        { id: 2, name: 'E', type: 'double' },
+      ],
+    };
+
+    await expect(editInterface(interfaceId, diagramId, data)).rejects.toThrow(
+      'Invalid - Ensure all fields are present and valid'
+    );
+  });
+
+  it('should not edit an interface without a valid diagram id', async () => {
+    const data = {
+      name: 'Shape',
+    };
+
+    await expect(editInterface(interfaceId, '999', data)).rejects.toThrow(
+      'Could not find a diagram with the given id: 999'
+    );
+  });
+});
+
+describe('deleteInterface', () => {
+  let interfaceId: string;
+
+  beforeEach(async () => {
+    const data = {
+      name: 'Shape',
+    };
+
+    const createdInterface = await createInterface(data, diagramId);
+    interfaceId = createdInterface.id;
+  });
+
+  afterEach(async () => {
+    await EntityModel.deleteMany({});
+  });
+
+  it('should be able to delete an interface', async () => {
+    await deleteInterface(interfaceId);
+    const deletedInterface = await EntityModel.findById(interfaceId);
+    expect(deletedInterface).toBeNull();
+  });
+
+  it('should not delete an interface with an invalid id', async () => {
+    await expect(deleteInterface('invalidId')).rejects.toThrow(
+      'Could not delete an interface with the given id: invalidId'
     );
   });
 });
