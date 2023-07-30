@@ -51,7 +51,7 @@ export default function entitiesReducer(
     case 'UPDATE_ENUM':
       if (!action.payload) return entities;
       return entities.map((entity) =>
-        entity.id === action.id ? action.payload : entity
+        entity.id === action.payload?.id ? action.payload : entity
       ) as Entity<NodeData>[];
     // node actions
     case 'SET_NODES':

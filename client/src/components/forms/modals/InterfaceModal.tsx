@@ -80,7 +80,6 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
         entitiesDispatch({
           type: 'UPDATE_INTERFACE',
           payload: updatedInterface,
-          id,
         });
         close();
       } catch (err: any) {

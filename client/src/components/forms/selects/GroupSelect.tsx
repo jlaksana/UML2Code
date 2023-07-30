@@ -1,5 +1,5 @@
 import { ListSubheader, MenuItem, TextField } from '@mui/material';
-import { Enum, Interface, Klass } from '../../../types';
+import { useEntities } from '../../../context/EntitiesContext';
 import { types } from './TypeSelect';
 
 interface GroupSelectProps {
@@ -23,26 +23,18 @@ function GroupSelect({
   includeInterfaces = false,
   includeEnums = false,
 }: GroupSelectProps) {
+  const entities = useEntities();
+
   // TODO: get classes, interfaces, enums from context
-  const classes: Klass[] = [];
-  const interfaces: Interface[] = [
-    {
-      name: 'interface',
-    },
-    {
-      name: 'interface2',
-    },
-  ];
-  const enums: Enum[] = [
-    {
-      name: 'enum',
-      values: [],
-    },
-    {
-      name: 'enum2',
-      values: [],
-    },
-  ];
+  const classes: string[] = entities
+    .filter((e) => e.type === 'class')
+    .map((e) => e.data.name);
+  const interfaces: string[] = entities
+    .filter((e) => e.type === 'interface')
+    .map((e) => e.data.name);
+  const enums: string[] = entities
+    .filter((e) => e.type === 'enum')
+    .map((e) => e.data.name);
 
   return (
     <TextField
@@ -75,8 +67,8 @@ function GroupSelect({
       )}
       {includeClasses &&
         classes.map((opt) => (
-          <MenuItem key={opt.name} value={opt.name}>
-            {opt.name}
+          <MenuItem key={opt} value={opt}>
+            {opt}
           </MenuItem>
         ))}
       {includeInterfaces && (
@@ -87,8 +79,8 @@ function GroupSelect({
       )}
       {includeInterfaces &&
         interfaces.map((opt) => (
-          <MenuItem key={opt.name} value={opt.name}>
-            {opt.name}
+          <MenuItem key={opt} value={opt}>
+            {opt}
           </MenuItem>
         ))}
       {includeEnums && (
@@ -99,8 +91,8 @@ function GroupSelect({
       )}
       {includeEnums &&
         enums.map((opt) => (
-          <MenuItem key={opt.name} value={opt.name}>
-            {opt.name}
+          <MenuItem key={opt} value={opt}>
+            {opt}
           </MenuItem>
         ))}
     </TextField>
