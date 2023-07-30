@@ -25,7 +25,6 @@ function GroupSelect({
 }: GroupSelectProps) {
   const entities = useEntities();
 
-  // TODO: get classes, interfaces, enums from context
   const classes: string[] = entities
     .filter((e) => e.type === 'class')
     .map((e) => e.data.name);

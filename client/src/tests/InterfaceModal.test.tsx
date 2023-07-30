@@ -9,6 +9,16 @@ describe('InterfaceModal', () => {
     vi.mock('../context/EntitiesContext', () => {
       return {
         useEntitiesDispatch: () => vi.fn(),
+        useEntities: () => {
+          return [
+            { type: 'class', data: { name: 'Class 1' } },
+            { type: 'class', data: { name: 'Class 2' } },
+            { type: 'interface', data: { name: 'Interface 1' } },
+            { type: 'interface', data: { name: 'Interface 2' } },
+            { type: 'enum', data: { name: 'Enum 1' } },
+            { type: 'enum', data: { name: 'Enum 2' } },
+          ];
+        },
       };
     });
   });
