@@ -54,7 +54,7 @@ router.put('/:id', async (req, res) => {
 
   try {
     const updatedInterface = await editInterface(id, diagramId, req.body);
-    res.status(204).json(updatedInterface);
+    res.status(200).json(updatedInterface);
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));
