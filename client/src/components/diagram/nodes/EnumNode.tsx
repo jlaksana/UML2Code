@@ -4,19 +4,22 @@ import { useState } from 'react';
 import { Handle, NodeProps, NodeToolbar, Position } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import { Enum, EnumValue } from '../../../types';
+import { AlertType } from '../../alert/AlertContext';
+import useAlert from '../../alert/useAlert';
 import EnumModal from '../../forms/modals/EnumModal';
 
 function EnumNode({ id, data }: NodeProps<Enum>) {
   const [editOpen, setEditOpen] = useState(false);
   const entitiesDispatch = useEntitiesDispatch();
 
+  const { setAlert } = useAlert();
+
   const handleDelete = async () => {
     try {
       await axios.delete(`/api/enum/${id}`);
       entitiesDispatch({ type: 'DELETE_ENUM', payload: null, id });
     } catch (e) {
-      // TODO error toast
-      console.error(e);
+      setAlert('Could not delete enum. Try again', AlertType.ERROR);
     }
   };
 

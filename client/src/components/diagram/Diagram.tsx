@@ -19,6 +19,8 @@ import {
 } from '../../context/EntitiesContext';
 import '../../styles/Editor.css';
 import { Entity, NodeData } from '../../types';
+import { AlertType } from '../alert/AlertContext';
+import useAlert from '../alert/useAlert';
 import ClassNode from './nodes/ClassNode';
 import EnumNode from './nodes/EnumNode';
 import InterfaceNode from './nodes/InterfaceNode';
@@ -55,6 +57,7 @@ function Diagram() {
   const [edges, setEdges] = useState(initialEdges);
 
   const { diagramId } = useParams();
+  const { setAlert } = useAlert();
 
   useEffect(() => {
     const fetchDiagramContents = async () => {
@@ -63,13 +66,15 @@ function Diagram() {
         entitiesDispatch({ type: 'SET_NODES', payload: res.data.entities });
         // TODO set edges here
       } catch (e) {
-        console.error(e);
-        // TODO toast error
+        setAlert(
+          'Could not fetch diagram contents. Try again',
+          AlertType.ERROR
+        );
       }
     };
 
     fetchDiagramContents();
-  }, [diagramId, entitiesDispatch]);
+  }, [diagramId, entitiesDispatch, setAlert]);
 
   const getEntityPosition = (id: string, ents: Entity<NodeData>[]) => {
     const entity = ents.find((e) => e.id === id);
@@ -92,8 +97,7 @@ function Diagram() {
           await axios.put(`/api/entity/${updatedId}/position`, newPos);
           entitiesDispatch({ type: 'END_UPDATE_NODES', payload: newEntities });
         } catch (e) {
-          console.error(e);
-          // TODO toast error
+          setAlert('Server error. Please try again', AlertType.ERROR);
         }
       } else {
         entitiesDispatch({
@@ -102,7 +106,7 @@ function Diagram() {
         });
       }
     },
-    [entities, entitiesDispatch]
+    [entities, entitiesDispatch, setAlert]
   );
 
   const onEdgesChange = useCallback(

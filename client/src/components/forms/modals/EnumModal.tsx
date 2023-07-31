@@ -7,6 +7,8 @@ import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/FormModals.css';
 import { Entity, Enum, EnumValue } from '../../../types';
+import { AlertType } from '../../alert/AlertContext';
+import useAlert from '../../alert/useAlert';
 import ValuesInput from '../inputs/ValuesInput';
 
 type EnumModalProps = {
@@ -31,6 +33,7 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
   const [errorMessage, setErrorMessage] = useState('No fields can be empty');
 
   const entitiesDispatch = useEntitiesDispatch();
+  const { setAlert } = useAlert();
 
   const { diagramId } = useParams();
 
@@ -69,6 +72,7 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
         );
         const updatedEnum = (await res.data) as Entity<Enum>;
         entitiesDispatch({ type: 'UPDATE_ENUM', payload: updatedEnum });
+        setAlert('Enum updated successfully', AlertType.SUCCESS);
         close();
       } catch (err: any) {
         setError(true);
@@ -90,6 +94,7 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
         );
         const newEnum = (await res.data) as Entity<Enum>;
         entitiesDispatch({ type: 'ADD_ENUM', payload: newEnum });
+        setAlert('Enum created successfully', AlertType.SUCCESS);
         close();
       } catch (err: any) {
         setError(true);

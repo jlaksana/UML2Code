@@ -16,6 +16,8 @@ import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/FormModals.css';
 import { Attribute, Constant, Entity, Klass, Method } from '../../../types';
+import { AlertType } from '../../alert/AlertContext';
+import useAlert from '../../alert/useAlert';
 import AttributesInput from '../inputs/AttributesInput';
 import ConstantsInput from '../inputs/ConstantsInput';
 import MethodsInput from '../inputs/MethodsInput';
@@ -49,6 +51,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
   const [errorMessage, setErrorMessage] = useState('No fields can be empty');
 
   const entitiesDispatch = useEntitiesDispatch();
+  const { setAlert } = useAlert();
 
   const { diagramId } = useParams();
 
@@ -107,6 +110,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
         );
         const updatedKlass = res.data as Entity<Klass>;
         entitiesDispatch({ type: 'UPDATE_KLASS', payload: updatedKlass });
+        setAlert('Class updated successfully', AlertType.SUCCESS);
         close();
       } catch (err: any) {
         setError(true);
@@ -128,6 +132,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
         );
         const newKlass = res.data as Entity<Klass>;
         entitiesDispatch({ type: 'ADD_KLASS', payload: newKlass });
+        setAlert('Class created successfully', AlertType.SUCCESS);
         close();
       } catch (err: any) {
         setError(true);

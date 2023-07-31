@@ -5,19 +5,22 @@ import { Handle, NodeProps, NodeToolbar, Position } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/Node.css';
 import { Constant, Interface, Method } from '../../../types';
+import { AlertType } from '../../alert/AlertContext';
+import useAlert from '../../alert/useAlert';
 import InterfaceModal from '../../forms/modals/InterfaceModal';
 
 function InterfaceNode({ id, data }: NodeProps<Interface>) {
   const [editOpen, setEditOpen] = useState(false);
   const entitiesDispatch = useEntitiesDispatch();
 
+  const { setAlert } = useAlert();
+
   const handleDelete = async () => {
     try {
       await axios.delete(`/api/interface/${id}`);
       entitiesDispatch({ type: 'DELETE_INTERFACE', payload: null, id });
     } catch (e) {
-      // TODO error toast
-      console.error(e);
+      setAlert('Could not delete interface. Try again', AlertType.ERROR);
     }
   };
 

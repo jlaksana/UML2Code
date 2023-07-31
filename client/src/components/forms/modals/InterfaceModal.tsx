@@ -7,6 +7,8 @@ import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/FormModals.css';
 import { Constant, Entity, Interface, Method } from '../../../types';
+import { AlertType } from '../../alert/AlertContext';
+import useAlert from '../../alert/useAlert';
 import ConstantsInput from '../inputs/ConstantsInput';
 import MethodsInput from '../inputs/MethodsInput';
 
@@ -34,6 +36,7 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
   const [errorMessage, setErrorMessage] = useState('No fields can be empty');
 
   const entitiesDispatch = useEntitiesDispatch();
+  const { setAlert } = useAlert();
 
   const { diagramId } = useParams();
 
@@ -81,6 +84,7 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
           type: 'UPDATE_INTERFACE',
           payload: updatedInterface,
         });
+        setAlert('Interface updated successfully', AlertType.SUCCESS);
         close();
       } catch (err: any) {
         setError(true);
@@ -105,6 +109,7 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
           type: 'ADD_INTERFACE',
           payload: newInterface,
         });
+        setAlert('Interface created successfully', AlertType.SUCCESS);
         close();
       } catch (err: any) {
         setError(true);
