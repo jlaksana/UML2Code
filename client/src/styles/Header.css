@@ -28,4 +28,8 @@
   flex-direction: row;
   align-items: center;
   gap: 1.5em;
+  width: 220px;
+}
+.left {
+  width: 220px;
 }
