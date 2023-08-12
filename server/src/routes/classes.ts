@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
     res.status(201).json(newClass);
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
-    console.log(getErrorMessage(e));
+    console.log(e);
   }
 });
 
@@ -55,7 +55,7 @@ router.put('/:id', async (req, res) => {
     res.status(200).json(updatedClass);
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
-    console.log(getErrorMessage(e));
+    console.log(e);
   }
 });
 
@@ -74,7 +74,7 @@ router.delete('/:id', async (req, res) => {
     res.status(204).json({ message: 'OK' });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
-    console.log(getErrorMessage(e));
+    console.log(e);
   }
 });
 

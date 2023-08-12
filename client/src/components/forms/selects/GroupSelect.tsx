@@ -1,8 +1,9 @@
-import { ListSubheader, MenuItem, TextField } from '@mui/material';
+/* eslint-disable react/jsx-props-no-spreading */
+import { Autocomplete, TextField } from '@mui/material';
 import { useEntities } from '../../../context/EntitiesContext';
 import { types } from './TypeSelect';
 
-interface GroupSelectProps {
+type GroupSelectProps = {
   option: string;
   setOption: (option: string) => void;
   label: string;
@@ -11,7 +12,12 @@ interface GroupSelectProps {
   includeClasses?: boolean;
   includeInterfaces?: boolean;
   includeEnums?: boolean;
-}
+};
+
+type GroupOption = {
+  type: string | undefined;
+  name: string;
+};
 
 function GroupSelect({
   option,
@@ -25,76 +31,48 @@ function GroupSelect({
 }: GroupSelectProps) {
   const entities = useEntities();
 
-  const classes: string[] = entities
-    .filter((e) => e.type === 'class')
-    .map((e) => e.data.name);
-  const interfaces: string[] = entities
-    .filter((e) => e.type === 'interface')
-    .map((e) => e.data.name);
-  const enums: string[] = entities
-    .filter((e) => e.type === 'enum')
-    .map((e) => e.data.name);
+  const classes: GroupOption[] = includeClasses
+    ? entities
+        .filter((e) => e.type === 'class')
+        .map((e) => ({ type: e.type, name: e.data.name }))
+    : [];
+  const interfaces: GroupOption[] = includeInterfaces
+    ? entities
+        .filter((e) => e.type === 'interface')
+        .map((e) => ({ type: e.type, name: e.data.name }))
+    : [];
+  const enums: GroupOption[] = includeEnums
+    ? entities
+        .filter((e) => e.type === 'enum')
+        .map((e) => ({ type: e.type, name: e.data.name }))
+    : [];
+  const prims = includePrimitives
+    ? types.map((t) => ({ type: 'primitive', name: t }))
+    : [];
+
+  const options = [...prims, ...classes, ...interfaces, ...enums];
 
   return (
-    <TextField
+    <Autocomplete
       id={`${label}-select`}
-      variant="standard"
-      select
-      label={label}
-      value={option}
-      onChange={(e) => {
-        setOption(e.target.value);
+      freeSolo
+      options={options}
+      value={{ name: option, type: undefined }}
+      onInputChange={(e, value) => {
+        setOption(value);
       }}
-      sx={{ width }}
-      required
-      SelectProps={{ MenuProps: { PaperProps: { sx: { maxHeight: 400 } } } }}
-    >
-      {includePrimitives && <ListSubheader>Primitives</ListSubheader>}
-      {includePrimitives &&
-        types.map((opt) => {
-          return (
-            <MenuItem key={opt as string} value={opt as string}>
-              {opt}
-            </MenuItem>
-          );
-        })}
-      {includeClasses && (
-        <div>
-          <hr />
-          <ListSubheader>Classes</ListSubheader>
-        </div>
+      getOptionLabel={(opt) => (opt as GroupOption).name}
+      groupBy={(opt) => opt.type || ''}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label={label}
+          variant="standard"
+          required
+          sx={{ width }}
+        />
       )}
-      {includeClasses &&
-        classes.map((opt) => (
-          <MenuItem key={opt} value={opt}>
-            {opt}
-          </MenuItem>
-        ))}
-      {includeInterfaces && (
-        <div>
-          <hr />
-          <ListSubheader>Interfaces</ListSubheader>
-        </div>
-      )}
-      {includeInterfaces &&
-        interfaces.map((opt) => (
-          <MenuItem key={opt} value={opt}>
-            {opt}
-          </MenuItem>
-        ))}
-      {includeEnums && (
-        <div>
-          <hr />
-          <ListSubheader>Enums</ListSubheader>
-        </div>
-      )}
-      {includeEnums &&
-        enums.map((opt) => (
-          <MenuItem key={opt} value={opt}>
-            {opt}
-          </MenuItem>
-        ))}
-    </TextField>
+    />
   );
 }
 

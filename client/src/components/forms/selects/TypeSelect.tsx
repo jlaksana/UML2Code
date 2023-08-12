@@ -1,23 +1,41 @@
+/* eslint-disable react/jsx-props-no-spreading */
+import { Autocomplete, TextField } from '@mui/material';
 import { DataType } from '../../../types';
-import GenericSelect, { GenericSelectProps } from './GenericSelect';
 
 export const types: DataType[] = [
   'int',
   'float',
+  'long',
   'double',
   'char',
   'boolean',
   'string',
 ];
 
-function TypeSelect({ option, setOption }: GenericSelectProps<DataType>) {
+type TypeSelectProps = {
+  option: DataType | string;
+  setOption: (option: DataType | string) => void;
+};
+
+function TypeSelect({ option, setOption }: TypeSelectProps) {
   return (
-    <GenericSelect
-      option={option}
-      setOption={setOption}
+    <Autocomplete
+      id="type-select"
+      freeSolo
       options={types}
-      label="Type"
-      width={90}
+      value={option}
+      onInputChange={(e, value) => {
+        setOption(value as DataType);
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Type"
+          variant="standard"
+          required
+          sx={{ width: 90 }}
+        />
+      )}
     />
   );
 }

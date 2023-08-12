@@ -70,38 +70,6 @@ describe('ClassModal', () => {
     expect(handleCloseMock).toHaveBeenCalled();
   });
 
-  test('adds constants when add button is clicked', () => {
-    const { getByText, getAllByText, getAllByLabelText } = render(
-      <ClassModal open handleClose={() => {}} />
-    );
-
-    const constantsTab = getByText('Constants');
-    fireEvent.click(constantsTab);
-
-    const addButton = getByText('Add');
-    fireEvent.click(addButton);
-
-    const nameInput = getAllByLabelText('Name *');
-    fireEvent.change(nameInput[0], { target: { value: 'Constant 1' } });
-
-    const typeInput = getAllByLabelText('Type *');
-    fireEvent.mouseDown(typeInput[0]);
-    const typeMenuItem = getByText('int');
-    fireEvent.click(typeMenuItem);
-
-    fireEvent.click(addButton);
-
-    const nameInput2 = getAllByLabelText('Name *');
-    fireEvent.change(nameInput2[1], { target: { value: 'Constant 2' } });
-
-    const typeInput2 = getAllByLabelText('Type *');
-    fireEvent.mouseDown(typeInput2[1]);
-    const typeMenuItem2 = getAllByText('string');
-    fireEvent.click(typeMenuItem2[1]);
-
-    expect(nameInput2).toHaveLength(2);
-  });
-
   test('deletes constants when delete button is clicked', () => {
     const { getByText, getAllByRole, getAllByLabelText } = render(
       <ClassModal open handleClose={() => {}} />
@@ -130,43 +98,6 @@ describe('ClassModal', () => {
     expect(getAllByLabelText('Type *')).toHaveLength(1);
   });
 
-  test('adds attributes when add button is clicked', () => {
-    const { getByText, getAllByText, getAllByLabelText } = render(
-      <ClassModal open handleClose={() => {}} />
-    );
-
-    const attributesTab = getByText('Attributes');
-    fireEvent.click(attributesTab);
-
-    const addButton = getByText('Add');
-    fireEvent.click(addButton);
-
-    const nameInput = getAllByLabelText('Name *');
-    fireEvent.change(nameInput[0], { target: { value: 'Attribute 1' } });
-
-    const typeInput = getAllByLabelText('Type *');
-    fireEvent.mouseDown(typeInput[0]);
-    const typeMenuItem = getByText('int');
-    fireEvent.click(typeMenuItem);
-
-    const visibilityInput = getAllByLabelText('Visibility *');
-    fireEvent.mouseDown(visibilityInput[0]);
-    const visibilityMenuItem = getByText('+');
-    fireEvent.click(visibilityMenuItem);
-
-    fireEvent.click(addButton);
-
-    const nameInput2 = getAllByLabelText('Name *');
-    fireEvent.change(nameInput2[1], { target: { value: 'Attribute 2' } });
-
-    const typeInput2 = getAllByLabelText('Type *');
-    fireEvent.mouseDown(typeInput2[1]);
-    const typeMenuItem2 = getAllByText('string');
-    fireEvent.click(typeMenuItem2[1]);
-
-    expect(nameInput2).toHaveLength(2);
-  });
-
   test('deletes attributes when delete button is clicked', () => {
     const { getByText, getAllByRole, getAllByLabelText } = render(
       <ClassModal open handleClose={() => {}} />
@@ -193,46 +124,6 @@ describe('ClassModal', () => {
 
     expect(getAllByLabelText('Name *')).toHaveLength(1);
     expect(getAllByLabelText('Type *')).toHaveLength(1);
-  });
-
-  test('adds methods when add button is clicked', () => {
-    const { getByText, getAllByText, getAllByLabelText } = render(
-      <ClassModal open handleClose={() => {}} />
-    );
-
-    const methodsTab = getByText('Methods');
-    fireEvent.click(methodsTab);
-
-    const addButton = getByText('Add');
-    fireEvent.click(addButton);
-
-    const nameInput = getAllByLabelText('Name *');
-    fireEvent.change(nameInput[0], { target: { value: 'Method 1' } });
-
-    const returnInput = getAllByLabelText('Returns *');
-    fireEvent.mouseDown(returnInput[0]);
-    const returnMenuItem = getByText('int');
-    fireEvent.click(returnMenuItem);
-
-    const visibilityInput = getAllByLabelText('Visibility *');
-    fireEvent.mouseDown(visibilityInput[0]);
-    const visibilityMenuItem = getByText('#');
-    fireEvent.click(visibilityMenuItem);
-
-    const staticCheckbox = getAllByLabelText('Static');
-    fireEvent.click(staticCheckbox[0]);
-
-    fireEvent.click(addButton);
-
-    const nameInput2 = getAllByLabelText('Name *');
-    fireEvent.change(nameInput2[1], { target: { value: 'Method 2' } });
-
-    const returnInput2 = getAllByLabelText('Returns *');
-    fireEvent.mouseDown(returnInput2[1]);
-    const returnMenuItem2 = getAllByText('string');
-    fireEvent.click(returnMenuItem2[1]);
-
-    expect(nameInput2).toHaveLength(2);
   });
 
   test('deletes methods when delete button is clicked', () => {

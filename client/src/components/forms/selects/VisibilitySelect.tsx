@@ -1,20 +1,35 @@
+import { MenuItem, TextField } from '@mui/material';
 import { Visibility } from '../../../types';
-import GenericSelect, { GenericSelectProps } from './GenericSelect';
 
 const visibilities: Visibility[] = ['+', '—', '#'];
 
-function VisibilitySelect({
-  option,
-  setOption,
-}: GenericSelectProps<Visibility>) {
+type VisibilitySelectProps = {
+  option: Visibility;
+  setOption: (option: Visibility) => void;
+};
+
+function VisibilitySelect({ option, setOption }: VisibilitySelectProps) {
   return (
-    <GenericSelect
-      option={option}
-      setOption={setOption}
-      options={visibilities}
+    <TextField
+      id="visibility-select"
+      variant="standard"
+      select
+      required
       label="Visibility"
-      width={60}
-    />
+      value={option}
+      onChange={(e) => {
+        setOption(e.target.value as Visibility);
+      }}
+      sx={{ width: 48 }}
+    >
+      {visibilities.map((opt) => {
+        return (
+          <MenuItem key={opt as string} value={opt as string}>
+            {opt as string}
+          </MenuItem>
+        );
+      })}
+    </TextField>
   );
 }
 

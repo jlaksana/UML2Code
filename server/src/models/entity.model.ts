@@ -5,14 +5,14 @@ import { DiagramModel } from './diagram.model';
 const entityConstant = z.object({
   id: z.number(),
   name: z.string().min(1),
-  type: z.enum(['int', 'string', 'char', 'bool', 'float', 'double']),
+  type: z.string().min(1),
 });
 
 const entityAttribute = z.object({
   id: z.number(),
   name: z.string().min(1),
   visibility: z.enum(['+', '—', '#']),
-  type: z.enum(['int', 'string', 'char', 'bool', 'float', 'double']),
+  type: z.string().min(1),
 });
 
 const entityMethod = z.object({
@@ -61,7 +61,6 @@ const schema = new Schema<Entity>({
         name: { type: String, required: true },
         type: {
           type: String,
-          enum: ['int', 'string', 'char', 'bool', 'float', 'double'],
           required: true,
         },
       },
@@ -74,7 +73,6 @@ const schema = new Schema<Entity>({
         visibility: { type: String, enum: ['+', '—', '#'], required: true },
         type: {
           type: String,
-          enum: ['int', 'string', 'char', 'bool', 'float', 'double'],
           required: true,
         },
       },

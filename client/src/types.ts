@@ -4,6 +4,7 @@ export type DataType =
   | ''
   | 'int'
   | 'float'
+  | 'long'
   | 'double'
   | 'boolean'
   | 'string'
