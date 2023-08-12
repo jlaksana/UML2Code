@@ -74,7 +74,8 @@ function Diagram() {
     };
 
     fetchDiagramContents();
-  }, [diagramId, entitiesDispatch, setAlert]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [diagramId, entitiesDispatch]);
 
   const getEntityPosition = (id: string, ents: Entity<NodeData>[]) => {
     const entity = ents.find((e) => e.id === id);

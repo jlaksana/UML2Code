@@ -1,4 +1,4 @@
-import { createContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useMemo, useState } from 'react';
 
 const ALERT_TIME = 5000;
 export enum AlertType {
@@ -20,7 +20,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
   const [text, setText] = useState<string | null>(null);
   const [type, setType] = useState<AlertType | null>(null);
 
-  const setAlert = (newText: string, newType: AlertType) => {
+  const setAlert = useCallback((newText: string, newType: AlertType) => {
     setText(newText);
     setType(newType);
 
@@ -28,7 +28,17 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
       setText('');
       setType(null);
     }, ALERT_TIME);
-  };
+  }, []);
+
+  // const setAlert = (newText: string, newType: AlertType) => {
+  //   setText(newText);
+  //   setType(newType);
+
+  //   setTimeout(() => {
+  //     setText('');
+  //     setType(null);
+  //   }, ALERT_TIME);
+  // };
 
   const value = useMemo(() => {
     return {
@@ -36,7 +46,7 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
       type,
       setAlert,
     };
-  }, [text, type]);
+  }, [setAlert, text, type]);
 
   return (
     <AlertContext.Provider value={value}>{children}</AlertContext.Provider>

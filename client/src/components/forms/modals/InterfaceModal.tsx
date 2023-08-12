@@ -2,7 +2,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Button, Modal, Tab, TextField, Tooltip } from '@mui/material';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/FormModals.css';
@@ -40,6 +40,14 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
 
   const { diagramId } = useParams();
 
+  useEffect(() => {
+    if (data) {
+      setName(data.name);
+      setConstants(data.constants || []);
+      setMethods(data.methods || []);
+    }
+  }, [data]);
+
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabValue(newValue);
   };
@@ -47,12 +55,16 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
   const close = () => {
     // reset all fields
     // dont reset if editing
-    if (!id) {
-      setTabValue('1');
+    if (!id || !data) {
       setName('');
       setConstants([]);
       setMethods([]);
+    } else {
+      setName(data.name);
+      setConstants(data.constants || []);
+      setMethods(data.methods || []);
     }
+    setTabValue('1');
     setError(false);
     handleClose();
   };

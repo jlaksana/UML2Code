@@ -2,7 +2,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Button, Modal, Tab, TextField, Tooltip } from '@mui/material';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/FormModals.css';
@@ -37,12 +37,22 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
 
   const { diagramId } = useParams();
 
+  useEffect(() => {
+    if (data) {
+      setName(data.name);
+      setValues(data.values || []);
+    }
+  }, [data]);
+
   const close = () => {
     // reset all fields
     // dont reset if editing
-    if (!id) {
+    if (!id || !data) {
       setName('');
       setValues([]);
+    } else {
+      setName(data.name);
+      setValues(data.values || []);
     }
     setError(false);
     handleClose();

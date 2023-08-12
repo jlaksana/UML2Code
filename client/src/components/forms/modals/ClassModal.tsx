@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/FormModals.css';
@@ -55,6 +55,16 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
 
   const { diagramId } = useParams();
 
+  useEffect(() => {
+    if (data) {
+      setName(data.name);
+      setIsAbstract(data.isAbstract);
+      setConstants(data.constants || []);
+      setAttributes(data.attributes || []);
+      setMethods(data.methods || []);
+    }
+  }, [data]);
+
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabValue(newValue);
   };
@@ -62,14 +72,20 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
   const close = () => {
     // reset all fields
     // dont reset if editing
-    if (!id) {
-      setTabValue('1');
+    if (!id || !data) {
       setName('');
       setIsAbstract(false);
       setConstants([]);
       setAttributes([]);
       setMethods([]);
+    } else {
+      setName(data.name);
+      setIsAbstract(data.isAbstract);
+      setConstants(data.constants || []);
+      setAttributes(data.attributes || []);
+      setMethods(data.methods || []);
     }
+    setTabValue('1');
     setError(false);
     handleClose();
   };
