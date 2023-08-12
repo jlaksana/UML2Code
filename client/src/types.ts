@@ -41,13 +41,13 @@ export type Enum = {
 export type Constant = {
   id: number;
   name: string;
-  type: DataType;
+  type: string;
 };
 
 export type Attribute = {
   id: number;
   name: string;
-  type: DataType;
+  type: string;
   visibility: Visibility;
 };
 

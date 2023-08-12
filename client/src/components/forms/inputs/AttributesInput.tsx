@@ -2,7 +2,7 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import { Button, IconButton, TextField, Tooltip } from '@mui/material';
 import '../../../styles/FormModals.css';
-import { Attribute, DataType, Visibility } from '../../../types';
+import { Attribute, Visibility } from '../../../types';
 import TypeSelect from '../selects/TypeSelect';
 import VisibilitySelect from '../selects/VisibilitySelect';
 
@@ -11,7 +11,7 @@ type AttributeFieldProps = {
   updateAttribute: (
     id: number,
     name: string,
-    type: DataType,
+    type: string,
     visibility: Visibility
   ) => void;
   removeAttribute: (index: number) => void;
@@ -104,7 +104,7 @@ function AttributesInput({ attributes, setAttributes }: AttributesInputProps) {
   const updateAttribute = (
     id: number,
     name: string,
-    type: DataType,
+    type: string,
     visibility: Visibility
   ) => {
     const newAttributes = attributes.map((attribute) => {

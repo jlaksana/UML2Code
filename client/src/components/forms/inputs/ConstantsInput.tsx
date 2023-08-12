@@ -2,12 +2,12 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import { Button, IconButton, TextField, Tooltip } from '@mui/material';
 import '../../../styles/FormModals.css';
-import { Constant, DataType } from '../../../types';
+import { Constant } from '../../../types';
 import TypeSelect from '../selects/TypeSelect';
 
 type ConstantFieldProps = {
   constant: Constant;
-  updateConstant: (id: number, name: string, type: DataType) => void;
+  updateConstant: (id: number, name: string, type: string) => void;
   removeConstant: (index: number) => void;
 };
 
@@ -73,7 +73,7 @@ function ConstantsInput({ constants, setConstants }: ConstantsInputProps) {
     setConstants(newConstants);
   };
 
-  const updateConstant = (id: number, name: string, type: DataType) => {
+  const updateConstant = (id: number, name: string, type: string) => {
     const newConstants = constants.map((constant) => {
       if (constant.id === id) {
         return {
