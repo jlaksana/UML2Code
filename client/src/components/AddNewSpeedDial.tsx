@@ -10,11 +10,13 @@ import { useState } from 'react';
 import ClassModal from './forms/modals/ClassModal';
 import EnumModal from './forms/modals/EnumModal';
 import InterfaceModal from './forms/modals/InterfaceModal';
+import RelationshipModal from './forms/modals/RelationshipModal';
 
 function AddNewSpeedDial() {
   const [classOpen, setClassOpen] = useState(false);
   const [interfaceOpen, setInterfaceOpen] = useState(false);
   const [enumOpen, setEnumOpen] = useState(false);
+  const [relationshipOpen, setRelationshipOpen] = useState(false);
 
   const actions = [
     { icon: <CreditCardSharpIcon />, name: 'Class', actionType: 'Class' },
@@ -43,6 +45,7 @@ function AddNewSpeedDial() {
         setEnumOpen(true);
         break;
       case 'Relationship':
+        setRelationshipOpen(true);
         break;
       default:
         // Should never happen
@@ -75,6 +78,10 @@ function AddNewSpeedDial() {
         handleClose={() => setInterfaceOpen(false)}
       />
       <EnumModal open={enumOpen} handleClose={() => setEnumOpen(false)} />
+      <RelationshipModal
+        open={relationshipOpen}
+        handleClose={() => setRelationshipOpen(false)}
+      />
     </>
   );
 }

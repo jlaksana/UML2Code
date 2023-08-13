@@ -12,6 +12,7 @@ type GroupSelectProps = {
   includeClasses?: boolean;
   includeInterfaces?: boolean;
   includeEnums?: boolean;
+  restrictOptions?: boolean;
 };
 
 type GroupOption = {
@@ -28,6 +29,7 @@ function GroupSelect({
   includeClasses = false,
   includeInterfaces = false,
   includeEnums = false,
+  restrictOptions = false,
 }: GroupSelectProps) {
   const entities = useEntities();
 
@@ -55,7 +57,7 @@ function GroupSelect({
   return (
     <Autocomplete
       id={`${label}-select`}
-      freeSolo
+      freeSolo={!restrictOptions}
       options={options}
       value={{ name: option, type: undefined }}
       onInputChange={(e, value) => {

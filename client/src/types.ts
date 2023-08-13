@@ -63,3 +63,11 @@ export type EnumValue = {
   id: number;
   name: string;
 };
+
+export type RelationshipType =
+  | 'Inheritance'
+  | 'Association'
+  | 'Aggregation'
+  | 'Composition'
+  | 'Realization'
+  | 'Dependency';
