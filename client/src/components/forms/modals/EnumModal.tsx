@@ -10,6 +10,7 @@ import { Entity, Enum, EnumValue } from '../../../types';
 import { AlertType } from '../../alert/AlertContext';
 import useAlert from '../../alert/useAlert';
 import ValuesInput from '../inputs/ValuesInput';
+import { removeWhiteSpace } from './utils';
 
 type EnumModalProps = {
   open: boolean;
@@ -17,10 +18,6 @@ type EnumModalProps = {
   // defined only when editing existing enum
   id?: string;
   data?: Enum;
-};
-
-const removeWhiteSpace = (str: string) => {
-  return str.replace(/\s/g, '');
 };
 
 const enumHelperText = `Enums are a set of constants. Use them to define a set of values that can be used in your program. 
@@ -120,7 +117,7 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
       aria-labelledby="Enum Form"
       aria-describedby="Specify the contents of a enum"
     >
-      <form className="modal-content" onSubmit={handleSubmit}>
+      <form className="modal-content entity-content" onSubmit={handleSubmit}>
         <div>
           <h2>
             {id ? 'Edit' : 'Create'} Enumeration&nbsp;

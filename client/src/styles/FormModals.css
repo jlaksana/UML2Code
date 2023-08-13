@@ -7,7 +7,6 @@
   background-color: white;
   max-width: 100vw;
   width: 500px;
-  height: 700px;
   border-radius: 10px;
   box-sizing: border-box;
   padding: 1em 3em;
@@ -48,4 +47,19 @@
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
+}
+.entity-content {
+  height: 700px;
+}
+.relationship-content {
+  min-height: 350px;
+  max-height: 700px;
+}
+.short-relationship-input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding-top: 2rem;
 }

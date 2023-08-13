@@ -11,6 +11,7 @@ import { AlertType } from '../../alert/AlertContext';
 import useAlert from '../../alert/useAlert';
 import ConstantsInput from '../inputs/ConstantsInput';
 import MethodsInput from '../inputs/MethodsInput';
+import { removeWhiteSpace } from './utils';
 
 type InterfaceModalProps = {
   open: boolean;
@@ -18,10 +19,6 @@ type InterfaceModalProps = {
   // defined only when editing existing interface
   id?: string;
   data?: Interface;
-};
-
-const removeWhiteSpace = (str: string) => {
-  return str.replace(/\s/g, '');
 };
 
 const interfaceHelperText = `Interfaces are used to define common behavior for classes. 
@@ -137,7 +134,7 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
       aria-labelledby="Interface Form"
       aria-describedby="Specify the contents of an interface"
     >
-      <form className="modal-content" onSubmit={handleSubmit}>
+      <form className="modal-content entity-content" onSubmit={handleSubmit}>
         <div>
           <h2>
             {id ? 'Edit' : 'Create'} Interface&nbsp;

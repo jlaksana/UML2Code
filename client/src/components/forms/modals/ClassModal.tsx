@@ -21,6 +21,7 @@ import useAlert from '../../alert/useAlert';
 import AttributesInput from '../inputs/AttributesInput';
 import ConstantsInput from '../inputs/ConstantsInput';
 import MethodsInput from '../inputs/MethodsInput';
+import { removeWhiteSpace } from './utils';
 
 type ClassModalProps = {
   open: boolean;
@@ -28,10 +29,6 @@ type ClassModalProps = {
   // defined only when editing existing class
   id?: string;
   data?: Klass;
-};
-
-const removeWhiteSpace = (str: string) => {
-  return str.replace(/\s/g, '');
 };
 
 const classHelperText = `Classes are the building blocks of your program. 
@@ -164,7 +161,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
       aria-labelledby="Class Form"
       aria-describedby="Specify the contents of a class"
     >
-      <form className="modal-content" onSubmit={handleSubmit}>
+      <form className="modal-content entity-content" onSubmit={handleSubmit}>
         <div>
           <h2>
             {id ? 'Edit' : 'Create'} Class&nbsp;
