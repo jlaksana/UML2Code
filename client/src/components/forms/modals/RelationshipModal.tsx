@@ -3,6 +3,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { Autocomplete, Button, Modal, TextField, Tooltip } from '@mui/material';
 import { useState } from 'react';
 import { RelationshipType } from '../../../types';
+import LongRelationshipInput from '../inputs/LongRelationshipInput';
 import ShortRelationshipInput from '../inputs/ShortRelationshipInput';
 
 const relationshipTypes: RelationshipType[] = [
@@ -19,13 +20,29 @@ const getContentByType = (
   source: string,
   setSource: (s: string) => void,
   target: string,
-  setTarget: (t: string) => void
+  setTarget: (t: string) => void,
+  srcInfo: { label: string; multiplicity: string },
+  setSrcInfo: (s: { label: string; multiplicity: string }) => void,
+  tgtInfo: { label: string; multiplicity: string },
+  setTgtInfo: (s: { label: string; multiplicity: string }) => void
 ) => {
   switch (type) {
     case 'Association':
     case 'Aggregation':
     case 'Composition':
-      return <h2>full modal content</h2>;
+      return (
+        <LongRelationshipInput
+          type={type}
+          source={source}
+          setSource={setSource}
+          target={target}
+          setTarget={setTarget}
+          srcInfo={srcInfo}
+          setSrcInfo={setSrcInfo}
+          tgtInfo={tgtInfo}
+          setTgtInfo={setTgtInfo}
+        />
+      );
     case 'Dependency':
     case 'Inheritance':
     case 'Realization':
@@ -48,23 +65,43 @@ type RelationshipModalProps = {
   handleClose: () => void;
 };
 
+const initInfo = { label: '', multiplicity: '' };
+
 function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
   const [type, setType] = useState<RelationshipType | null>(null);
   const [source, setSource] = useState('');
   const [target, setTarget] = useState('');
+  const [srcInfo, setSrcInfo] = useState(initInfo);
+  const [tgtInfo, setTgtInfo] = useState(initInfo);
   const [errorMessage, setErrorMessage] = useState();
 
   const close = () => {
     setType(null);
     setSource('');
     setTarget('');
+    setSrcInfo(initInfo);
+    setTgtInfo(initInfo);
     setErrorMessage(undefined);
     handleClose();
+  };
+
+  const handleTypeChange = (
+    e: React.SyntheticEvent<Element, Event>,
+    value: RelationshipType | null
+  ) => {
+    setType(value);
+    setSource('');
+    setTarget('');
+    setSrcInfo(initInfo);
+    setTgtInfo(initInfo);
+    setErrorMessage(undefined);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log(source, target);
+    console.log(srcInfo);
+    console.log(tgtInfo);
   };
 
   const relationshipHelperText = `Relationships are the connections between classes. 
@@ -93,7 +130,7 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
             autoSelect
             options={relationshipTypes}
             value={type}
-            onChange={(e, value) => setType(value)}
+            onChange={handleTypeChange}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -105,7 +142,17 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
               />
             )}
           />
-          {getContentByType(type, source, setSource, target, setTarget)}
+          {getContentByType(
+            type,
+            source,
+            setSource,
+            target,
+            setTarget,
+            srcInfo,
+            setSrcInfo,
+            tgtInfo,
+            setTgtInfo
+          )}
         </div>
         <div className="buttons">
           <Button variant="text" onClick={close}>

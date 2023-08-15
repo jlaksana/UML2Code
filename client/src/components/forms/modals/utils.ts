@@ -32,11 +32,14 @@ export const getTargetLabel = (type: RelationshipType) => {
 
 export const getSourcePermittedEntities = (type: RelationshipType) => {
   switch (type) {
-    case 'Inheritance':
-      return ['class'];
     case 'Realization':
       return ['interface'];
+    case 'Inheritance':
     case 'Dependency':
+    case 'Aggregation':
+    case 'Composition':
+      return ['class'];
+    case 'Association':
       return ['class', 'interface'];
     default:
       return [];
@@ -45,13 +48,18 @@ export const getSourcePermittedEntities = (type: RelationshipType) => {
 
 export const getTargetPermittedEntities = (type: RelationshipType) => {
   switch (type) {
-    case 'Inheritance':
-      return ['class'];
     case 'Realization':
-      return ['class', 'interface'];
+      return ['class'];
+    case 'Inheritance':
     case 'Dependency':
       return ['class', 'interface'];
+    case 'Aggregation':
+    case 'Composition':
+    case 'Association':
+      return ['class', 'interface', 'enum'];
     default:
       return [];
   }
 };
+
+export const umlMultiplicityRegex = /^(?:\d+|\d+\.\.\*|\*)$/;

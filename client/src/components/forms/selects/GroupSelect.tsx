@@ -24,7 +24,7 @@ function GroupSelect({
   option,
   setOption,
   label,
-  width = 300,
+  width = 250,
   includePrimitives = false,
   includeClasses = false,
   includeInterfaces = false,
