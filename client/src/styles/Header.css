@@ -23,13 +23,13 @@
   font-size: 20px;
   font-weight: 600;
 }
-.right {
+.header .right {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 1.5em;
   width: 220px;
 }
-.left {
+.header .left {
   width: 220px;
 }
