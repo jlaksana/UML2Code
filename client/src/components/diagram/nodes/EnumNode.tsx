@@ -1,12 +1,13 @@
 import { Button } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
-import { Handle, NodeProps, NodeToolbar, Position } from 'reactflow';
+import { NodeProps, NodeToolbar } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import { Enum, EnumValue } from '../../../types';
 import { AlertType } from '../../alert/AlertContext';
 import useAlert from '../../alert/useAlert';
 import EnumModal from '../../forms/modals/EnumModal';
+import Handles from './Handles';
 
 function EnumNode({ id, data }: NodeProps<Enum>) {
   const [editOpen, setEditOpen] = useState(false);
@@ -25,8 +26,7 @@ function EnumNode({ id, data }: NodeProps<Enum>) {
 
   return (
     <>
-      <Handle id="a" type="target" position={Position.Top} />
-      <Handle id="b" type="target" position={Position.Left} />
+      <Handles />
       <NodeToolbar className="node-toolbar">
         <Button
           variant="contained"
@@ -62,8 +62,6 @@ function EnumNode({ id, data }: NodeProps<Enum>) {
           </div>
         </div>
       </div>
-      <Handle id="c" type="source" position={Position.Right} />
-      <Handle id="d" type="source" position={Position.Bottom} />
       <EnumModal
         open={editOpen}
         handleClose={() => setEditOpen(false)}

@@ -1,13 +1,14 @@
 import { Button } from '@mui/material';
 import axios from 'axios';
 import { memo, useState } from 'react';
-import { Handle, NodeProps, NodeToolbar, Position } from 'reactflow';
+import { NodeProps, NodeToolbar } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/Node.css';
 import { Attribute, Constant, Klass, Method } from '../../../types';
 import { AlertType } from '../../alert/AlertContext';
 import useAlert from '../../alert/useAlert';
 import ClassModal from '../../forms/modals/ClassModal';
+import Handles from './Handles';
 
 function ClassNode({ id, data }: NodeProps<Klass>) {
   const [editOpen, setEditOpen] = useState(false);
@@ -26,8 +27,7 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
 
   return (
     <>
-      <Handle id="a" type="target" position={Position.Top} />
-      <Handle id="b" type="target" position={Position.Left} />
+      <Handles />
       <NodeToolbar className="node-toolbar">
         <Button
           variant="contained"
@@ -80,8 +80,6 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
           </div>
         </div>
       </div>
-      <Handle id="c" type="source" position={Position.Right} />
-      <Handle id="d" type="source" position={Position.Bottom} />
       <ClassModal
         open={editOpen}
         handleClose={() => setEditOpen(false)}
