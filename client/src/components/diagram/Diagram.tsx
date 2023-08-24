@@ -7,6 +7,7 @@ import ReactFlow, {
   Controls,
   Edge,
   EdgeChange,
+  MarkerType,
   MiniMap,
   NodeChange,
   applyEdgeChanges,
@@ -21,6 +22,12 @@ import '../../styles/Editor.css';
 import { Entity, NodeData } from '../../types';
 import { AlertType } from '../alert/AlertContext';
 import useAlert from '../alert/useAlert';
+import AggregationEdge from './edges/AggregationEdge';
+import AssociationEdge from './edges/AssociationEdge';
+import CompositionEdge from './edges/CompositionEdge';
+import DependencyEdge from './edges/DependencyEdge';
+import InheritanceEdge from './edges/InheritanceEdge';
+import RealizationEdge from './edges/RealizationEdge';
 import ClassNode from './nodes/ClassNode';
 import EnumNode from './nodes/EnumNode';
 import InterfaceNode from './nodes/InterfaceNode';
@@ -46,9 +53,64 @@ const nodeColor = (node: Entity<NodeData>) => {
   }
 };
 
+const edgeTypes = {
+  inheritance: InheritanceEdge,
+  association: AssociationEdge,
+  dependency: DependencyEdge,
+  realization: RealizationEdge,
+  aggregation: AggregationEdge,
+  composition: CompositionEdge,
+};
+
 // ! for testing purposes only
 const initialEdges: Edge[] = [
-  { id: '1-2', source: '1', target: '2', type: 'step' },
+  {
+    id: '1-2',
+    source: '64973d9948d50a631ba3d9ce',
+    sourceHandle: 'bottom-right',
+    target: '649741cd48d50a631ba3d9db',
+    type: 'association',
+    markerStart: { type: MarkerType.Arrow, width: 50, height: 50 },
+  },
+  {
+    id: '2-1',
+    source: '64973d9948d50a631ba3d9ce',
+    sourceHandle: 'bottom-left',
+    target: '649741cd48d50a631ba3d9db',
+    type: 'dependency',
+  },
+  {
+    id: '3-1',
+    source: '64973d9948d50a631ba3d9ce',
+    sourceHandle: 'right-bottom',
+    target: '649741cd48d50a631ba3d9db',
+    targetHandle: 'top-right',
+    type: 'inheritance',
+  },
+  {
+    id: '3-2',
+    source: '64973d9948d50a631ba3d9ce',
+    sourceHandle: 'right-top',
+    target: '649741cd48d50a631ba3d9db',
+    targetHandle: 'top-right',
+    type: 'realization',
+  },
+  {
+    id: '4-2',
+    source: '649741cd48d50a631ba3d9db',
+    sourceHandle: 'right-top',
+    target: '64c57efc7a546ae970012685',
+    targetHandle: 'top-right',
+    type: 'aggregation',
+  },
+  {
+    id: '4-3',
+    source: '649741cd48d50a631ba3d9db',
+    sourceHandle: 'right-bottom',
+    target: '64c57efc7a546ae970012685',
+    targetHandle: 'top-right',
+    type: 'composition',
+  },
 ];
 
 function Diagram() {
@@ -123,6 +185,7 @@ function Diagram() {
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         edges={edges}
+        edgeTypes={edgeTypes}
         onEdgesChange={onEdgesChange}
         deleteKeyCode={null}
       >
