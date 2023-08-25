@@ -12,6 +12,9 @@ export const getSourceLabel = (type: RelationshipType) => {
       return 'Interface';
     case 'Dependency':
       return 'Client';
+    case 'Aggregation':
+    case 'Composition':
+      return 'Part';
     default:
       return 'Source';
   }
@@ -25,6 +28,9 @@ export const getTargetLabel = (type: RelationshipType) => {
       return 'Class';
     case 'Dependency':
       return 'Supplier';
+    case 'Aggregation':
+    case 'Composition':
+      return 'Whole';
     default:
       return 'Target';
   }
