@@ -30,16 +30,6 @@ export function AlertProvider({ children }: { children: React.ReactNode }) {
     }, ALERT_TIME);
   }, []);
 
-  // const setAlert = (newText: string, newType: AlertType) => {
-  //   setText(newText);
-  //   setType(newType);
-
-  //   setTimeout(() => {
-  //     setText('');
-  //     setType(null);
-  //   }, ALERT_TIME);
-  // };
-
   const value = useMemo(() => {
     return {
       text,
