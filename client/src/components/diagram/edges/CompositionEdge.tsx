@@ -1,4 +1,11 @@
-import { BaseEdge, EdgeProps, getBezierPath } from 'reactflow';
+import {
+  BaseEdge,
+  EdgeLabelRenderer,
+  EdgeProps,
+  getBezierPath,
+} from 'reactflow';
+import EdgeLabel from './EdgeLabel';
+import { getDiamondRefX, getDiamondRefY } from './edgeUtils';
 
 function CompositionEdge({
   id,
@@ -8,8 +15,9 @@ function CompositionEdge({
   targetY,
   sourcePosition,
   targetPosition,
+  data,
 }: EdgeProps) {
-  const [edgePath] = getBezierPath({
+  const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -25,10 +33,10 @@ function CompositionEdge({
           <marker
             id={id}
             viewBox="0 0 40 40"
-            markerHeight={60}
-            markerWidth={60}
-            refX={4}
-            refY={12}
+            markerHeight={50}
+            markerWidth={50}
+            refX={getDiamondRefX(targetPosition)}
+            refY={getDiamondRefY(targetPosition)}
           >
             <path
               d="M4.26244 14.2628C3.47041 13.4707 3.07439 13.0747 2.92601 12.618
@@ -55,7 +63,21 @@ function CompositionEdge({
           </marker>
         </defs>
       </svg>
-      <BaseEdge path={edgePath} markerStart={`url(#${id})`} />
+      <BaseEdge path={edgePath} markerEnd={`url(#${id})`} />
+      <EdgeLabelRenderer>
+        <EdgeLabel
+          label={data?.label}
+          position="middle"
+          x={labelX}
+          y={labelY}
+        />
+        <EdgeLabel
+          label={data?.srcMultiplicity}
+          position="source"
+          x={sourceX + 10}
+          y={sourceY}
+        />
+      </EdgeLabelRenderer>
     </>
   );
 }

@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
   BackgroundVariant,
+  Connection,
   Controls,
   Edge,
   EdgeChange,
@@ -12,6 +13,7 @@ import ReactFlow, {
   NodeChange,
   applyEdgeChanges,
   applyNodeChanges,
+  updateEdge,
 } from 'reactflow';
 import 'reactflow/dist/base.css';
 import {
@@ -71,6 +73,7 @@ const initialEdges: Edge[] = [
     target: '649741cd48d50a631ba3d9db',
     type: 'association',
     markerStart: { type: MarkerType.Arrow, width: 50, height: 50 },
+    data: { label: 'association', srcMultiplicity: '1', tgtMultiplicity: '*' },
   },
   {
     id: '2-1',
@@ -100,16 +103,18 @@ const initialEdges: Edge[] = [
     source: '649741cd48d50a631ba3d9db',
     sourceHandle: 'right-top',
     target: '64c57efc7a546ae970012685',
-    targetHandle: 'top-right',
+    targetHandle: 'top-left',
     type: 'aggregation',
+    data: { label: 'aggregation', srcMultiplicity: '1..*' },
   },
   {
     id: '4-3',
     source: '649741cd48d50a631ba3d9db',
     sourceHandle: 'right-bottom',
     target: '64c57efc7a546ae970012685',
-    targetHandle: 'top-right',
+    targetHandle: 'left-top',
     type: 'composition',
+    data: { label: 'composition', srcMultiplicity: '*' },
   },
 ];
 
@@ -136,8 +141,7 @@ function Diagram() {
     };
 
     fetchDiagramContents();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [diagramId, entitiesDispatch]);
+  }, [diagramId, entitiesDispatch, setAlert]);
 
   const getEntityPosition = (id: string, ents: Entity<NodeData>[]) => {
     const entity = ents.find((e) => e.id === id);
@@ -178,6 +182,13 @@ function Diagram() {
     []
   );
 
+  const onEdgeUpdate = useCallback(
+    (oldEdge: Edge, newConnection: Connection) =>
+      // TODO validate then update edge in db
+      setEdges((els) => updateEdge(oldEdge, newConnection, els)),
+    []
+  );
+
   return (
     <div className="diagram">
       <ReactFlow
@@ -187,6 +198,7 @@ function Diagram() {
         edges={edges}
         edgeTypes={edgeTypes}
         onEdgesChange={onEdgesChange}
+        onEdgeUpdate={onEdgeUpdate}
         deleteKeyCode={null}
       >
         <Background color="#444" variant={'dots' as BackgroundVariant} />

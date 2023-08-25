@@ -1,13 +1,10 @@
-import { BaseEdge, Position, getBezierPath } from 'reactflow';
-
-type AssociationEdgeProps = {
-  sourceX: number;
-  sourceY: number;
-  targetX: number;
-  targetY: number;
-  sourcePosition: Position;
-  targetPosition: Position;
-};
+import {
+  BaseEdge,
+  EdgeLabelRenderer,
+  EdgeProps,
+  getBezierPath,
+} from 'reactflow';
+import EdgeLabel from './EdgeLabel';
 
 function AssociationEdge({
   sourceX,
@@ -16,8 +13,9 @@ function AssociationEdge({
   targetY,
   sourcePosition,
   targetPosition,
-}: AssociationEdgeProps) {
-  const [edgePath] = getBezierPath({
+  data,
+}: EdgeProps) {
+  const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -26,10 +24,29 @@ function AssociationEdge({
     targetPosition,
   });
   return (
-    <BaseEdge
-      path={edgePath}
-      markerStart="url(#1__height=50&type=arrow&width=50)"
-    />
+    <>
+      <BaseEdge path={edgePath} />;
+      <EdgeLabelRenderer>
+        <EdgeLabel
+          label={data?.label}
+          position="middle"
+          x={labelX}
+          y={labelY}
+        />
+        <EdgeLabel
+          label={data?.srcMultiplicity}
+          position="source"
+          x={sourceX + 10}
+          y={sourceY}
+        />
+        <EdgeLabel
+          label={data?.tgtMultiplicity}
+          position="target"
+          x={targetX + 10}
+          y={targetY}
+        />
+      </EdgeLabelRenderer>
+    </>
   );
 }
 

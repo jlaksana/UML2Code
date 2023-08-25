@@ -11,4 +11,26 @@ const getMarkerRotation = (sourcePosition: Position) => {
   }
 };
 
-export default getMarkerRotation;
+const getDiamondRefX = (targetPosition: Position) => {
+  switch (targetPosition) {
+    case Position.Top:
+      return 12;
+    case Position.Left:
+      return 19;
+    default:
+      throw new Error(`Invalid position: ${targetPosition}`);
+  }
+};
+
+const getDiamondRefY = (targetPosition: Position) => {
+  switch (targetPosition) {
+    case Position.Top:
+      return 19;
+    case Position.Left:
+      return 12;
+    default:
+      throw new Error(`Invalid position: ${targetPosition}`);
+  }
+};
+
+export { getDiamondRefX, getDiamondRefY, getMarkerRotation };

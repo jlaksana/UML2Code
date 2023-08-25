@@ -1,5 +1,5 @@
 import { BaseEdge, EdgeProps, getBezierPath } from 'reactflow';
-import getMarkerRotation from './edgeUtils';
+import { getMarkerRotation } from './edgeUtils';
 
 function InheritanceEdge({
   id,
@@ -26,8 +26,8 @@ function InheritanceEdge({
           <marker
             id={id}
             viewBox="0 0 40 40"
-            markerHeight={40}
-            markerWidth={40}
+            markerHeight={50}
+            markerWidth={50}
             refX={12}
             refY={8}
             orient={getMarkerRotation(sourcePosition)}
