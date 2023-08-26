@@ -7,12 +7,12 @@ import LongRelationshipInput from '../inputs/LongRelationshipInput';
 import ShortRelationshipInput from '../inputs/ShortRelationshipInput';
 
 const relationshipTypes: RelationshipType[] = [
+  'Realization',
+  'Inheritance',
   'Association',
   'Aggregation',
   'Composition',
   'Dependency',
-  'Inheritance',
-  'Realization',
 ];
 
 const getContentByType = (
@@ -21,10 +21,12 @@ const getContentByType = (
   setSource: (s: string) => void,
   target: string,
   setTarget: (t: string) => void,
-  srcInfo: { label: string; multiplicity: string },
-  setSrcInfo: (s: { label: string; multiplicity: string }) => void,
-  tgtInfo: { label: string; multiplicity: string },
-  setTgtInfo: (s: { label: string; multiplicity: string }) => void
+  label: string,
+  setLabel: (l: string) => void,
+  srcMultiplicity: string,
+  setSrcMultiplicity: (sm: string) => void,
+  tgtMultiplicity: string,
+  setTgtMultiplicity: (tm: string) => void
 ) => {
   switch (type) {
     case 'Association':
@@ -37,10 +39,12 @@ const getContentByType = (
           setSource={setSource}
           target={target}
           setTarget={setTarget}
-          srcInfo={srcInfo}
-          setSrcInfo={setSrcInfo}
-          tgtInfo={tgtInfo}
-          setTgtInfo={setTgtInfo}
+          label={label}
+          setLabel={setLabel}
+          srcMultiplicity={srcMultiplicity}
+          setSrcMultiplicity={setSrcMultiplicity}
+          tgtMultiplicity={tgtMultiplicity}
+          setTgtMultiplicity={setTgtMultiplicity}
         />
       );
     case 'Dependency':
@@ -65,22 +69,19 @@ type RelationshipModalProps = {
   handleClose: () => void;
 };
 
-const initInfo = { label: '', multiplicity: '' };
-
 function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
   const [type, setType] = useState<RelationshipType | null>(null);
   const [source, setSource] = useState('');
   const [target, setTarget] = useState('');
-  const [srcInfo, setSrcInfo] = useState(initInfo);
-  const [tgtInfo, setTgtInfo] = useState(initInfo);
+  const [label, setLabel] = useState('');
+  const [srcMultiplicity, setSrcMultiplicity] = useState('');
+  const [tgtMultiplicity, setTgtMultiplicity] = useState('');
   const [errorMessage, setErrorMessage] = useState();
 
   const close = () => {
     setType(null);
     setSource('');
     setTarget('');
-    setSrcInfo(initInfo);
-    setTgtInfo(initInfo);
     setErrorMessage(undefined);
     handleClose();
   };
@@ -92,16 +93,15 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
     setType(value);
     setSource('');
     setTarget('');
-    setSrcInfo(initInfo);
-    setTgtInfo(initInfo);
+    setLabel('');
+    setSrcMultiplicity('');
+    setTgtMultiplicity('');
     setErrorMessage(undefined);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     console.log(source, target);
-    console.log(srcInfo);
-    console.log(tgtInfo);
   };
 
   const relationshipHelperText = `Relationships are the connections between classes. 
@@ -148,10 +148,12 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
             setSource,
             target,
             setTarget,
-            srcInfo,
-            setSrcInfo,
-            tgtInfo,
-            setTgtInfo
+            label,
+            setLabel,
+            srcMultiplicity,
+            setSrcMultiplicity,
+            tgtMultiplicity,
+            setTgtMultiplicity
           )}
         </div>
         <div className="buttons">

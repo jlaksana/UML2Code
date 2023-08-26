@@ -1,11 +1,11 @@
 import { TextField } from '@mui/material';
 import { RelationshipType } from '../../../types';
 import {
-  getSourcePermittedEntities,
-  getTargetPermittedEntities,
+  getSourceLabel,
+  getTargetLabel,
   umlMultiplicityRegex,
 } from '../modals/utils';
-import GroupSelect from '../selects/GroupSelect';
+import ShortRelationshipInput from './ShortRelationshipInput';
 
 type LongRelationshipInputProps = {
   type: RelationshipType;
@@ -13,10 +13,12 @@ type LongRelationshipInputProps = {
   setSource: (source: string) => void;
   target: string;
   setTarget: (target: string) => void;
-  srcInfo: { label: string; multiplicity: string };
-  setSrcInfo: (srcInfo: { label: string; multiplicity: string }) => void;
-  tgtInfo: { label: string; multiplicity: string };
-  setTgtInfo: (tgtInfo: { label: string; multiplicity: string }) => void;
+  label: string;
+  setLabel: (label: string) => void;
+  srcMultiplicity: string;
+  setSrcMultiplicity: (srcMultiplicity: string) => void;
+  tgtMultiplicity: string;
+  setTgtMultiplicity: (tgtMultiplicity: string) => void;
 };
 
 function LongRelationshipInput({
@@ -25,83 +27,55 @@ function LongRelationshipInput({
   setSource,
   target,
   setTarget,
-  srcInfo,
-  setSrcInfo,
-  tgtInfo,
-  setTgtInfo,
+  label,
+  setLabel,
+  srcMultiplicity,
+  setSrcMultiplicity,
+  tgtMultiplicity,
+  setTgtMultiplicity,
 }: LongRelationshipInputProps) {
-  const sourcePermittedEntities = getSourcePermittedEntities(type);
-  const targetPermittedEntities = getTargetPermittedEntities(type);
-
   return (
     <div className="long-relationship-input">
+      <ShortRelationshipInput
+        type={type}
+        source={source}
+        setSource={setSource}
+        target={target}
+        setTarget={setTarget}
+      />
       <div className="section">
         <TextField
           variant="standard"
-          label="Source Label"
+          label="Label"
           fullWidth
-          required
-          value={srcInfo.label}
-          onChange={(e) => setSrcInfo({ ...srcInfo, label: e.target.value })}
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
         />
         <div className="sub-section">
-          <GroupSelect
-            option={source}
-            setOption={setSource}
-            label="Source"
-            includeClasses={sourcePermittedEntities.includes('class')}
-            includeInterfaces={sourcePermittedEntities.includes('interface')}
-            includeEnums={sourcePermittedEntities.includes('enum')}
-            restrictOptions
-          />
           <TextField
             variant="standard"
-            label="Multiplicity"
-            required
-            value={srcInfo.multiplicity}
-            onChange={(e) =>
-              setSrcInfo({ ...srcInfo, multiplicity: e.target.value })
-            }
-            sx={{ width: 130 }}
+            label={`${getSourceLabel(type)} Multiplicity`}
+            value={srcMultiplicity}
+            onChange={(e) => setSrcMultiplicity(e.target.value)}
+            sx={{ width: 190 }}
             error={
-              umlMultiplicityRegex.test(srcInfo.multiplicity) === false &&
-              srcInfo.multiplicity !== ''
+              umlMultiplicityRegex.test(srcMultiplicity) === false &&
+              srcMultiplicity !== ''
             }
           />
-        </div>
-      </div>
-      <div className="section">
-        <TextField
-          variant="standard"
-          label="Target Label"
-          fullWidth
-          value={tgtInfo.label}
-          onChange={(e) => setTgtInfo({ ...tgtInfo, label: e.target.value })}
-        />
-        <div className="sub-section">
-          <GroupSelect
-            option={target}
-            setOption={setTarget}
-            label="Target"
-            includeClasses={targetPermittedEntities.includes('class')}
-            includeInterfaces={targetPermittedEntities.includes('interface')}
-            includeEnums={targetPermittedEntities.includes('enum')}
-            restrictOptions
-          />
-          <TextField
-            variant="standard"
-            label="Multiplicity"
-            required
-            value={tgtInfo.multiplicity}
-            onChange={(e) =>
-              setTgtInfo({ ...tgtInfo, multiplicity: e.target.value })
-            }
-            sx={{ width: 130 }}
-            error={
-              umlMultiplicityRegex.test(tgtInfo.multiplicity) === false &&
-              tgtInfo.multiplicity !== ''
-            }
-          />
+          {type === 'Association' ? (
+            <TextField
+              variant="standard"
+              label={`${getTargetLabel(type)} Multiplicity`}
+              value={tgtMultiplicity}
+              onChange={(e) => setTgtMultiplicity(e.target.value)}
+              sx={{ width: 190 }}
+              error={
+                umlMultiplicityRegex.test(tgtMultiplicity) === false &&
+                tgtMultiplicity !== ''
+              }
+            />
+          ) : null}
         </div>
       </div>
     </div>
