@@ -9,6 +9,7 @@ function Handles() {
         position={Position.Top}
         style={{ left: '25%' }}
       />
+      <Handle id="top-middle" type="target" position={Position.Top} />
       <Handle
         id="top-right"
         type="target"
@@ -21,6 +22,7 @@ function Handles() {
         position={Position.Left}
         style={{ top: '25%' }}
       />
+      <Handle id="left-middle" type="target" position={Position.Left} />
       <Handle
         id="left-bottom"
         type="target"
@@ -33,6 +35,7 @@ function Handles() {
         position={Position.Right}
         style={{ top: '25%' }}
       />
+      <Handle id="right-middle" type="source" position={Position.Right} />
       <Handle
         id="right-bottom"
         type="source"
@@ -45,6 +48,7 @@ function Handles() {
         position={Position.Bottom}
         style={{ left: '25%' }}
       />
+      <Handle id="bottom-middle" type="source" position={Position.Bottom} />
       <Handle
         id="bottom-right"
         type="source"
