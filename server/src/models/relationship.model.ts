@@ -4,47 +4,101 @@ import { DiagramModel } from './diagram.model';
 import { EntityModel } from './entity.model';
 
 const RelationshipVariant = z.enum([
-  'inheritance',
-  'association',
-  'aggregation',
-  'composition',
-  'realization',
-  'dependency',
+  'Inheritance',
+  'Association',
+  'Aggregation',
+  'Composition',
+  'Realization',
+  'Dependency',
+]);
+
+const SourceHandlePositions = z.enum([
+  'bottom-left',
+  'bottom-middle',
+  'bottom-right',
+  'right-top',
+  'right-middle',
+  'right-bottom',
+]);
+
+const TargetHandlePositions = z.enum([
+  'top-left',
+  'top-middle',
+  'top-right',
+  'left-top',
+  'left-middle',
+  'left-bottom',
 ]);
 
 const relationshipSchema = z.object({
-  variant: RelationshipVariant,
-  diagramId: z.number().min(1000).max(9999),
-  src: z.instanceof(Schema.Types.ObjectId),
-  src_name: z.string().optional(),
-  src_multi: z.string().optional(),
-  tar: z.instanceof(Schema.Types.ObjectId),
-  tar_name: z.string().optional(),
-  tar_multi: z.string().optional(),
+  type: RelationshipVariant,
+  diagramId: z.number().min(1000).max(999999),
+  source: z.instanceof(Schema.Types.ObjectId),
+  target: z.instanceof(Schema.Types.ObjectId),
+  sourceHandle: SourceHandlePositions.optional(),
+  targetHandle: TargetHandlePositions.optional(),
+  data: z
+    .object({
+      label: z.string().optional(),
+      srcMultiplicity: z
+        .string()
+        .regex(/^(?:\d+|\d+\.\.\*|\*)$/)
+        .optional(),
+      tgtMultiplicity: z
+        .string()
+        .regex(/^(?:\d+|\d+\.\.\*|\*)$/)
+        .optional(),
+    })
+    .optional(),
 });
 
 type Relationship = z.infer<typeof relationshipSchema> & Document;
 
 const schema = new Schema<Relationship>({
-  variant: {
+  type: {
     type: String,
     enum: [
-      'inheritance',
-      'association',
-      'aggregation',
-      'composition',
-      'realization',
-      'dependency',
+      'Inheritance',
+      'Association',
+      'Aggregation',
+      'Composition',
+      'Realization',
+      'Dependency',
     ],
     required: true,
   },
   diagramId: { type: Number, ref: 'Diagram', required: true },
-  src: { type: Schema.Types.ObjectId, ref: 'Entity', required: true },
-  src_name: { type: String },
-  src_multi: { type: String },
-  tar: { type: Schema.Types.ObjectId, ref: 'Entity', required: true },
-  tar_name: { type: String },
-  tar_multi: { type: String },
+  source: { type: Schema.Types.ObjectId, ref: 'Entity', required: true },
+  target: { type: Schema.Types.ObjectId, ref: 'Entity', required: true },
+  sourceHandle: {
+    type: String,
+    enum: [
+      'bottom-left',
+      'bottom-middle',
+      'bottom-right',
+      'right-top',
+      'right-middle',
+      'right-bottom',
+    ],
+    default: 'bottom-middle',
+  },
+  targetHandle: {
+    type: String,
+    enum: [
+      'top-left',
+      'top-middle',
+      'top-right',
+      'left-top',
+      'left-middle',
+      'left-bottom',
+    ],
+    default: 'top-middle',
+  },
+  data: {
+    label: { type: String, default: '' },
+    srcMultiplicity: { type: String, default: '' },
+    tgtMultiplicity: { type: String, default: '' },
+  },
 });
 
 // validate diagramId to be an existing diagram
@@ -54,17 +108,17 @@ schema.path('diagramId').validate(async (diagramId) => {
 }, 'Invalid diagram ID');
 
 // validate src to be an existing entity
-schema.path('src').validate(async (src) => {
+schema.path('source').validate(async (src) => {
   const entity = await EntityModel.findById(src);
   return !!entity;
 }, 'Invalid source entity ID');
 
 // validate tar to be an existing entity
-schema.path('tar').validate(async (tar) => {
+schema.path('target').validate(async (tar) => {
   const entity = await EntityModel.findById(tar);
   return !!entity;
 }, 'Invalid target entity ID');
 
 const RelationshipModel = model<Relationship>('Relationship', schema);
 
-export { relationshipSchema, Relationship, RelationshipModel };
+export { Relationship, RelationshipModel, relationshipSchema };

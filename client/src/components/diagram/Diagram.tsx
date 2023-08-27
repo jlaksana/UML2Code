@@ -8,7 +8,6 @@ import ReactFlow, {
   Controls,
   Edge,
   EdgeChange,
-  MarkerType,
   MiniMap,
   NodeChange,
   applyEdgeChanges,
@@ -56,12 +55,12 @@ const nodeColor = (node: Entity<NodeData>) => {
 };
 
 const edgeTypes = {
-  inheritance: InheritanceEdge,
-  association: AssociationEdge,
-  dependency: DependencyEdge,
-  realization: RealizationEdge,
-  aggregation: AggregationEdge,
-  composition: CompositionEdge,
+  Inheritance: InheritanceEdge,
+  Association: AssociationEdge,
+  Dependency: DependencyEdge,
+  Realization: RealizationEdge,
+  Aggregation: AggregationEdge,
+  Composition: CompositionEdge,
 };
 
 // ! for testing purposes only
@@ -71,8 +70,7 @@ const initialEdges: Edge[] = [
     source: '64973d9948d50a631ba3d9ce',
     sourceHandle: 'bottom-right',
     target: '649741cd48d50a631ba3d9db',
-    type: 'association',
-    markerStart: { type: MarkerType.Arrow, width: 50, height: 50 },
+    type: 'Association',
     data: { label: 'association', srcMultiplicity: '1', tgtMultiplicity: '*' },
   },
   {
@@ -80,7 +78,7 @@ const initialEdges: Edge[] = [
     source: '64973d9948d50a631ba3d9ce',
     sourceHandle: 'bottom-left',
     target: '649741cd48d50a631ba3d9db',
-    type: 'dependency',
+    type: 'Dependency',
   },
   {
     id: '3-1',
@@ -88,7 +86,7 @@ const initialEdges: Edge[] = [
     sourceHandle: 'right-bottom',
     target: '649741cd48d50a631ba3d9db',
     targetHandle: 'top-right',
-    type: 'inheritance',
+    type: 'Inheritance',
   },
   {
     id: '3-2',
@@ -96,7 +94,7 @@ const initialEdges: Edge[] = [
     sourceHandle: 'right-top',
     target: '649741cd48d50a631ba3d9db',
     targetHandle: 'top-right',
-    type: 'realization',
+    type: 'Realization',
   },
   {
     id: '4-2',
@@ -104,7 +102,7 @@ const initialEdges: Edge[] = [
     sourceHandle: 'right-top',
     target: '64c57efc7a546ae970012685',
     targetHandle: 'top-left',
-    type: 'aggregation',
+    type: 'Aggregation',
     data: { label: 'aggregation', srcMultiplicity: '1..*' },
   },
   {
@@ -113,7 +111,7 @@ const initialEdges: Edge[] = [
     sourceHandle: 'right-bottom',
     target: '64c57efc7a546ae970012685',
     targetHandle: 'left-top',
-    type: 'composition',
+    type: 'Composition',
     data: { label: 'composition', srcMultiplicity: '*' },
   },
 ];

@@ -129,7 +129,6 @@ describe('getDiagramContents', () => {
     await createEnum(testEnum, '1000');
 
     const contents = await getDiagramContents('1000');
-    console.log(contents);
     expect(contents).not.toBeNull();
     expect(contents.diagramId).toEqual(1000);
     expect(contents.entities).not.toBeNull();

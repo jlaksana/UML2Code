@@ -1,8 +1,8 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
-import { DiagramModel } from '../src/models/diagram.model';
-import { EntityModel } from '../src/models/entity.model';
-import { RelationshipModel } from '../src/models/relationship.model';
+import { DiagramModel } from '../../src/models/diagram.model';
+import { EntityModel } from '../../src/models/entity.model';
+import { RelationshipModel } from '../../src/models/relationship.model';
 
 let mongoServer: MongoMemoryServer;
 let testDiagramId: number;
@@ -60,38 +60,44 @@ afterAll(async () => {
 describe('Relationship Schema', () => {
   it('should create a relationship', async () => {
     const testRelationship = new RelationshipModel({
-      variant: 'association',
+      type: 'Association',
       diagramId: testDiagramId,
-      src: testEntity1Id,
-      src_name: 'testSrcName',
-      src_multi: 'testSrcMulti',
-      tar: testEntity2Id,
-      tar_name: 'testTarName',
-      tar_multi: 'testTarMulti',
+      source: testEntity1Id,
+      target: testEntity2Id,
+      data: {
+        label: 'testLabel',
+        srcMultiplicity: '*',
+        tgtMultiplicity: '1..*',
+      },
     });
     await testRelationship.save();
 
-    expect(testRelationship).not.toBeNull();
-    expect(testRelationship.variant).toBe('association');
-    expect(testRelationship.diagramId).toBe(testDiagramId);
-    expect(testRelationship.src).toEqual(testEntity1Id);
-    expect(testRelationship.src_name).toBe('testSrcName');
-    expect(testRelationship.src_multi).toBe('testSrcMulti');
-    expect(testRelationship.tar).toEqual(testEntity2Id);
-    expect(testRelationship.tar_name).toBe('testTarName');
-    expect(testRelationship.tar_multi).toBe('testTarMulti');
+    expect(testRelationship).toMatchObject({
+      type: 'Association',
+      diagramId: testDiagramId,
+      source: testEntity1Id,
+      target: testEntity2Id,
+      sourceHandle: 'bottom-middle',
+      targetHandle: 'top-middle',
+      data: {
+        label: 'testLabel',
+        srcMultiplicity: '*',
+        tgtMultiplicity: '1..*',
+      },
+    });
   });
 
   it('should not create a relationship with a non-existent diagramId', async () => {
     const testRelationship = new RelationshipModel({
-      variant: 'association',
-      diagramId: 4040,
-      src: testEntity1Id,
-      src_name: 'testSrcName',
-      src_multi: 'testSrcMulti',
-      tar: testEntity2Id,
-      tar_name: 'testTarName',
-      tar_multi: 'testTarMulti',
+      type: 'Association',
+      diagramId: 9000000,
+      source: testEntity1Id,
+      target: testEntity2Id,
+      data: {
+        label: 'testLabel',
+        srcMultiplicity: '*',
+        tgtMultiplicity: '1..*',
+      },
     });
 
     await expect(testRelationship.save()).rejects.toThrow();
@@ -99,14 +105,15 @@ describe('Relationship Schema', () => {
 
   it('should not create a relationship with a non-existent src entity', async () => {
     const testRelationship = new RelationshipModel({
-      variant: 'inheritance',
+      type: 'Association',
       diagramId: testDiagramId,
-      src: new mongoose.Types.ObjectId(),
-      src_name: 'testSrcName',
-      src_multi: 'testSrcMulti',
-      tar: testEntity2Id,
-      tar_name: 'testTarName',
-      tar_multi: 'testTarMulti',
+      source: new mongoose.Types.ObjectId(),
+      target: testEntity2Id,
+      data: {
+        label: 'testLabel',
+        srcMultiplicity: '*',
+        tgtMultiplicity: '1..*',
+      },
     });
 
     await expect(testRelationship.save()).rejects.toThrow();
@@ -114,14 +121,15 @@ describe('Relationship Schema', () => {
 
   it('should not create a relationship with a non-existent tar entity', async () => {
     const testRelationship = new RelationshipModel({
-      variant: 'inheritance',
+      type: 'Association',
       diagramId: testDiagramId,
-      src: testEntity1Id,
-      src_name: 'testSrcName',
-      src_multi: 'testSrcMulti',
-      tar: new mongoose.Types.ObjectId(),
-      tar_name: 'testTarName',
-      tar_multi: 'testTarMulti',
+      source: testEntity1Id,
+      target: new mongoose.Types.ObjectId(),
+      data: {
+        label: 'testLabel',
+        srcMultiplicity: '*',
+        tgtMultiplicity: '1..*',
+      },
     });
 
     await expect(testRelationship.save()).rejects.toThrow();
@@ -129,14 +137,15 @@ describe('Relationship Schema', () => {
 
   it('should not create a relationship with a invalid variant', async () => {
     const testRelationship = new RelationshipModel({
-      variant: 'invalid',
+      type: 'invalid',
       diagramId: testDiagramId,
-      src: testEntity1Id,
-      src_name: 'testSrcName',
-      src_multi: 'testSrcMulti',
-      tar: testEntity2Id,
-      tar_name: 'testTarName',
-      tar_multi: 'testTarMulti',
+      source: testEntity1Id,
+      target: testEntity2Id,
+      data: {
+        label: 'testLabel',
+        srcMultiplicity: '*',
+        tgtMultiplicity: '1..*',
+      },
     });
 
     await expect(testRelationship.save()).rejects.toThrow();
