@@ -41,12 +41,12 @@ export const getSourcePermittedEntities = (type: RelationshipType) => {
     case 'Realization':
       return ['interface'];
     case 'Inheritance':
+      return ['class', 'interface'];
     case 'Dependency':
     case 'Aggregation':
     case 'Composition':
-      return ['class'];
     case 'Association':
-      return ['class', 'interface'];
+      return ['class'];
     default:
       return [];
   }
@@ -57,8 +57,8 @@ export const getTargetPermittedEntities = (type: RelationshipType) => {
     case 'Realization':
       return ['class'];
     case 'Inheritance':
-    case 'Dependency':
       return ['class', 'interface'];
+    case 'Dependency':
     case 'Aggregation':
     case 'Composition':
     case 'Association':

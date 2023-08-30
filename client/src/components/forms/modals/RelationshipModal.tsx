@@ -1,8 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { Autocomplete, Button, Modal, TextField, Tooltip } from '@mui/material';
+import axios from 'axios';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { RelationshipType } from '../../../types';
+import { AlertType } from '../../alert/AlertContext';
+import useAlert from '../../alert/useAlert';
 import LongRelationshipInput from '../inputs/LongRelationshipInput';
 import ShortRelationshipInput from '../inputs/ShortRelationshipInput';
 
@@ -78,6 +82,10 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
   const [tgtMultiplicity, setTgtMultiplicity] = useState('');
   const [errorMessage, setErrorMessage] = useState();
 
+  const { setAlert } = useAlert();
+
+  const { diagramId } = useParams();
+
   const close = () => {
     setType(null);
     setSource('');
@@ -99,9 +107,29 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
     setErrorMessage(undefined);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log(source, target);
+    setErrorMessage(undefined);
+
+    const relationship = {
+      type,
+      source,
+      target,
+      label,
+      srcMultiplicity,
+      tgtMultiplicity,
+    };
+
+    try {
+      const res = await axios.post('/api/relationship', relationship, {
+        params: { diagramId },
+      });
+      console.log(res.data);
+      setAlert('Relationship created successfully', AlertType.SUCCESS);
+      close();
+    } catch (err: any) {
+      setErrorMessage(err.response.data.message);
+    }
   };
 
   const relationshipHelperText = `Relationships are the connections between classes. 
@@ -137,7 +165,7 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
                 label="Type"
                 variant="standard"
                 required
-                error={errorMessage}
+                error={errorMessage !== undefined}
                 helperText={errorMessage}
               />
             )}
