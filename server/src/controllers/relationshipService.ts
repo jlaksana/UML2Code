@@ -31,7 +31,6 @@ const relationshipUISchema = z
   .strict();
 
 const validateRelationship = async (data: unknown, diagramId: string) => {
-  console.log(data);
   // validate all fields are present and valid
   const parsedDataFromUI = relationshipUISchema.safeParse(data);
   if (!parsedDataFromUI.success) {
