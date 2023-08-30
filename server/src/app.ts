@@ -7,6 +7,7 @@ import diagramRouter from './routes/diagrams';
 import entityRouter from './routes/entity';
 import enumRouter from './routes/enums';
 import interfaceRouter from './routes/interfaces';
+import relationshipRouter from './routes/relationship';
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/api/class', classRouter);
 app.use('/api/interface', interfaceRouter);
 app.use('/api/enum', enumRouter);
 app.use('/api/entity', entityRouter);
+app.use('/api/relationship', relationshipRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello World from UML2Code API!');
