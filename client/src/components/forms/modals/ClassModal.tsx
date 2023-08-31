@@ -110,17 +110,9 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
     if (id) {
       // editing existing class
       try {
-        const res = await axios.put(
-          `/api/class/${id}?diagramId=${diagramId}`,
-          klass,
-          {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json;charset=UTF-8',
-            },
-            timeout: 5000,
-          }
-        );
+        const res = await axios.put(`/api/class/${id}`, klass, {
+          params: { diagramId },
+        });
         const updatedKlass = res.data as Entity<Klass>;
         entitiesDispatch({ type: 'UPDATE_KLASS', payload: updatedKlass });
         setAlert('Class updated successfully', AlertType.SUCCESS);
@@ -132,17 +124,9 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
     } else {
       // adding new class
       try {
-        const res = await axios.post(
-          `/api/class?diagramId=${diagramId}`,
-          klass,
-          {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json;charset=UTF-8',
-            },
-            timeout: 5000,
-          }
-        );
+        const res = await axios.post('/api/class', klass, {
+          params: { diagramId },
+        });
         const newKlass = res.data as Entity<Klass>;
         entitiesDispatch({ type: 'ADD_KLASS', payload: newKlass });
         setAlert('Class created successfully', AlertType.SUCCESS);

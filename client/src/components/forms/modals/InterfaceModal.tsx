@@ -84,10 +84,9 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
     if (id) {
       // edit
       try {
-        const res = await axios.put(
-          `/api/interface/${id}?diagramId=${diagramId}`,
-          interfaceData
-        );
+        const res = await axios.put(`/api/interface/${id}`, interfaceData, {
+          params: { diagramId },
+        });
         const updatedInterface = res.data as Entity<Interface>;
         entitiesDispatch({
           type: 'UPDATE_INTERFACE',
@@ -102,17 +101,9 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
     } else {
       // create
       try {
-        const res = await axios.post(
-          `/api/interface?diagramId=${diagramId}`,
-          interfaceData,
-          {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json;charset=UTF-8',
-            },
-            timeout: 5000,
-          }
-        );
+        const res = await axios.post('/api/interface', interfaceData, {
+          params: { diagramId },
+        });
         const newInterface = res.data as Entity<Interface>;
         entitiesDispatch({
           type: 'ADD_INTERFACE',
