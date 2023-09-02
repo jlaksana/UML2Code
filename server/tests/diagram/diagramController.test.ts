@@ -8,7 +8,10 @@ import {
 } from '../../src/controllers/diagramController';
 import { createEnum } from '../../src/controllers/enumController';
 import { createInterface } from '../../src/controllers/interfaceController';
+import { createRelationship } from '../../src/controllers/relationshipController';
 import { CounterModel, DiagramModel } from '../../src/models/diagram.model';
+import { EntityModel } from '../../src/models/entity.model';
+import { RelationshipModel } from '../../src/models/relationship.model';
 
 let mongoServer: MongoMemoryServer;
 
@@ -87,6 +90,8 @@ describe('getDiagramContents', () => {
   afterEach(async () => {
     await DiagramModel.deleteMany({});
     await CounterModel.deleteMany({});
+    await EntityModel.deleteMany({});
+    await RelationshipModel.deleteMany({});
   });
 
   it('should be able to get the contents of a diagram', async () => {
@@ -135,5 +140,31 @@ describe('getDiagramContents', () => {
     expect(contents.entities.length).toEqual(3);
   });
 
-  // TODO test relationships
+  it('should be able to get the contents of a diagram with relationships', async () => {
+    const testClass = {
+      name: 'classtest',
+      isAbstract: false,
+      constants: [],
+      attributes: [],
+      methods: [],
+    };
+    await createClass(testClass, '1000');
+    const testInterface = { name: 'interfacetest', constants: [], methods: [] };
+    await createInterface(testInterface, '1000');
+    const testRelationship = {
+      type: 'Association',
+      source: 'classtest',
+      target: 'interfacetest',
+      label: 'test',
+      srcMultiplicity: '1',
+      tgtMultiplicity: '1',
+    };
+    await createRelationship(testRelationship, '1000');
+
+    const contents = await getDiagramContents('1000');
+    expect(contents).not.toBeNull();
+    expect(contents.diagramId).toEqual(1000);
+    expect(contents.relationships).not.toBeNull();
+    expect(contents.relationships.length).toEqual(1);
+  });
 });

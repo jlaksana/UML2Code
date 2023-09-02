@@ -37,7 +37,7 @@ import ClassNode from './nodes/ClassNode';
 import EnumNode from './nodes/EnumNode';
 import InterfaceNode from './nodes/InterfaceNode';
 
-// define node types and their components
+// define node types and their custom components
 const nodeTypes = {
   class: ClassNode,
   interface: InterfaceNode,
@@ -58,6 +58,7 @@ const nodeColor = (node: Entity) => {
   }
 };
 
+// define edge types and their custom components
 const edgeTypes = {
   Inheritance: InheritanceEdge,
   Association: AssociationEdge,
@@ -67,63 +68,9 @@ const edgeTypes = {
   Composition: CompositionEdge,
 };
 
-// ! for testing purposes only
-const initialEdges: Edge[] = [
-  {
-    id: '1-2',
-    source: '64973d9948d50a631ba3d9ce',
-    sourceHandle: 'bottom-right',
-    target: '649741cd48d50a631ba3d9db',
-    type: 'Association',
-    data: { label: 'association', srcMultiplicity: '1', tgtMultiplicity: '*' },
-  },
-  {
-    id: '2-1',
-    source: '64973d9948d50a631ba3d9ce',
-    sourceHandle: 'bottom-left',
-    target: '649741cd48d50a631ba3d9db',
-    type: 'Dependency',
-  },
-  {
-    id: '3-1',
-    source: '64973d9948d50a631ba3d9ce',
-    sourceHandle: 'right-bottom',
-    target: '649741cd48d50a631ba3d9db',
-    targetHandle: 'top-right',
-    type: 'Inheritance',
-  },
-  {
-    id: '3-2',
-    source: '64973d9948d50a631ba3d9ce',
-    sourceHandle: 'right-top',
-    target: '649741cd48d50a631ba3d9db',
-    targetHandle: 'top-right',
-    type: 'Realization',
-  },
-  {
-    id: '4-2',
-    source: '649741cd48d50a631ba3d9db',
-    sourceHandle: 'right-top',
-    target: '64c57efc7a546ae970012685',
-    targetHandle: 'top-left',
-    type: 'Aggregation',
-    data: { label: 'aggregation', srcMultiplicity: '1..*' },
-  },
-  {
-    id: '4-3',
-    source: '649741cd48d50a631ba3d9db',
-    sourceHandle: 'right-bottom',
-    target: '64c57efc7a546ae970012685',
-    targetHandle: 'left-top',
-    type: 'Composition',
-    data: { label: 'composition', srcMultiplicity: '*' },
-  },
-];
-
 function Diagram() {
   const entities = useEntities();
   const entitiesDispatch = useEntitiesDispatch();
-  // const [edges, setEdges] = useState(initialEdges);
   const relationships = useRelationships();
   const relationshipsDispatch = useRelationshipsDispatch();
 
@@ -135,10 +82,9 @@ function Diagram() {
       try {
         const res = await axios.get(`/api/diagram/${diagramId}/contents`);
         entitiesDispatch({ type: 'SET_ENTITIES', payload: res.data.entities });
-        // TODO set edges here
         relationshipsDispatch({
           type: 'SET_RELATIONSHIPS',
-          payload: initialEdges,
+          payload: res.data.relationships,
         });
       } catch (e) {
         setAlert(
@@ -147,7 +93,6 @@ function Diagram() {
         );
       }
     };
-
     fetchDiagramContents();
   }, [diagramId, entitiesDispatch, relationshipsDispatch, setAlert]);
 

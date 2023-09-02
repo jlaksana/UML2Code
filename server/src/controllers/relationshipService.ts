@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import pick from 'lodash.pick';
-import { Document } from 'mongoose';
 import { z } from 'zod';
 import { DiagramModel } from '../models/diagram.model';
 import { EntityModel } from '../models/entity.model';
@@ -148,7 +147,7 @@ const validateSourceAndTarget = async (
   return { sourceId: sourceEntity._id, targetId: targetEntity._id };
 };
 
-const reformatRelationship = (relationship: Document<Relationship>) => {
+const reformatRelationship = (relationship: Relationship) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const reformattedRelationship: any = relationship.toObject();
 

@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Document, Schema, model } from 'mongoose';
 import { z } from 'zod';
 import { DiagramModel } from './diagram.model';
 import { EntityModel } from './entity.model';

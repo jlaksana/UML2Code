@@ -17,7 +17,7 @@ const createRelationship = async (data: unknown, diagramId: string) => {
     });
     await relationship.save();
 
-    return reformatRelationship(relationship as never);
+    return reformatRelationship(relationship);
   } catch (e) {
     // could not create a relationship in database
     console.log(e);

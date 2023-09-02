@@ -1,11 +1,13 @@
 import { DiagramModel } from '../models/diagram.model';
 import { EntityModel } from '../models/entity.model';
+import { RelationshipModel } from '../models/relationship.model';
 import { getNextSequence } from '../utils';
 import {
   reformatClass,
   reformatEnum,
   reformatInterface,
 } from './entityServices';
+import { reformatRelationship } from './relationshipService';
 
 const findDiagramById = async (id: string) => {
   const idRegex = /^\d{4}$/;
@@ -23,8 +25,8 @@ const findDiagramById = async (id: string) => {
  */
 const getDiagramContents = async (id: string) => {
   const diagram = await findDiagramById(id);
-  const entities = await EntityModel.find({ diagramId: diagram.id });
 
+  const entities = await EntityModel.find({ diagramId: diagram.id });
   const classes = entities
     .filter((entity) => entity.type === 'class')
     .map((c) => reformatClass(c));
@@ -35,10 +37,12 @@ const getDiagramContents = async (id: string) => {
     .filter((entity) => entity.type === 'enum')
     .map((e) => reformatEnum(e));
 
+  const relationships = await RelationshipModel.find({ diagramId: diagram.id });
+
   return {
     diagramId: diagram.id,
     entities: [...classes, ...interfaces, ...enums],
-    relationships: [],
+    relationships: relationships.map((r) => reformatRelationship(r)),
   };
 };
 
