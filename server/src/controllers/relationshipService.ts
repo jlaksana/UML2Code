@@ -104,9 +104,6 @@ const validateSourceAndTarget = async (
   }
 
   try {
-    if (sourceEntity.type === 'enum') {
-      throw new Error();
-    }
     switch (relationshipType) {
       case 'Realization':
         if (
@@ -120,7 +117,8 @@ const validateSourceAndTarget = async (
       case 'Inheritance':
         if (
           sourceEntity._id.equals(targetEntity._id) ||
-          sourceEntity.type !== targetEntity.type
+          sourceEntity.type !== targetEntity.type ||
+          sourceEntity.type === 'enum'
         ) {
           throw new Error();
         }

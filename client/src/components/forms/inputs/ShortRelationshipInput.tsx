@@ -34,6 +34,7 @@ function ShortRelationshipInput({
         width={190}
         includeClasses={sourcePermittedEntities.includes('class')}
         includeInterfaces={sourcePermittedEntities.includes('interface')}
+        includeEnums={sourcePermittedEntities.includes('enum')}
         restrictOptions
       />
       <GroupSelect
