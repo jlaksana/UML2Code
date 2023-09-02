@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
@@ -19,6 +19,10 @@ import {
   useEntities,
   useEntitiesDispatch,
 } from '../../context/EntitiesContext';
+import {
+  useRelationships,
+  useRelationshipsDispatch,
+} from '../../context/RelationshipsContext';
 import '../../styles/Editor.css';
 import { Entity, NodeData } from '../../types';
 import { AlertType } from '../alert/AlertContext';
@@ -119,7 +123,9 @@ const initialEdges: Edge[] = [
 function Diagram() {
   const entities = useEntities();
   const entitiesDispatch = useEntitiesDispatch();
-  const [edges, setEdges] = useState(initialEdges);
+  // const [edges, setEdges] = useState(initialEdges);
+  const relationships = useRelationships();
+  const relationshipsDispatch = useRelationshipsDispatch();
 
   const { diagramId } = useParams();
   const { setAlert } = useAlert();
@@ -130,6 +136,10 @@ function Diagram() {
         const res = await axios.get(`/api/diagram/${diagramId}/contents`);
         entitiesDispatch({ type: 'SET_NODES', payload: res.data.entities });
         // TODO set edges here
+        relationshipsDispatch({
+          type: 'SET_RELATIONSHIPS',
+          payload: initialEdges,
+        });
       } catch (e) {
         setAlert(
           'Could not fetch diagram contents. Try again',
@@ -139,7 +149,7 @@ function Diagram() {
     };
 
     fetchDiagramContents();
-  }, [diagramId, entitiesDispatch, setAlert]);
+  }, [diagramId, entitiesDispatch, relationshipsDispatch, setAlert]);
 
   const getEntityPosition = (id: string, ents: Entity<NodeData>[]) => {
     const entity = ents.find((e) => e.id === id);
@@ -176,15 +186,23 @@ function Diagram() {
 
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) =>
-      setEdges((eds) => applyEdgeChanges(changes, eds)),
-    []
+      // TODO find out if we can update one edge from the edgeChange
+      relationshipsDispatch({
+        type: 'SET_RELATIONSHIPS',
+        payload: applyEdgeChanges(changes, relationships),
+      }),
+    [relationships, relationshipsDispatch]
   );
 
   const onEdgeUpdate = useCallback(
     (oldEdge: Edge, newConnection: Connection) =>
       // TODO validate then update edge in db
-      setEdges((els) => updateEdge(oldEdge, newConnection, els)),
-    []
+      // TODO find out if we can update one edge from newConnection
+      relationshipsDispatch({
+        type: 'SET_RELATIONSHIPS',
+        payload: updateEdge(oldEdge, newConnection, relationships),
+      }),
+    [relationships, relationshipsDispatch]
   );
 
   return (
@@ -193,7 +211,7 @@ function Diagram() {
         nodes={entities}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
-        edges={edges}
+        edges={relationships}
         edgeTypes={edgeTypes}
         onEdgesChange={onEdgesChange}
         onEdgeUpdate={onEdgeUpdate}

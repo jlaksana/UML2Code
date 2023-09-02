@@ -1,4 +1,5 @@
 import { EntitiesProvider } from '../context/EntitiesContext';
+import { RelationshipsProvider } from '../context/RelationshipsContext';
 import AddNewSpeedDial from './AddNewSpeedDial';
 import Header from './Header';
 import AlertToast from './alert/Alert';
@@ -10,11 +11,13 @@ function Editor() {
     <AlertProvider>
       <AlertToast />
       <EntitiesProvider>
-        <div className="editor">
-          <Header />
-          <AddNewSpeedDial />
-          <Diagram />
-        </div>
+        <RelationshipsProvider>
+          <div className="editor">
+            <Header />
+            <AddNewSpeedDial />
+            <Diagram />
+          </div>
+        </RelationshipsProvider>
       </EntitiesProvider>
     </AlertProvider>
   );

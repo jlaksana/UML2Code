@@ -1,4 +1,4 @@
-import { Node } from 'reactflow';
+import { Edge, Node } from 'reactflow';
 
 export type DataType =
   | ''
@@ -71,3 +71,11 @@ export type RelationshipType =
   | 'Composition'
   | 'Realization'
   | 'Dependency';
+
+export type Relationship = Edge<RelationshipData | undefined>;
+
+export type RelationshipData = {
+  label: string;
+  srcMultiplicity: string;
+  tgtMultiplicity: string;
+};
