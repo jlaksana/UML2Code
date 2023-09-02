@@ -24,7 +24,7 @@ import {
   useRelationshipsDispatch,
 } from '../../context/RelationshipsContext';
 import '../../styles/Editor.css';
-import { Entity, NodeData } from '../../types';
+import { Entity } from '../../types';
 import { AlertType } from '../alert/AlertContext';
 import useAlert from '../alert/useAlert';
 import AggregationEdge from './edges/AggregationEdge';
@@ -45,7 +45,7 @@ const nodeTypes = {
 };
 
 // handle colors for minimap
-const nodeColor = (node: Entity<NodeData>) => {
+const nodeColor = (node: Entity) => {
   switch (node.type) {
     case 'class':
       return '#D4F1F4';
@@ -134,7 +134,7 @@ function Diagram() {
     const fetchDiagramContents = async () => {
       try {
         const res = await axios.get(`/api/diagram/${diagramId}/contents`);
-        entitiesDispatch({ type: 'SET_NODES', payload: res.data.entities });
+        entitiesDispatch({ type: 'SET_ENTITIES', payload: res.data.entities });
         // TODO set edges here
         relationshipsDispatch({
           type: 'SET_RELATIONSHIPS',
@@ -151,7 +151,7 @@ function Diagram() {
     fetchDiagramContents();
   }, [diagramId, entitiesDispatch, relationshipsDispatch, setAlert]);
 
-  const getEntityPosition = (id: string, ents: Entity<NodeData>[]) => {
+  const getEntityPosition = (id: string, ents: Entity[]) => {
     const entity = ents.find((e) => e.id === id);
     if (!entity) return { x: 0, y: 0 };
     return entity.position;
@@ -170,13 +170,14 @@ function Diagram() {
           const updatedId = changes[0].id;
           const newPos = getEntityPosition(updatedId, newEntities);
           await axios.put(`/api/entity/${updatedId}/position`, newPos);
-          entitiesDispatch({ type: 'END_UPDATE_NODES', payload: newEntities });
+          // TODO investigate if we can update one node from the nodeChange
+          entitiesDispatch({ type: 'SET_ENTITIES', payload: newEntities });
         } catch (e) {
           setAlert('Server error. Please try again', AlertType.ERROR);
         }
       } else {
         entitiesDispatch({
-          type: 'UPDATE_NODES',
+          type: 'SET_ENTITIES',
           payload: applyNodeChanges(changes, entities),
         });
       }
@@ -184,6 +185,7 @@ function Diagram() {
     [entities, entitiesDispatch, setAlert]
   );
 
+  // handle select and remove of edges
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) =>
       // TODO find out if we can update one edge from the edgeChange
@@ -194,6 +196,7 @@ function Diagram() {
     [relationships, relationshipsDispatch]
   );
 
+  // handle edge source and target updates
   const onEdgeUpdate = useCallback(
     (oldEdge: Edge, newConnection: Connection) =>
       // TODO validate then update edge in db

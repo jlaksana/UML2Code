@@ -69,8 +69,8 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
         const res = await axios.put(`/api/enum/${id}`, enumer, {
           params: { diagramId },
         });
-        const updatedEnum = (await res.data) as Entity<Enum>;
-        entitiesDispatch({ type: 'UPDATE_ENUM', payload: updatedEnum });
+        const updatedEnum = (await res.data) as Entity;
+        entitiesDispatch({ type: 'UPDATE_ENTITY', payload: updatedEnum });
         setAlert('Enum updated successfully', AlertType.SUCCESS);
         close();
       } catch (err: any) {
@@ -83,8 +83,8 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
         const res = await axios.post('/api/enum', enumer, {
           params: { diagramId },
         });
-        const newEnum = (await res.data) as Entity<Enum>;
-        entitiesDispatch({ type: 'ADD_ENUM', payload: newEnum });
+        const newEnum = (await res.data) as Entity;
+        entitiesDispatch({ type: 'ADD_ENTITY', payload: newEnum });
         setAlert('Enum created successfully', AlertType.SUCCESS);
         close();
       } catch (err: any) {

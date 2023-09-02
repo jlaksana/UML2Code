@@ -1,8 +1,8 @@
 import { Dispatch, createContext, useContext, useReducer } from 'react';
-import { Entity, NodeData } from '../types';
+import { Entity } from '../types';
 import entitiesReducer, { EntityAction } from './EntitiesReducer';
 
-const EntitiesContext = createContext<Entity<NodeData>[] | null>(null);
+const EntitiesContext = createContext<Entity[] | null>(null);
 const EntitiesDispatchContext = createContext<Dispatch<EntityAction> | null>(
   null
 );

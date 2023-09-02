@@ -14,7 +14,7 @@ export type DataType =
 export type Visibility = '+' | '—' | '#';
 
 // Entity is a node in the graph where its data can be a class, interface, or enum
-export type Entity<T extends NodeData> = Node<T>;
+export type Entity = Node<NodeData>;
 
 export type NodeData = Klass | Interface | Enum;
 

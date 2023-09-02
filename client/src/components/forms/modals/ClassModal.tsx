@@ -113,8 +113,8 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
         const res = await axios.put(`/api/class/${id}`, klass, {
           params: { diagramId },
         });
-        const updatedKlass = res.data as Entity<Klass>;
-        entitiesDispatch({ type: 'UPDATE_KLASS', payload: updatedKlass });
+        const updatedKlass = res.data as Entity;
+        entitiesDispatch({ type: 'UPDATE_ENTITY', payload: updatedKlass });
         setAlert('Class updated successfully', AlertType.SUCCESS);
         close();
       } catch (err: any) {
@@ -127,8 +127,8 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
         const res = await axios.post('/api/class', klass, {
           params: { diagramId },
         });
-        const newKlass = res.data as Entity<Klass>;
-        entitiesDispatch({ type: 'ADD_KLASS', payload: newKlass });
+        const newKlass = res.data as Entity;
+        entitiesDispatch({ type: 'ADD_ENTITY', payload: newKlass });
         setAlert('Class created successfully', AlertType.SUCCESS);
         close();
       } catch (err: any) {
