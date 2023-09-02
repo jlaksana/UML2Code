@@ -4,7 +4,8 @@ import { Autocomplete, Button, Modal, TextField, Tooltip } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { RelationshipType } from '../../../types';
+import { useRelationshipsDispatch } from '../../../context/RelationshipsContext';
+import { Relationship, RelationshipType } from '../../../types';
 import { AlertType } from '../../alert/AlertContext';
 import useAlert from '../../alert/useAlert';
 import LongRelationshipInput from '../inputs/LongRelationshipInput';
@@ -82,6 +83,7 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
   const [tgtMultiplicity, setTgtMultiplicity] = useState('');
   const [errorMessage, setErrorMessage] = useState();
 
+  const relationshipsDispatch = useRelationshipsDispatch();
   const { setAlert } = useAlert();
 
   const { diagramId } = useParams();
@@ -124,7 +126,11 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
       const res = await axios.post('/api/relationship', relationship, {
         params: { diagramId },
       });
-      console.log(res.data);
+      const newRelationship = res.data as Relationship;
+      relationshipsDispatch({
+        type: 'ADD_RELATIONSHIP',
+        payload: newRelationship,
+      });
       setAlert('Relationship created successfully', AlertType.SUCCESS);
       close();
     } catch (err: any) {

@@ -2,13 +2,8 @@ import { Relationship } from '../types';
 
 export type RelationshipAction =
   | {
-      type: 'ADD_RELATIONSHIP';
+      type: 'ADD_RELATIONSHIP' | 'UPDATE_RELATIONSHIP';
       payload: Relationship;
-    }
-  | {
-      type: 'UPDATE_RELATIONSHIP';
-      payload: Relationship;
-      id: string;
     }
   | {
       type: 'DELETE_RELATIONSHIP';
