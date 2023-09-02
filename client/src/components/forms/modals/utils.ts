@@ -46,7 +46,7 @@ export const getSourcePermittedEntities = (type: RelationshipType) => {
     case 'Aggregation':
     case 'Composition':
     case 'Association':
-      return ['class'];
+      return ['class', 'interface', 'enum'];
     default:
       return [];
   }
@@ -62,7 +62,7 @@ export const getTargetPermittedEntities = (type: RelationshipType) => {
     case 'Aggregation':
     case 'Composition':
     case 'Association':
-      return ['class', 'interface', 'enum'];
+      return ['class', 'interface'];
     default:
       return [];
   }

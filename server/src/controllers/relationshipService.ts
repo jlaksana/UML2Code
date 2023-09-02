@@ -133,7 +133,7 @@ const validateSourceAndTarget = async (
       case 'Association':
       case 'Aggregation':
       case 'Dependency':
-        if (sourceEntity.type !== 'class') {
+        if (targetEntity.type === 'enum') {
           throw new Error();
         }
         break;
