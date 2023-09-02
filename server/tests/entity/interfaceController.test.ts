@@ -3,7 +3,6 @@ import mongoose, { ConnectOptions } from 'mongoose';
 import { createDiagram } from '../../src/controllers/diagramController';
 import {
   createInterface,
-  deleteInterface,
   editInterface,
 } from '../../src/controllers/interfaceController';
 import { EntityModel } from '../../src/models/entity.model';
@@ -240,35 +239,6 @@ describe('editInterface', () => {
 
     await expect(editInterface(interfaceId, '999', data)).rejects.toThrow(
       'Could not find a diagram with the given id: 999'
-    );
-  });
-});
-
-describe('deleteInterface', () => {
-  let interfaceId: string;
-
-  beforeEach(async () => {
-    const data = {
-      name: 'Shape',
-    };
-
-    const createdInterface = await createInterface(data, diagramId);
-    interfaceId = createdInterface.id;
-  });
-
-  afterEach(async () => {
-    await EntityModel.deleteMany({});
-  });
-
-  it('should be able to delete an interface', async () => {
-    await deleteInterface(interfaceId);
-    const deletedInterface = await EntityModel.findById(interfaceId);
-    expect(deletedInterface).toBeNull();
-  });
-
-  it('should not delete an interface with an invalid id', async () => {
-    await expect(deleteInterface('invalidId')).rejects.toThrow(
-      'Could not delete an interface with the given id: invalidId'
     );
   });
 });

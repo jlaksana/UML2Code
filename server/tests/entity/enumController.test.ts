@@ -1,11 +1,7 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
 import { createDiagram } from '../../src/controllers/diagramController';
-import {
-  createEnum,
-  deleteEnum,
-  editEnum,
-} from '../../src/controllers/enumController';
+import { createEnum, editEnum } from '../../src/controllers/enumController';
 import { Entity, EntityModel } from '../../src/models/entity.model';
 
 let mongoServer: MongoMemoryServer;
@@ -173,36 +169,6 @@ describe('editEnum', () => {
     };
     await expect(editEnum('invalidId', diagramId, data)).rejects.toThrow(
       'Could not update an enum with the given id: invalidId'
-    );
-  });
-});
-
-describe('deleteEnum', () => {
-  let enumer: Entity;
-  beforeEach(async () => {
-    const data = {
-      name: 'Color enum',
-      values: [
-        { id: 1, name: 'RED' },
-        { id: 2, name: 'BLUE' },
-      ],
-    };
-    enumer = await createEnum(data, diagramId);
-  });
-
-  afterEach(async () => {
-    await EntityModel.deleteMany({});
-  });
-
-  it('should be able to delete an enum', async () => {
-    await deleteEnum(enumer.id);
-    const entity = await EntityModel.findById(enumer.id);
-    expect(entity).toBeNull();
-  });
-
-  it('should throw an error if the enum id is invalid', async () => {
-    await expect(deleteEnum('invalidId')).rejects.toThrow(
-      'Could not delete an enum with the given id: invalidId'
     );
   });
 });

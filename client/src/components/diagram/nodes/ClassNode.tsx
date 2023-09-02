@@ -18,7 +18,7 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/api/class/${id}`);
+      await axios.delete(`/api/entity/${id}`);
       entitiesDispatch({ type: 'DELETE_ENTITY', id });
     } catch (e) {
       setAlert('Could not delete class. Try again', AlertType.ERROR);

@@ -2,12 +2,14 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
 import {
   createClass,
-  deleteClass,
+  deleteEntity,
   editClass,
   updatePosition,
 } from '../../src/controllers/classController';
 import { createDiagram } from '../../src/controllers/diagramController';
+import { createRelationship } from '../../src/controllers/relationshipController';
 import { Entity, EntityModel } from '../../src/models/entity.model';
+import { RelationshipModel } from '../../src/models/relationship.model';
 
 let mongoServer: MongoMemoryServer;
 let diagramId: string;
@@ -222,7 +224,7 @@ describe('editClass', () => {
   });
 });
 
-describe('deleteClass', () => {
+describe('deleteEntity', () => {
   let klass: Entity;
   beforeEach(async () => {
     // test data
@@ -234,16 +236,53 @@ describe('deleteClass', () => {
     klass = await createClass(data, diagramId);
   });
 
+  afterEach(async () => {
+    await EntityModel.deleteMany({});
+  });
+
   it('should be able to delete a class', async () => {
-    await deleteClass(klass.id);
+    await deleteEntity(klass.id);
     const deletedClass = await EntityModel.findById(klass.id);
     expect(deletedClass).toBeNull();
   });
 
   it('should not be able to delete a class with an invalid id', async () => {
-    expect(deleteClass('invalid')).rejects.toThrow(
-      'Could not delete a class with the given id: invalid'
+    expect(deleteEntity('invalid')).rejects.toThrow(
+      'Could not delete entity with the given id: invalid'
     );
+  });
+
+  it('should delete all relationships associated with a class', async () => {
+    // create a relationship
+    const data = {
+      name: 'Square',
+      isAbstract: false,
+    };
+    const square = await createClass(data, diagramId);
+    const relationship1 = await createRelationship(
+      {
+        type: 'Association',
+        source: 'Circle',
+        target: 'Square',
+        srcMultiplicity: '1',
+        tgtMultiplicity: '1',
+      },
+      diagramId
+    );
+    const relationship2 = await createRelationship(
+      {
+        type: 'Association',
+        source: 'Square',
+        target: 'Circle',
+        srcMultiplicity: '1',
+        tgtMultiplicity: '1',
+      },
+      diagramId
+    );
+
+    await deleteEntity(square.id);
+    expect(await RelationshipModel.findById(relationship1.id)).toBeNull();
+    expect(await RelationshipModel.findById(relationship2.id)).toBeNull();
   });
 });
 

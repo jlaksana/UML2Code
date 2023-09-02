@@ -1,9 +1,5 @@
 import express from 'express';
-import {
-  createEnum,
-  deleteEnum,
-  editEnum,
-} from '../controllers/enumController';
+import { createEnum, editEnum } from '../controllers/enumController';
 import { getErrorMessage } from '../utils';
 
 const router = express.Router();
@@ -54,17 +50,6 @@ router.put('/:id', async (req, res) => {
   try {
     const updatedEnum = await editEnum(id, diagramId, req.body);
     res.status(200).json(updatedEnum);
-  } catch (e) {
-    res.status(400).json({ message: getErrorMessage(e) });
-    console.log(getErrorMessage(e));
-  }
-});
-
-router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    await deleteEnum(id);
-    res.status(204).json({ message: 'Successfully deleted enum' });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));

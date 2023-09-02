@@ -68,19 +68,4 @@ const editInterface = async (
   }
 };
 
-const deleteInterface = async (interfaceId: string) => {
-  try {
-    const deletedInterface = await EntityModel.findByIdAndDelete(interfaceId);
-    if (!deletedInterface) {
-      throw new Error();
-    }
-    return reformatInterface(deletedInterface);
-  } catch (e) {
-    console.log(e);
-    throw new Error(
-      `Could not delete an interface with the given id: ${interfaceId}`
-    );
-  }
-};
-
-export { createInterface, deleteInterface, editInterface };
+export { createInterface, editInterface };

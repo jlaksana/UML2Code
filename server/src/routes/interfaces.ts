@@ -1,7 +1,6 @@
 import express from 'express';
 import {
   createInterface,
-  deleteInterface,
   editInterface,
 } from '../controllers/interfaceController';
 import { getErrorMessage } from '../utils';
@@ -55,25 +54,6 @@ router.put('/:id', async (req, res) => {
   try {
     const updatedInterface = await editInterface(id, diagramId, req.body);
     res.status(200).json(updatedInterface);
-  } catch (e) {
-    res.status(400).json({ message: getErrorMessage(e) });
-    console.log(getErrorMessage(e));
-  }
-});
-
-/**
- * @route DELETE /api/interface/:id
- * @access Public
- * @param {string} id - interface id
- * @returns status 200 if successful
- * @returns status 400 if unsuccessful
- */
-router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    await deleteInterface(id);
-    res.status(204).json({ message: 'Interface deleted' });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));

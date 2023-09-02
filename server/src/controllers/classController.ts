@@ -1,4 +1,5 @@
 import { EntityModel } from '../models/entity.model';
+import { RelationshipModel } from '../models/relationship.model';
 import { removeWhitespace } from '../utils';
 import {
   reformatClass,
@@ -63,14 +64,18 @@ const editClass = async (classId: string, diagramId: string, data: unknown) => {
   }
 };
 
-const deleteClass = async (classId: string) => {
+const deleteEntity = async (entityId: string) => {
   try {
-    const klass = await EntityModel.findByIdAndDelete(classId);
-    if (!klass) {
+    const entity = await EntityModel.findByIdAndDelete(entityId);
+    if (!entity) {
       throw new Error();
     }
+    // delete all relationships that are connected to the entity
+    RelationshipModel.deleteMany({
+      $or: [{ source: entityId }, { target: entityId }],
+    }).exec();
   } catch (e) {
-    throw new Error(`Could not delete a class with the given id: ${classId}`);
+    throw new Error(`Could not delete entity with the given id: ${entityId}`);
   }
 };
 
@@ -92,4 +97,4 @@ const updatePosition = async (
   }
 };
 
-export { createClass, deleteClass, editClass, updatePosition };
+export { createClass, deleteEntity, editClass, updatePosition };

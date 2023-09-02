@@ -92,16 +92,4 @@ const editEnum = async (enumId: string, diagramId: string, data: unknown) => {
   }
 };
 
-const deleteEnum = async (enumId: string) => {
-  try {
-    const deletedEnum = await EntityModel.findByIdAndDelete(enumId);
-    if (!deletedEnum) {
-      throw new Error();
-    }
-  } catch (e) {
-    console.log(e);
-    throw new Error(`Could not delete an enum with the given id: ${enumId}`);
-  }
-};
-
-export { createEnum, deleteEnum, editEnum };
+export { createEnum, editEnum };
