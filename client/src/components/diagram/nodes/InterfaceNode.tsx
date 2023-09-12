@@ -20,6 +20,7 @@ function InterfaceNode({ id, data }: NodeProps<Interface>) {
     try {
       await axios.delete(`/api/entity/${id}`);
       entitiesDispatch({ type: 'DELETE_ENTITY', id });
+      setAlert('Interface successfully deleted', AlertType.SUCCESS);
     } catch (e) {
       setAlert('Could not delete interface. Try again', AlertType.ERROR);
     }

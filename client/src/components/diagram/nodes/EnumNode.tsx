@@ -19,6 +19,7 @@ function EnumNode({ id, data }: NodeProps<Enum>) {
     try {
       await axios.delete(`/api/entity/${id}`);
       entitiesDispatch({ type: 'DELETE_ENTITY', id });
+      setAlert('Enum successfully deleted', AlertType.SUCCESS);
     } catch (e) {
       setAlert('Could not delete enum. Try again', AlertType.ERROR);
     }
