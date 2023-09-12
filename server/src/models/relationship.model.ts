@@ -16,8 +16,8 @@ const SourceHandlePositions = z.enum([
   'bottom-left',
   'bottom-middle',
   'bottom-right',
-  'right-top',
   'right-middle',
+  'left-bottom',
   'right-bottom',
 ]);
 
@@ -27,8 +27,10 @@ const TargetHandlePositions = z.enum([
   'top-right',
   'left-top',
   'left-middle',
-  'left-bottom',
+  'right-top',
 ]);
+
+const umlMultiplicityRegex = /^(?:\d+|\d+\.\.\*|\d+\.\.\d+|\*|)$/;
 
 const relationshipSchema = z.object({
   type: RelationshipVariant,
@@ -40,14 +42,8 @@ const relationshipSchema = z.object({
   data: z
     .object({
       label: z.string().optional(),
-      srcMultiplicity: z
-        .string()
-        .regex(/^(?:\d+|\d+\.\.\*|\*)$/)
-        .optional(),
-      tgtMultiplicity: z
-        .string()
-        .regex(/^(?:\d+|\d+\.\.\*|\*)$/)
-        .optional(),
+      srcMultiplicity: z.string().regex(umlMultiplicityRegex).optional(),
+      tgtMultiplicity: z.string().regex(umlMultiplicityRegex).optional(),
     })
     .optional(),
 });
@@ -121,4 +117,9 @@ schema.path('target').validate(async (tar) => {
 
 const RelationshipModel = model<Relationship>('Relationship', schema);
 
-export { Relationship, RelationshipModel, relationshipSchema };
+export {
+  Relationship,
+  RelationshipModel,
+  relationshipSchema,
+  umlMultiplicityRegex,
+};

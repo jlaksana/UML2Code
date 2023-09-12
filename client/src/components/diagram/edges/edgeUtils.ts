@@ -6,30 +6,36 @@ const getMarkerRotation = (sourcePosition: Position) => {
       return '0deg';
     case Position.Right:
       return '270deg';
+    case Position.Left:
+      return '90deg';
     default:
       throw new Error(`Invalid position: ${sourcePosition}`);
   }
 };
 
-const getDiamondRefX = (targetPosition: Position) => {
-  switch (targetPosition) {
-    case Position.Top:
-      return 12;
+const getDiamondRefX = (sourcePosition: Position) => {
+  switch (sourcePosition) {
+    case Position.Bottom:
+      return 11.5;
     case Position.Left:
       return 19;
+    case Position.Right:
+      return 5;
     default:
-      throw new Error(`Invalid position: ${targetPosition}`);
+      throw new Error(`Invalid position: ${sourcePosition}`);
   }
 };
 
-const getDiamondRefY = (targetPosition: Position) => {
-  switch (targetPosition) {
-    case Position.Top:
-      return 19;
+const getDiamondRefY = (sourcePosition: Position) => {
+  switch (sourcePosition) {
+    case Position.Bottom:
+      return 5;
     case Position.Left:
       return 12;
+    case Position.Right:
+      return 12;
     default:
-      throw new Error(`Invalid position: ${targetPosition}`);
+      throw new Error(`Invalid position: ${sourcePosition}`);
   }
 };
 

@@ -25,13 +25,13 @@ function Handles() {
       <Handle id="left-middle" type="target" position={Position.Left} />
       <Handle
         id="left-bottom"
-        type="target"
+        type="source"
         position={Position.Left}
         style={{ top: '75%' }}
       />
       <Handle
         id="right-top"
-        type="source"
+        type="target"
         position={Position.Right}
         style={{ top: '25%' }}
       />

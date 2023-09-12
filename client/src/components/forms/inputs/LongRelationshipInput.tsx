@@ -52,30 +52,24 @@ function LongRelationshipInput({
           onChange={(e) => setLabel(e.target.value)}
         />
         <div className="sub-section">
-          <TextField
-            variant="standard"
-            label={`${getSourceLabel(type)} Multiplicity`}
-            value={srcMultiplicity}
-            onChange={(e) => setSrcMultiplicity(e.target.value)}
-            sx={{ width: 190 }}
-            error={
-              umlMultiplicityRegex.test(srcMultiplicity) === false &&
-              srcMultiplicity !== ''
-            }
-          />
           {type === 'Association' ? (
             <TextField
               variant="standard"
-              label={`${getTargetLabel(type)} Multiplicity`}
-              value={tgtMultiplicity}
-              onChange={(e) => setTgtMultiplicity(e.target.value)}
+              label={`${getSourceLabel(type)} Multiplicity`}
+              value={srcMultiplicity}
+              onChange={(e) => setSrcMultiplicity(e.target.value)}
               sx={{ width: 190 }}
-              error={
-                umlMultiplicityRegex.test(tgtMultiplicity) === false &&
-                tgtMultiplicity !== ''
-              }
+              error={umlMultiplicityRegex.test(srcMultiplicity) === false}
             />
           ) : null}
+          <TextField
+            variant="standard"
+            label={`${getTargetLabel(type)} Multiplicity`}
+            value={tgtMultiplicity}
+            onChange={(e) => setTgtMultiplicity(e.target.value)}
+            sx={{ width: 190 }}
+            error={umlMultiplicityRegex.test(tgtMultiplicity) === false}
+          />
         </div>
       </div>
     </div>

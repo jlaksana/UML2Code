@@ -14,7 +14,7 @@ export const getSourceLabel = (type: RelationshipType) => {
       return 'Supplier';
     case 'Aggregation':
     case 'Composition':
-      return 'Part';
+      return 'Whole';
     default:
       return 'Source';
   }
@@ -30,7 +30,7 @@ export const getTargetLabel = (type: RelationshipType) => {
       return 'Client';
     case 'Aggregation':
     case 'Composition':
-      return 'Whole';
+      return 'Part';
     default:
       return 'Target';
   }
@@ -40,13 +40,13 @@ export const getSourcePermittedEntities = (type: RelationshipType) => {
   switch (type) {
     case 'Realization':
       return ['interface'];
-    case 'Inheritance':
-      return ['class', 'interface'];
     case 'Dependency':
+      return ['class', 'interface', 'enum'];
+    case 'Inheritance':
     case 'Aggregation':
     case 'Composition':
     case 'Association':
-      return ['class', 'interface', 'enum'];
+      return ['class', 'interface'];
     default:
       return [];
   }
@@ -57,15 +57,15 @@ export const getTargetPermittedEntities = (type: RelationshipType) => {
     case 'Realization':
       return ['class'];
     case 'Inheritance':
-      return ['class', 'interface'];
     case 'Dependency':
+      return ['class', 'interface'];
     case 'Aggregation':
     case 'Composition':
     case 'Association':
-      return ['class', 'interface'];
+      return ['class', 'interface', 'enum'];
     default:
       return [];
   }
 };
 
-export const umlMultiplicityRegex = /^(?:\d+|\d+\.\.\*|\*)$/;
+export const umlMultiplicityRegex = /^(?:\d+|\d+\.\.\*|\d+\.\.\d+|\*|)$/;

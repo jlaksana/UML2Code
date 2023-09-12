@@ -3,7 +3,11 @@ import pick from 'lodash.pick';
 import { z } from 'zod';
 import { DiagramModel } from '../models/diagram.model';
 import { EntityModel } from '../models/entity.model';
-import { Relationship, RelationshipModel } from '../models/relationship.model';
+import {
+  Relationship,
+  RelationshipModel,
+  umlMultiplicityRegex,
+} from '../models/relationship.model';
 
 const relationshipUISchema = z
   .object({
@@ -18,14 +22,8 @@ const relationshipUISchema = z
     source: z.string(),
     target: z.string(),
     label: z.string().optional(),
-    srcMultiplicity: z
-      .string()
-      .regex(/^(?:\d+|\d+\.\.\*|\*|)$/)
-      .optional(),
-    tgtMultiplicity: z
-      .string()
-      .regex(/^(?:\d+|\d+\.\.\*|\*|)$/)
-      .optional(),
+    srcMultiplicity: z.string().regex(umlMultiplicityRegex).optional(),
+    tgtMultiplicity: z.string().regex(umlMultiplicityRegex).optional(),
   })
   .strict();
 
@@ -130,6 +128,10 @@ const validateSourceAndTarget = async (
       // eslint-disable-next-line no-fallthrough
       case 'Association':
       case 'Aggregation':
+        if (sourceEntity.type === 'enum') {
+          throw new Error();
+        }
+        break;
       case 'Dependency':
         if (targetEntity.type === 'enum') {
           throw new Error();
@@ -187,7 +189,7 @@ const hasDuplicateRelationship = async (
   source: string,
   target: string
 ) => {
-  // only allow one relationship of type Inheritance, Realization, or Dependency
+  // only allow one relationship of type Inheritance, Realization, or Dependency between two entities
   if (
     type !== 'Inheritance' &&
     type !== 'Realization' &&
@@ -202,6 +204,18 @@ const hasDuplicateRelationship = async (
     source,
     target,
   });
+
+  // an entity can only inherit from one entity
+  if (type === 'Inheritance' && relationship === null) {
+    const relationship2 = await RelationshipModel.findOne({
+      diagramId,
+      type,
+      target,
+    });
+    if (relationship2 !== null) {
+      return true;
+    }
+  }
   return relationship !== null;
 };
 

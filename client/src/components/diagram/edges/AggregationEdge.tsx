@@ -35,8 +35,8 @@ function AggregationEdge({
             viewBox="0 0 40 40"
             markerHeight={50}
             markerWidth={50}
-            refX={getDiamondRefX(targetPosition)}
-            refY={getDiamondRefY(targetPosition)}
+            refX={getDiamondRefX(sourcePosition)}
+            refY={getDiamondRefY(sourcePosition)}
           >
             <path
               d="M4.26244 14.2628C3.47041 13.4707 3.07439 13.0747 2.92601 12.618
@@ -63,7 +63,7 @@ function AggregationEdge({
           </marker>
         </defs>
       </svg>
-      <BaseEdge path={edgePath} markerEnd={`url(#${id})`} />
+      <BaseEdge path={edgePath} markerStart={`url(#${id})`} />
       <EdgeLabelRenderer>
         <EdgeLabel
           label={data?.label}
@@ -72,10 +72,10 @@ function AggregationEdge({
           y={labelY}
         />
         <EdgeLabel
-          label={data?.srcMultiplicity}
-          position="source"
-          x={sourceX + 10}
-          y={sourceY}
+          label={data?.tgtMultiplicity}
+          position="target"
+          x={targetX}
+          y={targetY}
         />
       </EdgeLabelRenderer>
     </>
