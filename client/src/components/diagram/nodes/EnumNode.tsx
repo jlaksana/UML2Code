@@ -1,13 +1,13 @@
-import { Button } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
-import { NodeProps, NodeToolbar } from 'reactflow';
+import { NodeProps } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import { Enum, EnumValue } from '../../../types';
 import { AlertType } from '../../alert/AlertContext';
 import useAlert from '../../alert/useAlert';
 import EnumModal from '../../forms/modals/EnumModal';
 import Handles from './Handles';
+import NodeToolBarCustom from './NodeToolBarCustom';
 
 function EnumNode({ id, data }: NodeProps<Enum>) {
   const [editOpen, setEditOpen] = useState(false);
@@ -28,23 +28,10 @@ function EnumNode({ id, data }: NodeProps<Enum>) {
   return (
     <>
       <Handles />
-      <NodeToolbar className="node-toolbar">
-        <Button
-          variant="contained"
-          size="small"
-          onClick={() => setEditOpen(true)}
-        >
-          Edit
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          onClick={handleDelete}
-        >
-          Delete
-        </Button>
-      </NodeToolbar>
+      <NodeToolBarCustom
+        setEditOpen={setEditOpen}
+        handleDelete={handleDelete}
+      />
       <div className="node" style={{ backgroundColor: '#ffcccb' }}>
         <div className="node-header">
           <div className="node-supertitle">{'<enumeration>'}</div>

@@ -1,7 +1,6 @@
-import { Button } from '@mui/material';
 import axios from 'axios';
 import { memo, useState } from 'react';
-import { NodeProps, NodeToolbar } from 'reactflow';
+import { NodeProps } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/Node.css';
 import { Attribute, Constant, Klass, Method } from '../../../types';
@@ -9,6 +8,7 @@ import { AlertType } from '../../alert/AlertContext';
 import useAlert from '../../alert/useAlert';
 import ClassModal from '../../forms/modals/ClassModal';
 import Handles from './Handles';
+import NodeToolBarCustom from './NodeToolBarCustom';
 
 function ClassNode({ id, data }: NodeProps<Klass>) {
   const [editOpen, setEditOpen] = useState(false);
@@ -29,23 +29,10 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
   return (
     <>
       <Handles />
-      <NodeToolbar className="node-toolbar">
-        <Button
-          variant="contained"
-          size="small"
-          onClick={() => setEditOpen(true)}
-        >
-          Edit
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          onClick={handleDelete}
-        >
-          Delete
-        </Button>
-      </NodeToolbar>
+      <NodeToolBarCustom
+        setEditOpen={setEditOpen}
+        handleDelete={handleDelete}
+      />
       <div className="node" style={{ backgroundColor: '#D4F1F4' }}>
         <div className="node-header">
           {data.isAbstract && (

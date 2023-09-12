@@ -1,7 +1,6 @@
-import { Button } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
-import { NodeProps, NodeToolbar } from 'reactflow';
+import { NodeProps } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/Node.css';
 import { Constant, Interface, Method } from '../../../types';
@@ -9,6 +8,7 @@ import { AlertType } from '../../alert/AlertContext';
 import useAlert from '../../alert/useAlert';
 import InterfaceModal from '../../forms/modals/InterfaceModal';
 import Handles from './Handles';
+import NodeToolBarCustom from './NodeToolBarCustom';
 
 function InterfaceNode({ id, data }: NodeProps<Interface>) {
   const [editOpen, setEditOpen] = useState(false);
@@ -29,23 +29,10 @@ function InterfaceNode({ id, data }: NodeProps<Interface>) {
   return (
     <>
       <Handles />
-      <NodeToolbar className="node-toolbar">
-        <Button
-          variant="contained"
-          size="small"
-          onClick={() => setEditOpen(true)}
-        >
-          Edit
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          size="small"
-          onClick={handleDelete}
-        >
-          Delete
-        </Button>
-      </NodeToolbar>
+      <NodeToolBarCustom
+        setEditOpen={setEditOpen}
+        handleDelete={handleDelete}
+      />
       <div className="node" style={{ backgroundColor: '#b1f3b1' }}>
         <div className="node-header">
           <div className="node-supertitle">{'<interface>'}</div>
