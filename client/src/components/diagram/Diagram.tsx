@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
@@ -73,6 +73,7 @@ function Diagram() {
   const entitiesDispatch = useEntitiesDispatch();
   const relationships = useRelationships();
   const relationshipsDispatch = useRelationshipsDispatch();
+  const edgeUpdateSuccessful = useRef(true);
 
   const { diagramId } = useParams();
   const { setAlert } = useAlert();
@@ -141,17 +142,33 @@ function Diagram() {
     [relationships, relationshipsDispatch]
   );
 
-  // handle edge source and target updates
+  // handle edge position updates
+  const onEdgeUpdateStart = useCallback(() => {
+    edgeUpdateSuccessful.current = false;
+  }, []);
+
   const onEdgeUpdate = useCallback(
-    (oldEdge: Edge, newConnection: Connection) =>
+    (oldEdge: Edge, newConnection: Connection) => {
       // TODO validate then update edge in db
       // TODO find out if we can update one edge from newConnection
+      edgeUpdateSuccessful.current = true;
       relationshipsDispatch({
         type: 'SET_RELATIONSHIPS',
         payload: updateEdge(oldEdge, newConnection, relationships),
-      }),
+      });
+    },
     [relationships, relationshipsDispatch]
   );
+
+  const onEdgeUpdateEnd = useCallback(() => {
+    if (!edgeUpdateSuccessful.current) {
+      setAlert(
+        'Cannot attach edge to that port. Try a different port',
+        AlertType.WARNING
+      );
+    }
+    edgeUpdateSuccessful.current = true;
+  }, [setAlert]);
 
   return (
     <div className="diagram">
@@ -162,7 +179,9 @@ function Diagram() {
         edges={relationships}
         edgeTypes={edgeTypes}
         onEdgesChange={onEdgesChange}
+        onEdgeUpdateStart={onEdgeUpdateStart}
         onEdgeUpdate={onEdgeUpdate}
+        onEdgeUpdateEnd={onEdgeUpdateEnd}
         deleteKeyCode={null}
       >
         <Background color="#444" variant={'dots' as BackgroundVariant} />
