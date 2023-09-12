@@ -31,6 +31,13 @@ const editRelationship = async (
   data: unknown
 ) => {};
 
-const deleteRelationship = async (relationshipId: string) => {};
+const deleteRelationship = async (relationshipId: string) => {
+  const relationship = await RelationshipModel.findByIdAndDelete(
+    relationshipId
+  );
+  if (!relationship) {
+    throw new Error('Could not find relationship');
+  }
+};
 
 export { createRelationship, deleteRelationship, editRelationship };

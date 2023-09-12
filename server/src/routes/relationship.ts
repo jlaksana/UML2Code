@@ -1,5 +1,8 @@
 import express from 'express';
-import { createRelationship } from '../controllers/relationshipController';
+import {
+  createRelationship,
+  deleteRelationship,
+} from '../controllers/relationshipController';
 import { getErrorMessage } from '../utils';
 
 const router = express.Router();
@@ -23,6 +26,25 @@ router.post('/', async (req, res) => {
   try {
     const newRelationship = await createRelationship(req.body, diagramId);
     res.status(201).json(newRelationship);
+  } catch (e) {
+    res.status(400).json({ message: getErrorMessage(e) });
+    console.log(e);
+  }
+});
+
+/**
+ * @route DELETE /api/relationship/:id
+ * @access Public
+ * @param {string} id - relationship id
+ * @returns status 200 if successful
+ * @returns status 400 if unsuccessful
+ */
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await deleteRelationship(id);
+    res.status(204).json({ message: 'OK' });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
     console.log(e);

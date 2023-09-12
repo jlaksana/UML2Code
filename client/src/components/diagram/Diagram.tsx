@@ -111,7 +111,7 @@ function Diagram() {
         changes[0].type === 'position' &&
         changes[0].dragging === false
       ) {
-        // user stopped dragging a node
+        // user stopped dragging a node. update position in db
         try {
           const updatedId = changes[0].id;
           const newPos = getEntityPosition(updatedId, newEntities);
@@ -129,6 +129,21 @@ function Diagram() {
       }
     },
     [entities, entitiesDispatch, setAlert]
+  );
+
+  // handle node deletion via delete key
+  const onNodesDelete = useCallback(
+    async (nodes: Entity[]) => {
+      try {
+        const nodeToDelete = nodes[0];
+        await axios.delete(`/api/entity/${nodeToDelete.id}`);
+        entitiesDispatch({ type: 'DELETE_ENTITY', id: nodeToDelete.id });
+        setAlert('Entity successfully deleted', AlertType.SUCCESS);
+      } catch (e) {
+        setAlert('Could not delete entity. Try again', AlertType.ERROR);
+      }
+    },
+    [entitiesDispatch, setAlert]
   );
 
   // handle select and remove of edges
@@ -170,19 +185,38 @@ function Diagram() {
     edgeUpdateSuccessful.current = true;
   }, [setAlert]);
 
+  // handle edge deletion via delete key
+  const onEdgeDelete = useCallback(
+    async (edges: Edge[]) => {
+      try {
+        const edgeToDelete = edges[0];
+        await axios.delete(`/api/relationship/${edgeToDelete.id}`);
+        relationshipsDispatch({
+          type: 'DELETE_RELATIONSHIP',
+          id: edgeToDelete.id,
+        });
+        setAlert('Relationship successfully deleted', AlertType.SUCCESS);
+      } catch (e) {
+        setAlert('Could not delete relationship. Try again', AlertType.ERROR);
+      }
+    },
+    [relationshipsDispatch, setAlert]
+  );
+
   return (
     <div className="diagram">
       <ReactFlow
         nodes={entities}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
+        onNodesDelete={onNodesDelete}
         edges={relationships}
         edgeTypes={edgeTypes}
         onEdgesChange={onEdgesChange}
         onEdgeUpdateStart={onEdgeUpdateStart}
         onEdgeUpdate={onEdgeUpdate}
         onEdgeUpdateEnd={onEdgeUpdateEnd}
-        deleteKeyCode={null}
+        onEdgesDelete={onEdgeDelete}
       >
         <Background color="#444" variant={'dots' as BackgroundVariant} />
         <Controls style={{ flexDirection: 'column', gap: 0, margin: '3em' }} />
