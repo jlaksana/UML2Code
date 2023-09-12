@@ -71,7 +71,7 @@ const deleteEntity = async (entityId: string) => {
       throw new Error();
     }
     // delete all relationships that are connected to the entity
-    RelationshipModel.deleteMany({
+    await RelationshipModel.deleteMany({
       $or: [{ source: entityId }, { target: entityId }],
     }).exec();
   } catch (e) {
