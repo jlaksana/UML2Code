@@ -35,11 +35,7 @@ const validateEnum = async (data: unknown, diagramId: string) => {
 
 const createEnum = async (data: unknown, diagramId: string) => {
   const validatedEnum = await validateEnum(data, diagramId);
-  const name = await validateDuplicateEntity(
-    validatedEnum.name,
-    diagramId,
-    null
-  );
+  const name = await validateDuplicateEntity(validatedEnum.name, diagramId);
 
   try {
     const entity = new EntityModel({

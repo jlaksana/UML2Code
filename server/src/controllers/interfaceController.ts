@@ -8,7 +8,7 @@ import {
 
 const createInterface = async (data: unknown, diagramId: string) => {
   const validatedData = await validateEntity(data, diagramId);
-  await validateDuplicateEntity(validatedData.name, diagramId, null);
+  await validateDuplicateEntity(validatedData.name, diagramId);
 
   if (validatedData.attributes) {
     throw new Error('Invalid - Ensure all fields are present and valid');

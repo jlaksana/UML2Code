@@ -9,7 +9,7 @@ import {
 
 const createClass = async (data: unknown, diagramId: string) => {
   const validatedData = await validateEntity(data, diagramId);
-  await validateDuplicateEntity(validatedData.name, diagramId, null);
+  await validateDuplicateEntity(validatedData.name, diagramId);
 
   try {
     // create a new entity while removing whitespace from all names

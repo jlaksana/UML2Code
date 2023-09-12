@@ -8,7 +8,7 @@ import { removeWhitespace } from '../utils';
 const validateDuplicateEntity = async (
   name: string,
   diagramId: string,
-  entityId: string | null
+  entityId?: string
 ) => {
   const strippedName = removeWhitespace(name);
   let count;
