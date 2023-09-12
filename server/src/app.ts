@@ -1,7 +1,7 @@
 import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
-import { limiter, loggerMiddleware } from './middleware/utilMiddleware';
+import { loggerMiddleware } from './middleware/utilMiddleware';
 import classRouter from './routes/classes';
 import diagramRouter from './routes/diagrams';
 import entityRouter from './routes/entity';
@@ -15,7 +15,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(compression());
-app.use(limiter);
 app.use(loggerMiddleware);
 
 // Routes
