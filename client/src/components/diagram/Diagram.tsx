@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useCallback, useEffect, useRef } from 'react';
+import { MouseEvent, useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
@@ -12,7 +12,6 @@ import ReactFlow, {
   NodeChange,
   applyEdgeChanges,
   applyNodeChanges,
-  updateEdge,
 } from 'reactflow';
 import 'reactflow/dist/base.css';
 import {
@@ -97,38 +96,30 @@ function Diagram() {
     fetchDiagramContents();
   }, [diagramId, entitiesDispatch, relationshipsDispatch, setAlert]);
 
-  const getEntityPosition = (id: string, ents: Entity[]) => {
-    const entity = ents.find((e) => e.id === id);
-    if (!entity) return { x: 0, y: 0 };
-    return entity.position;
-  };
-
   const onNodesChange = useCallback(
-    async (changes: NodeChange[]) => {
-      const newEntities = applyNodeChanges(changes, entities);
-      if (
-        changes.length === 1 &&
-        changes[0].type === 'position' &&
-        changes[0].dragging === false
-      ) {
-        // user stopped dragging a node. update position in db
-        try {
-          const updatedId = changes[0].id;
-          const newPos = getEntityPosition(updatedId, newEntities);
-          await axios.put(`/api/entity/${updatedId}/position`, newPos);
-          // TODO investigate if we can update one node from the nodeChange
-          entitiesDispatch({ type: 'SET_ENTITIES', payload: newEntities });
-        } catch (e) {
-          setAlert('Server error. Please try again', AlertType.ERROR);
-        }
-      } else {
-        entitiesDispatch({
-          type: 'SET_ENTITIES',
-          payload: applyNodeChanges(changes, entities),
-        });
+    async (changes: NodeChange[]) =>
+      entitiesDispatch({
+        type: 'SET_ENTITIES',
+        payload: applyNodeChanges(changes, entities),
+      }),
+    [entities, entitiesDispatch]
+  );
+
+  // call api to update node position when drag stops
+  const onNodeDragStop = useCallback(
+    async (event: MouseEvent, node: Entity) => {
+      event.stopPropagation();
+      try {
+        const newPos = { x: node.position.x, y: node.position.y };
+        await axios.put(`/api/entity/${node.id}/position`, newPos);
+      } catch (e) {
+        setAlert(
+          'Could not update position. Please try again',
+          AlertType.ERROR
+        );
       }
     },
-    [entities, entitiesDispatch, setAlert]
+    [setAlert]
   );
 
   // handle node deletion via delete key
@@ -149,7 +140,6 @@ function Diagram() {
   // handle select and remove of edges
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) =>
-      // TODO find out if we can update one edge from the edgeChange
       relationshipsDispatch({
         type: 'SET_RELATIONSHIPS',
         payload: applyEdgeChanges(changes, relationships),
@@ -157,22 +147,43 @@ function Diagram() {
     [relationships, relationshipsDispatch]
   );
 
-  // handle edge position updates
+  // handle edge position updates, three separate handlers used to better alert the user of errors
   const onEdgeUpdateStart = useCallback(() => {
     edgeUpdateSuccessful.current = false;
   }, []);
 
   const onEdgeUpdate = useCallback(
-    (oldEdge: Edge, newConnection: Connection) => {
-      // TODO validate then update edge in db
-      // TODO find out if we can update one edge from newConnection
+    async (oldEdge: Edge, newConnection: Connection) => {
       edgeUpdateSuccessful.current = true;
-      relationshipsDispatch({
-        type: 'SET_RELATIONSHIPS',
-        payload: updateEdge(oldEdge, newConnection, relationships),
-      });
+      const newEdge = {
+        ...oldEdge,
+        ...newConnection,
+        id: oldEdge.id,
+      } as Edge;
+      try {
+        relationshipsDispatch({
+          type: 'UPDATE_RELATIONSHIP',
+          payload: newEdge,
+        });
+        await axios.put(
+          `/api/relationship/${oldEdge.id}/handle`,
+          { type: oldEdge.type, ...newConnection },
+          {
+            params: { diagramId },
+          }
+        );
+      } catch (e) {
+        setAlert(
+          'Cannot update relationship to that node and port',
+          AlertType.ERROR
+        );
+        relationshipsDispatch({
+          type: 'UPDATE_RELATIONSHIP',
+          payload: oldEdge,
+        });
+      }
     },
-    [relationships, relationshipsDispatch]
+    [diagramId, relationshipsDispatch, setAlert]
   );
 
   const onEdgeUpdateEnd = useCallback(() => {
@@ -209,6 +220,7 @@ function Diagram() {
         nodes={entities}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
+        onNodeDragStop={onNodeDragStop}
         onNodesDelete={onNodesDelete}
         edges={relationships}
         edgeTypes={edgeTypes}

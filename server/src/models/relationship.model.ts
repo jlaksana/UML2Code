@@ -120,6 +120,9 @@ const RelationshipModel = model<Relationship>('Relationship', schema);
 export {
   Relationship,
   RelationshipModel,
+  RelationshipVariant,
+  SourceHandlePositions,
+  TargetHandlePositions,
   relationshipSchema,
   umlMultiplicityRegex,
 };

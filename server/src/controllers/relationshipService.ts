@@ -6,28 +6,35 @@ import { EntityModel } from '../models/entity.model';
 import {
   Relationship,
   RelationshipModel,
+  RelationshipVariant,
+  SourceHandlePositions,
+  TargetHandlePositions,
   umlMultiplicityRegex,
 } from '../models/relationship.model';
 
-const relationshipUISchema = z
-  .object({
-    type: z.enum([
-      'Inheritance',
-      'Association',
-      'Aggregation',
-      'Composition',
-      'Realization',
-      'Dependency',
-    ]),
-    source: z.string(),
-    target: z.string(),
-    label: z.string().optional(),
-    srcMultiplicity: z.string().regex(umlMultiplicityRegex).optional(),
-    tgtMultiplicity: z.string().regex(umlMultiplicityRegex).optional(),
-  })
-  .strict();
+const relationshipUISchema = z.object({
+  type: z.enum([
+    'Inheritance',
+    'Association',
+    'Aggregation',
+    'Composition',
+    'Realization',
+    'Dependency',
+  ]),
+  source: z.string(),
+  target: z.string(),
+  sourceHandle: z.string().optional(),
+  targetHandle: z.string().optional(),
+  label: z.string().optional(),
+  srcMultiplicity: z.string().regex(umlMultiplicityRegex).optional(),
+  tgtMultiplicity: z.string().regex(umlMultiplicityRegex).optional(),
+});
 
-const validateRelationship = async (data: unknown, diagramId: string) => {
+const validateRelationship = async (
+  data: unknown,
+  diagramId: string,
+  isUpdate: boolean
+) => {
   // validate all fields are present and valid
   const parsedDataFromUI = relationshipUISchema.safeParse(data);
   if (!parsedDataFromUI.success) {
@@ -51,28 +58,17 @@ const validateRelationship = async (data: unknown, diagramId: string) => {
     parsedDataFromUI.data.source,
     parsedDataFromUI.data.target,
     diagramId,
-    parsedDataFromUI.data.type
+    parsedDataFromUI.data.type,
+    isUpdate
   );
-
-  // validate duplicate relationship
-  if (
-    await hasDuplicateRelationship(
-      diagramId,
-      parsedDataFromUI.data.type,
-      sourceId,
-      targetId
-    )
-  ) {
-    throw new Error(
-      'Diagram already has a relationship of this type and entities'
-    );
-  }
 
   const reformattedData = {
     type: parsedDataFromUI.data.type,
     diagramId: parseInt(diagramId, 10),
     source: sourceId,
     target: targetId,
+    sourceHandle: parsedDataFromUI.data.sourceHandle,
+    targetHandle: parsedDataFromUI.data.targetHandle,
     data: {
       label: parsedDataFromUI.data.label,
       srcMultiplicity: parsedDataFromUI.data.srcMultiplicity,
@@ -87,16 +83,24 @@ const validateSourceAndTarget = async (
   sourceName: string,
   targetName: string,
   diagramId: string,
-  relationshipType: string
+  relationshipType: string,
+  isUpdate: boolean
 ) => {
-  const sourceEntity = await EntityModel.findOne({
-    diagramId,
-    'data.name': sourceName,
-  });
-  const targetEntity = await EntityModel.findOne({
-    diagramId,
-    'data.name': targetName,
-  });
+  let sourceEntity;
+  let targetEntity;
+  if (isUpdate) {
+    sourceEntity = await EntityModel.findById(sourceName);
+    targetEntity = await EntityModel.findById(targetName);
+  } else {
+    sourceEntity = await EntityModel.findOne({
+      diagramId,
+      'data.name': sourceName,
+    });
+    targetEntity = await EntityModel.findOne({
+      diagramId,
+      'data.name': targetName,
+    });
+  }
   if (!sourceEntity || !targetEntity) {
     throw new Error('Invalid source or target');
   }
@@ -183,11 +187,12 @@ const reformatRelationship = (relationship: Relationship) => {
   }
 };
 
-const hasDuplicateRelationship = async (
+const validateDuplicateRelationship = async (
   diagramId: string,
   type: string,
   source: string,
-  target: string
+  target: string,
+  relationshipId?: string
 ) => {
   // only allow one relationship of type Inheritance, Realization, or Dependency between two entities
   if (
@@ -195,28 +200,73 @@ const hasDuplicateRelationship = async (
     type !== 'Realization' &&
     type !== 'Dependency'
   ) {
-    return false;
+    return true;
   }
-
   const relationship = await RelationshipModel.findOne({
     diagramId,
     type,
     source,
     target,
   });
+  if (relationship !== null && relationship.id !== relationshipId) {
+    throw new Error('Diagram already has a relationship of this type');
+  }
 
   // an entity can only inherit from one entity
-  if (type === 'Inheritance' && relationship === null) {
+  if (type === 'Inheritance') {
     const relationship2 = await RelationshipModel.findOne({
       diagramId,
       type,
       target,
     });
-    if (relationship2 !== null) {
-      return true;
+    if (relationship2 !== null && relationship2.id !== relationshipId) {
+      throw new Error('An entity can only inherit from one entity');
     }
   }
-  return relationship !== null;
+  return true;
 };
 
-export { reformatRelationship, validateRelationship };
+const newConnectionSchema = z.object({
+  type: RelationshipVariant,
+  source: z.string(),
+  sourceHandle: SourceHandlePositions,
+  target: z.string(),
+  targetHandle: TargetHandlePositions,
+});
+
+const validateRelationshipHandleUpdate = async (
+  relationshipId: string,
+  handleData: unknown,
+  diagramId: string
+) => {
+  const parsedData = newConnectionSchema.safeParse(handleData);
+  if (!parsedData.success) {
+    throw new Error('Could not update relationship position');
+  }
+
+  // validate source and target
+  const { sourceId, targetId } = await validateSourceAndTarget(
+    parsedData.data.source,
+    parsedData.data.target,
+    diagramId,
+    parsedData.data.type,
+    true
+  );
+
+  await validateDuplicateRelationship(
+    diagramId,
+    parsedData.data.type,
+    sourceId,
+    targetId,
+    relationshipId
+  );
+
+  return parsedData.data;
+};
+
+export {
+  reformatRelationship,
+  validateDuplicateRelationship,
+  validateRelationship,
+  validateRelationshipHandleUpdate,
+};

@@ -1,11 +1,19 @@
 import { RelationshipModel } from '../models/relationship.model';
 import {
   reformatRelationship,
+  validateDuplicateRelationship,
   validateRelationship,
+  validateRelationshipHandleUpdate,
 } from './relationshipService';
 
 const createRelationship = async (data: unknown, diagramId: string) => {
-  const validatedData = await validateRelationship(data, diagramId);
+  const validatedData = await validateRelationship(data, diagramId, false);
+  await validateDuplicateRelationship(
+    diagramId,
+    validatedData.type,
+    validatedData.source,
+    validatedData.target
+  );
 
   try {
     const relationship = new RelationshipModel({
@@ -29,7 +37,70 @@ const editRelationship = async (
   relationshipId: string,
   diagramId: string,
   data: unknown
-) => {};
+) => {
+  const validatedData = await validateRelationship(data, diagramId, true);
+  await validateDuplicateRelationship(
+    diagramId,
+    validatedData.type,
+    validatedData.source,
+    validatedData.target,
+    relationshipId
+  );
+
+  try {
+    const relationship = await RelationshipModel.findByIdAndUpdate(
+      relationshipId,
+      {
+        type: validatedData.type,
+        source: validatedData.source,
+        target: validatedData.target,
+        data: validatedData.data,
+      },
+      { new: true }
+    );
+    if (!relationship) {
+      throw new Error();
+    }
+    return reformatRelationship(relationship);
+  } catch (e) {
+    console.log(e);
+    throw new Error(
+      `Could not update relationship with given id: ${relationshipId}`
+    );
+  }
+};
+
+const editRelationshipHandle = async (
+  relationshipId: string,
+  diagramId: string,
+  handleData: unknown
+) => {
+  const validatedData = await validateRelationshipHandleUpdate(
+    relationshipId,
+    handleData,
+    diagramId
+  );
+  try {
+    const relationship = await RelationshipModel.findByIdAndUpdate(
+      relationshipId,
+      {
+        source: validatedData.source,
+        sourceHandle: validatedData.sourceHandle,
+        target: validatedData.target,
+        targetHandle: validatedData.targetHandle,
+      },
+      { new: true }
+    );
+    if (!relationship) {
+      throw new Error();
+    }
+  } catch (e) {
+    console.log(e);
+    throw new Error(
+      `Could not update relationship with given id: ${relationshipId}`
+    );
+  }
+};
 
 const deleteRelationship = async (relationshipId: string) => {
   const relationship = await RelationshipModel.findByIdAndDelete(
@@ -40,4 +111,9 @@ const deleteRelationship = async (relationshipId: string) => {
   }
 };
 
-export { createRelationship, deleteRelationship, editRelationship };
+export {
+  createRelationship,
+  deleteRelationship,
+  editRelationship,
+  editRelationshipHandle,
+};

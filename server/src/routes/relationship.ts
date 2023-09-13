@@ -2,6 +2,8 @@ import express from 'express';
 import {
   createRelationship,
   deleteRelationship,
+  editRelationship,
+  editRelationshipHandle,
 } from '../controllers/relationshipController';
 import { getErrorMessage } from '../utils';
 
@@ -26,6 +28,58 @@ router.post('/', async (req, res) => {
   try {
     const newRelationship = await createRelationship(req.body, diagramId);
     res.status(201).json(newRelationship);
+  } catch (e) {
+    res.status(400).json({ message: getErrorMessage(e) });
+    console.log(e);
+  }
+});
+
+/**
+ * @route PUT /api/relationship/:id?diagramId={diagramId}
+ * @access Public
+ * @param {string} id - relationship id
+ * @param {object} body - relationship data
+ * @returns status 200 if successful
+ * @returns status 400 if unsuccessful
+ */
+router.put('/:id', async (req, res) => {
+  const { diagramId } = req.query;
+  const { id } = req.params;
+
+  if (!diagramId || typeof diagramId !== 'string') {
+    res.status(400).json({ message: 'Missing diagram id' });
+    console.log('Missing diagram id');
+    return;
+  }
+  try {
+    const updatedRelationship = await editRelationship(id, diagramId, req.body);
+    res.status(200).json(updatedRelationship);
+  } catch (e) {
+    res.status(400).json({ message: getErrorMessage(e) });
+    console.log(e);
+  }
+});
+
+/**
+ * @route PUT /api/relationship/:id/handle?diagramId={diagramId}
+ * @access Public
+ * @param {string} id - relationship id
+ * @param {object} body - handle update data
+ * @returns status 200 if successful
+ * @returns status 400 if unsuccessful
+ */
+router.put('/:id/handle', async (req, res) => {
+  const { diagramId } = req.query;
+  const { id } = req.params;
+
+  if (!diagramId || typeof diagramId !== 'string') {
+    res.status(400).json({ message: 'Missing diagram id' });
+    console.log('Missing diagram id');
+    return;
+  }
+  try {
+    await editRelationshipHandle(id, diagramId, req.body);
+    res.status(200).json({ message: 'OK' });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
     console.log(e);
