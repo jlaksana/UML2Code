@@ -1,4 +1,10 @@
-import { BaseEdge, EdgeProps, getBezierPath } from 'reactflow';
+import {
+  BaseEdge,
+  EdgeLabelRenderer,
+  EdgeProps,
+  getBezierPath,
+} from 'reactflow';
+import RelationshipToolBar from './RelationshipToolBar';
 import { getMarkerRotation } from './edgeUtils';
 
 function DependencyEdge({
@@ -9,8 +15,9 @@ function DependencyEdge({
   targetY,
   sourcePosition,
   targetPosition,
+  selected,
 }: EdgeProps) {
-  const [edgePath] = getBezierPath({
+  const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -40,6 +47,11 @@ function DependencyEdge({
           </marker>
         </defs>
       </svg>
+      {selected && (
+        <EdgeLabelRenderer>
+          <RelationshipToolBar labelX={labelX} labelY={labelY} id={id} />
+        </EdgeLabelRenderer>
+      )}
       <BaseEdge
         path={edgePath}
         style={{ strokeDasharray: '5, 5' }}

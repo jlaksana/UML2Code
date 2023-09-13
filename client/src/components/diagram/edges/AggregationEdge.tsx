@@ -5,6 +5,7 @@ import {
   getBezierPath,
 } from 'reactflow';
 import EdgeLabel from './EdgeLabel';
+import RelationshipToolBar from './RelationshipToolBar';
 import { getDiamondRefX, getDiamondRefY } from './edgeUtils';
 
 function AggregationEdge({
@@ -16,6 +17,7 @@ function AggregationEdge({
   sourcePosition,
   targetPosition,
   data,
+  selected,
 }: EdgeProps) {
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -77,6 +79,9 @@ function AggregationEdge({
           x={targetX}
           y={targetY}
         />
+        {selected && (
+          <RelationshipToolBar labelX={labelX} labelY={labelY} id={id} />
+        )}
       </EdgeLabelRenderer>
     </>
   );

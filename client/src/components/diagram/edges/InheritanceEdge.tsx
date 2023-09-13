@@ -1,4 +1,10 @@
-import { BaseEdge, EdgeProps, getBezierPath } from 'reactflow';
+import {
+  BaseEdge,
+  EdgeLabelRenderer,
+  EdgeProps,
+  getBezierPath,
+} from 'reactflow';
+import RelationshipToolBar from './RelationshipToolBar';
 import { getMarkerRotation } from './edgeUtils';
 
 function InheritanceEdge({
@@ -9,8 +15,9 @@ function InheritanceEdge({
   targetY,
   sourcePosition,
   targetPosition,
+  selected,
 }: EdgeProps) {
-  const [edgePath] = getBezierPath({
+  const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -55,6 +62,11 @@ function InheritanceEdge({
           </marker>
         </defs>
       </svg>
+      {selected && (
+        <EdgeLabelRenderer>
+          <RelationshipToolBar labelX={labelX} labelY={labelY} id={id} />
+        </EdgeLabelRenderer>
+      )}
       <BaseEdge path={edgePath} markerStart={`url(#${id})`} />
     </>
   );

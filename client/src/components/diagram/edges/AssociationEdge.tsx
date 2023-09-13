@@ -5,8 +5,10 @@ import {
   getBezierPath,
 } from 'reactflow';
 import EdgeLabel from './EdgeLabel';
+import RelationshipToolBar from './RelationshipToolBar';
 
 function AssociationEdge({
+  id,
   sourceX,
   sourceY,
   targetX,
@@ -14,6 +16,7 @@ function AssociationEdge({
   sourcePosition,
   targetPosition,
   data,
+  selected,
 }: EdgeProps) {
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -45,6 +48,9 @@ function AssociationEdge({
           x={targetX + 10}
           y={targetY}
         />
+        {selected && (
+          <RelationshipToolBar labelX={labelX} labelY={labelY} id={id} />
+        )}
       </EdgeLabelRenderer>
     </>
   );
