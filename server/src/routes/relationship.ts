@@ -4,10 +4,38 @@ import {
   deleteRelationship,
   editRelationship,
   editRelationshipHandle,
+  getRelationship,
 } from '../controllers/relationshipController';
 import { getErrorMessage } from '../utils';
 
 const router = express.Router();
+
+/**
+ * GET a relationship given an id
+ * @route GET /api/relationship/:id?diagramId={diagramId}
+ * @access Public
+ * @param {string} id - relationship id
+ * @returns {object} 200 - Relationship object
+ */
+router.get('/:id', async (req, res) => {
+  const { diagramId } = req.query;
+  if (!diagramId || typeof diagramId !== 'string') {
+    res.status(400).json({ message: 'Missing diagram id' });
+    console.log('Missing diagram id');
+    return;
+  }
+
+  try {
+    const relationship = await getRelationship(req.params.id, diagramId);
+    if (!relationship) {
+      throw new Error();
+    }
+    res.status(200).json(relationship);
+  } catch (e) {
+    res.status(400).json({ message: getErrorMessage(e) });
+    console.log(e);
+  }
+});
 
 /* POST relationship given a diagram id as a parameter and relationship data in body.
  * @route POST /api/relationship?diagramId={diagramId}
@@ -35,6 +63,7 @@ router.post('/', async (req, res) => {
 });
 
 /**
+ * PUT relationship given a relationship id as a parameter and relationship data in body
  * @route PUT /api/relationship/:id?diagramId={diagramId}
  * @access Public
  * @param {string} id - relationship id
@@ -61,6 +90,7 @@ router.put('/:id', async (req, res) => {
 });
 
 /**
+ * PUT relationship handles given a relationship id as a parameter and handle data in body
  * @route PUT /api/relationship/:id/handle?diagramId={diagramId}
  * @access Public
  * @param {string} id - relationship id

@@ -84,11 +84,11 @@ const validateSourceAndTarget = async (
   targetName: string,
   diagramId: string,
   relationshipType: string,
-  isUpdate: boolean
+  isHandleUpdate: boolean
 ) => {
   let sourceEntity;
   let targetEntity;
-  if (isUpdate) {
+  if (isHandleUpdate) {
     sourceEntity = await EntityModel.findById(sourceName);
     targetEntity = await EntityModel.findById(targetName);
   } else {

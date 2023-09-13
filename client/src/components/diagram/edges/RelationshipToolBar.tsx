@@ -10,9 +10,10 @@ type Props = {
   labelX: number;
   labelY: number;
   id: string;
+  openEditModal: () => void;
 };
 
-function RelationshipToolBar({ labelX, labelY, id }: Props) {
+function RelationshipToolBar({ labelX, labelY, id, openEditModal }: Props) {
   const relationshipsDispatch = useRelationshipsDispatch();
   const { setAlert } = useAlert();
 
@@ -42,7 +43,7 @@ function RelationshipToolBar({ labelX, labelY, id }: Props) {
       className="nodrag nopan"
     >
       <Tooltip title="Edit" placement="left">
-        <IconButton aria-label="edit" color="primary">
+        <IconButton aria-label="edit" color="primary" onClick={openEditModal}>
           <EditIcon />
         </IconButton>
       </Tooltip>

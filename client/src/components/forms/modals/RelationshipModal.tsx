@@ -1,8 +1,15 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import { Autocomplete, Button, Modal, TextField, Tooltip } from '@mui/material';
+import {
+  Autocomplete,
+  Button,
+  Modal,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRelationshipsDispatch } from '../../../context/RelationshipsContext';
 import { Relationship, RelationshipType } from '../../../types';
@@ -74,6 +81,9 @@ type RelationshipModalProps = {
   handleClose: () => void;
 };
 
+const relationshipHelperText = `Relationships are the connections between classes. 
+        They contain a type, source, and target. The source and target are the classes that are connected by the relationship.`;
+
 function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
   const [type, setType] = useState<RelationshipType | null>(null);
   const [source, setSource] = useState('');
@@ -92,6 +102,9 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
     setType(null);
     setSource('');
     setTarget('');
+    setLabel('');
+    setSrcMultiplicity('');
+    setTgtMultiplicity('');
     setErrorMessage(undefined);
     handleClose();
   };
@@ -138,9 +151,6 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
     }
   };
 
-  const relationshipHelperText = `Relationships are the connections between classes. 
-    They contain a type, source, and target. The source and target are the classes that are connected by the relationship.`;
-
   return (
     <Modal
       open={open}
@@ -178,6 +188,137 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
           />
           {getContentByType(
             type,
+            source,
+            setSource,
+            target,
+            setTarget,
+            label,
+            setLabel,
+            srcMultiplicity,
+            setSrcMultiplicity,
+            tgtMultiplicity,
+            setTgtMultiplicity
+          )}
+        </div>
+        <div className="buttons">
+          <Button variant="text" onClick={close}>
+            Cancel
+          </Button>
+          <Button variant="text" type="submit">
+            OK
+          </Button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
+
+export function RelationshipEditModal({
+  open,
+  handleClose,
+  id,
+  relationshipType,
+}: RelationshipModalProps & {
+  id: string;
+  relationshipType: RelationshipType;
+}) {
+  const [source, setSource] = useState('');
+  const [target, setTarget] = useState('');
+  const [label, setLabel] = useState('');
+  const [srcMultiplicity, setSrcMultiplicity] = useState('');
+  const [tgtMultiplicity, setTgtMultiplicity] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string>();
+
+  const relationshipsDispatch = useRelationshipsDispatch();
+  const { setAlert } = useAlert();
+
+  const { diagramId } = useParams();
+
+  useEffect(() => {
+    const getRelationship = async () => {
+      try {
+        const res = await axios.get(`/api/relationship/${id}`, {
+          params: { diagramId },
+        });
+        const relationship = res.data as Relationship;
+        setSource(relationship.source);
+        setTarget(relationship.target);
+        setLabel(relationship.data?.label || '');
+        setSrcMultiplicity(relationship.data?.srcMultiplicity || '');
+        setTgtMultiplicity(relationship.data?.tgtMultiplicity || '');
+      } catch (err: any) {
+        setErrorMessage('Server Error. Please try again or report this bug.');
+      }
+    };
+    if (open) {
+      getRelationship();
+    }
+  }, [diagramId, id, open]);
+
+  const close = () => {
+    setSource('');
+    setTarget('');
+    setLabel('');
+    setSrcMultiplicity('');
+    setTgtMultiplicity('');
+    setErrorMessage(undefined);
+    handleClose();
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setErrorMessage(undefined);
+
+    const relationship = {
+      relationshipType,
+      source,
+      target,
+      label,
+      srcMultiplicity,
+      tgtMultiplicity,
+    };
+
+    try {
+      const res = await axios.put(`/api/relationship/${id}`, relationship, {
+        params: { diagramId },
+      });
+      const updatedRelationship = res.data as Relationship;
+      relationshipsDispatch({
+        type: 'UPDATE_RELATIONSHIP',
+        payload: updatedRelationship,
+      });
+      setAlert('Relationship updated successfully', AlertType.SUCCESS);
+      close();
+    } catch (err: any) {
+      setErrorMessage(err.response.data.message);
+    }
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="Edit Relationship Form"
+      aria-describedby="Edit the contents of a relationship"
+    >
+      <form
+        className="modal-content relationship-content"
+        onSubmit={handleSubmit}
+      >
+        <div>
+          <h2>
+            Edit Relationship&nbsp;
+            <Tooltip title={relationshipHelperText}>
+              <HelpOutlineIcon fontSize="small" />
+            </Tooltip>
+          </h2>
+          {errorMessage && (
+            <Typography variant="subtitle2" gutterBottom color="error">
+              Error: {errorMessage}
+            </Typography>
+          )}
+          {getContentByType(
+            relationshipType,
             source,
             setSource,
             target,

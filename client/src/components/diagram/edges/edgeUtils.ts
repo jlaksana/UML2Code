@@ -39,4 +39,19 @@ const getDiamondRefY = (sourcePosition: Position) => {
   }
 };
 
-export { getDiamondRefX, getDiamondRefY, getMarkerRotation };
+const getTgtLabelPositionX = (targetPosition: Position, targetX: number) => {
+  if (targetPosition === Position.Left) {
+    return targetX - 10;
+  }
+  if (targetPosition === Position.Right || targetPosition === Position.Top) {
+    return targetX + 15;
+  }
+  return targetX;
+};
+
+export {
+  getDiamondRefX,
+  getDiamondRefY,
+  getMarkerRotation,
+  getTgtLabelPositionX,
+};

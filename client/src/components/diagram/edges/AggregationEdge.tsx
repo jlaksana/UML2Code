@@ -1,12 +1,18 @@
+import { useState } from 'react';
 import {
   BaseEdge,
   EdgeLabelRenderer,
   EdgeProps,
   getBezierPath,
 } from 'reactflow';
+import { RelationshipEditModal } from '../../forms/modals/RelationshipModal';
 import EdgeLabel from './EdgeLabel';
 import RelationshipToolBar from './RelationshipToolBar';
-import { getDiamondRefX, getDiamondRefY } from './edgeUtils';
+import {
+  getDiamondRefX,
+  getDiamondRefY,
+  getTgtLabelPositionX,
+} from './edgeUtils';
 
 function AggregationEdge({
   id,
@@ -27,7 +33,7 @@ function AggregationEdge({
     targetY,
     targetPosition,
   });
-
+  const [open, setOpen] = useState(false);
   return (
     <>
       <svg style={{ position: 'absolute', top: 0, left: 0 }}>
@@ -76,13 +82,24 @@ function AggregationEdge({
         <EdgeLabel
           label={data?.tgtMultiplicity}
           position="target"
-          x={targetX}
+          x={getTgtLabelPositionX(targetPosition, targetX)}
           y={targetY}
         />
         {selected && (
-          <RelationshipToolBar labelX={labelX} labelY={labelY} id={id} />
+          <RelationshipToolBar
+            labelX={labelX}
+            labelY={labelY}
+            id={id}
+            openEditModal={() => setOpen(true)}
+          />
         )}
       </EdgeLabelRenderer>
+      <RelationshipEditModal
+        open={open}
+        handleClose={() => setOpen(false)}
+        id={id}
+        relationshipType="Aggregation"
+      />
     </>
   );
 }

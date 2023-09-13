@@ -1,11 +1,15 @@
+import { useState } from 'react';
 import {
   BaseEdge,
   EdgeLabelRenderer,
   EdgeProps,
+  Position,
   getBezierPath,
 } from 'reactflow';
+import { RelationshipEditModal } from '../../forms/modals/RelationshipModal';
 import EdgeLabel from './EdgeLabel';
 import RelationshipToolBar from './RelationshipToolBar';
+import { getTgtLabelPositionX } from './edgeUtils';
 
 function AssociationEdge({
   id,
@@ -26,6 +30,21 @@ function AssociationEdge({
     targetY,
     targetPosition,
   });
+  const [open, setOpen] = useState(false);
+
+  const getSrcLabelPositionX = () => {
+    if (sourcePosition === Position.Left) {
+      return sourceX - 10;
+    }
+    if (
+      sourcePosition === Position.Right ||
+      sourcePosition === Position.Bottom
+    ) {
+      return sourceX + 10;
+    }
+    return sourceX;
+  };
+
   return (
     <>
       <BaseEdge path={edgePath} />;
@@ -39,19 +58,30 @@ function AssociationEdge({
         <EdgeLabel
           label={data?.srcMultiplicity}
           position="source"
-          x={sourceX + 10}
+          x={getSrcLabelPositionX()}
           y={sourceY}
         />
         <EdgeLabel
           label={data?.tgtMultiplicity}
           position="target"
-          x={targetX + 10}
+          x={getTgtLabelPositionX(targetPosition, targetX)}
           y={targetY}
         />
         {selected && (
-          <RelationshipToolBar labelX={labelX} labelY={labelY} id={id} />
+          <RelationshipToolBar
+            labelX={labelX}
+            labelY={labelY}
+            id={id}
+            openEditModal={() => setOpen(true)}
+          />
         )}
       </EdgeLabelRenderer>
+      <RelationshipEditModal
+        open={open}
+        handleClose={() => setOpen(false)}
+        id={id}
+        relationshipType="Association"
+      />
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { EntityModel } from '../models/entity.model';
 import { RelationshipModel } from '../models/relationship.model';
 import {
   reformatRelationship,
@@ -5,6 +6,29 @@ import {
   validateRelationship,
   validateRelationshipHandleUpdate,
 } from './relationshipService';
+
+const getRelationship = async (relationshipId: string, diagramId: string) => {
+  try {
+    const relationship = await RelationshipModel.findOne({
+      _id: relationshipId,
+      diagramId,
+    });
+    if (!relationship) {
+      throw new Error();
+    }
+    const result = reformatRelationship(relationship);
+    const source = await EntityModel.findById(result.source);
+    result.source = source?.data.name;
+    const target = await EntityModel.findById(result.target);
+    result.target = target?.data.name;
+    return result;
+  } catch (e) {
+    console.log(e);
+    throw new Error(
+      `Could not find relationship with given id: ${relationshipId}`
+    );
+  }
+};
 
 const createRelationship = async (data: unknown, diagramId: string) => {
   const validatedData = await validateRelationship(data, diagramId, false);
@@ -38,7 +62,7 @@ const editRelationship = async (
   diagramId: string,
   data: unknown
 ) => {
-  const validatedData = await validateRelationship(data, diagramId, true);
+  const validatedData = await validateRelationship(data, diagramId, false);
   await validateDuplicateRelationship(
     diagramId,
     validatedData.type,
@@ -116,4 +140,5 @@ export {
   deleteRelationship,
   editRelationship,
   editRelationshipHandle,
+  getRelationship,
 };
