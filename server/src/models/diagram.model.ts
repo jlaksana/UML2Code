@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 const diagramSchema = z.object({
   _id: z.coerce.number().min(1000).max(999999),
+  password: z.string(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
@@ -15,6 +16,10 @@ const schema = new Schema<Diagram>(
       type: Number,
       min: 1000,
       max: 999999,
+    },
+    password: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }

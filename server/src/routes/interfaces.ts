@@ -3,25 +3,20 @@ import {
   createInterface,
   editInterface,
 } from '../controllers/interfaceController';
+import withAuth from '../middleware/auth';
 import { getErrorMessage } from '../utils';
 
 const router = express.Router();
 
-/* POST interface given a diagram id as a parameter and interface data in body.
- * @route POST /api/interface?diagramId={diagramId}
- * @access Public
+/** Creates interface given a diagram id as a parameter and interface data in body.
+ * @route POST /api/interface
+ * @access Private
  * @returns {object} 201 - Interface object
  * @returns {Error}  400 - Could not create an interface
  */
-router.post('/', async (req, res) => {
+router.post('/', withAuth, async (req, res) => {
   // validate diagramId to be an existing diagram
-  const { diagramId } = req.query;
-  if (!diagramId || typeof diagramId !== 'string') {
-    res.status(400).json({ message: 'Missing diagram id' });
-    console.log('Missing diagram id');
-    return;
-  }
-
+  const { diagramId } = req;
   try {
     const newInterface = await createInterface(req.body, diagramId);
     res.status(201).json(newInterface);
@@ -32,8 +27,8 @@ router.post('/', async (req, res) => {
 });
 
 /**
- * @route PUT /api/interface/:id?diagramId={diagramId}
- * @access Public
+ * @route PUT /api/interface/:id
+ * @access Private
  * @param {string} id - interface id
  * @param {object} body - interface data
  * @returns status 200 if successful
@@ -41,16 +36,9 @@ router.post('/', async (req, res) => {
  * @returns {object} 200 - Updated interface object
  * @returns {Error}  400 - Could not update an interface
  */
-router.put('/:id', async (req, res) => {
-  const { diagramId } = req.query;
+router.put('/:id', withAuth, async (req, res) => {
+  const { diagramId } = req;
   const { id } = req.params;
-
-  if (!diagramId || typeof diagramId !== 'string') {
-    res.status(400).json({ message: 'Missing diagram id' });
-    console.log('Missing diagram id');
-    return;
-  }
-
   try {
     const updatedInterface = await editInterface(id, diagramId, req.body);
     res.status(200).json(updatedInterface);

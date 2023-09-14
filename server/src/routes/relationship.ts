@@ -6,25 +6,20 @@ import {
   editRelationshipHandle,
   getRelationship,
 } from '../controllers/relationshipController';
+import withAuth from '../middleware/auth';
 import { getErrorMessage } from '../utils';
 
 const router = express.Router();
 
 /**
  * GET a relationship given an id
- * @route GET /api/relationship/:id?diagramId={diagramId}
- * @access Public
+ * @route GET /api/relationship/:id
+ * @access Private
  * @param {string} id - relationship id
  * @returns {object} 200 - Relationship object
  */
-router.get('/:id', async (req, res) => {
-  const { diagramId } = req.query;
-  if (!diagramId || typeof diagramId !== 'string') {
-    res.status(400).json({ message: 'Missing diagram id' });
-    console.log('Missing diagram id');
-    return;
-  }
-
+router.get('/:id', withAuth, async (req, res) => {
+  const { diagramId } = req;
   try {
     const relationship = await getRelationship(req.params.id, diagramId);
     if (!relationship) {
@@ -37,22 +32,16 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-/* POST relationship given a diagram id as a parameter and relationship data in body.
- * @route POST /api/relationship?diagramId={diagramId}
- * @access Public
+/** Create relationship given a diagram id as a parameter and relationship data in body.
+ * @route POST /api/relationship
+ * @access Private
  * @returns {object} 201 - Relationship object
  * @returns {Error}  400 - Could not create a relationship
  * @returns {Error}  400 - Missing diagram id
  */
-router.post('/', async (req, res) => {
+router.post('/', withAuth, async (req, res) => {
   // validate diagramId to be an existing diagram
-  const { diagramId } = req.query;
-  if (!diagramId || typeof diagramId !== 'string') {
-    res.status(400).json({ message: 'Missing diagram id' });
-    console.log('Missing diagram id');
-    return;
-  }
-
+  const { diagramId } = req;
   try {
     const newRelationship = await createRelationship(req.body, diagramId);
     res.status(201).json(newRelationship);
@@ -63,23 +52,17 @@ router.post('/', async (req, res) => {
 });
 
 /**
- * PUT relationship given a relationship id as a parameter and relationship data in body
- * @route PUT /api/relationship/:id?diagramId={diagramId}
- * @access Public
+ * Edit relationship given a relationship id as a parameter and relationship data in body
+ * @route PUT /api/relationship/:id
+ * @access Private
  * @param {string} id - relationship id
  * @param {object} body - relationship data
  * @returns status 200 if successful
  * @returns status 400 if unsuccessful
  */
-router.put('/:id', async (req, res) => {
-  const { diagramId } = req.query;
+router.put('/:id', withAuth, async (req, res) => {
+  const { diagramId } = req;
   const { id } = req.params;
-
-  if (!diagramId || typeof diagramId !== 'string') {
-    res.status(400).json({ message: 'Missing diagram id' });
-    console.log('Missing diagram id');
-    return;
-  }
   try {
     const updatedRelationship = await editRelationship(id, diagramId, req.body);
     res.status(200).json(updatedRelationship);
@@ -90,23 +73,17 @@ router.put('/:id', async (req, res) => {
 });
 
 /**
- * PUT relationship handles given a relationship id as a parameter and handle data in body
- * @route PUT /api/relationship/:id/handle?diagramId={diagramId}
- * @access Public
+ * Edit relationship handles given a relationship id as a parameter and handle data in body
+ * @route PUT /api/relationship/:id/handle
+ * @access Private
  * @param {string} id - relationship id
  * @param {object} body - handle update data
  * @returns status 200 if successful
  * @returns status 400 if unsuccessful
  */
-router.put('/:id/handle', async (req, res) => {
-  const { diagramId } = req.query;
+router.put('/:id/handle', withAuth, async (req, res) => {
+  const { diagramId } = req;
   const { id } = req.params;
-
-  if (!diagramId || typeof diagramId !== 'string') {
-    res.status(400).json({ message: 'Missing diagram id' });
-    console.log('Missing diagram id');
-    return;
-  }
   try {
     await editRelationshipHandle(id, diagramId, req.body);
     res.status(200).json({ message: 'OK' });
@@ -118,14 +95,13 @@ router.put('/:id/handle', async (req, res) => {
 
 /**
  * @route DELETE /api/relationship/:id
- * @access Public
+ * @access Private
  * @param {string} id - relationship id
  * @returns status 200 if successful
  * @returns status 400 if unsuccessful
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', withAuth, async (req, res) => {
   const { id } = req.params;
-
   try {
     await deleteRelationship(id);
     res.status(204).json({ message: 'OK' });

@@ -1,25 +1,19 @@
 import express from 'express';
 import { createEnum, editEnum } from '../controllers/enumController';
+import withAuth from '../middleware/auth';
 import { getErrorMessage } from '../utils';
 
 const router = express.Router();
 
-/* POST enum given a diagram id as a parameter and enum data in body.
- * @route POST /api/enum?diagramId={diagramId}
+/** Create enum given a diagram id as a parameter and enum data in body.
+ * @route POST /api/enum
  * @access Public
  * @returns {object} 201 - Enum object
  * @returns {Error}  400 - Could not create an enum
  * @returns {Error}  400 - Invalid - Ensure all fields are present and valid
  */
-router.post('/', async (req, res) => {
-  // validate diagramId to be an existing diagram
-  const { diagramId } = req.query;
-  if (!diagramId || typeof diagramId !== 'string') {
-    res.status(400).json({ message: 'Missing diagram id' });
-    console.log('Missing diagram id');
-    return;
-  }
-
+router.post('/', withAuth, async (req, res) => {
+  const { diagramId } = req;
   try {
     const newEnum = await createEnum(req.body, diagramId);
     res.status(201).json(newEnum);
@@ -30,23 +24,17 @@ router.post('/', async (req, res) => {
 });
 
 /**
- * @route PUT /api/enum/:id?diagramId={diagramId}
- * @access Public
+ * Edits an enum given a diagram id as a parameter and enum data in body.
+ * @route PUT /api/enum/:id
+ * @access Private
  * @param {string} id - enum id
  * @param {object} body - enum data
  * @returns status 200 if successful
  * @returns status 400 if unsuccessful
  */
-router.put('/:id', async (req, res) => {
-  const { diagramId } = req.query;
+router.put('/:id', withAuth, async (req, res) => {
+  const { diagramId } = req;
   const { id } = req.params;
-
-  if (!diagramId || typeof diagramId !== 'string') {
-    res.status(400).json({ message: 'Missing diagram id' });
-    console.log('Missing diagram id');
-    return;
-  }
-
   try {
     const updatedEnum = await editEnum(id, diagramId, req.body);
     res.status(200).json(updatedEnum);

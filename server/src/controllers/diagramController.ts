@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { DiagramModel } from '../models/diagram.model';
 import { EntityModel } from '../models/entity.model';
 import { RelationshipModel } from '../models/relationship.model';
@@ -9,6 +11,35 @@ import {
 } from './entityServices';
 import { reformatRelationship } from './relationshipService';
 
+/** Logs in to a diagram
+ * @param id id of the diagram to log in to
+ * @param password password of the diagram to log in to
+ * @returns a JWT token
+ */
+const loginToDiagram = async (id: string, password: string) => {
+  const idRegex = /^\d{4}$/;
+  if (!idRegex.test(id)) throw new Error('Invalid Diagram id');
+
+  const diagram = await DiagramModel.findById(id);
+  if (!diagram) throw new Error('Diagram not found');
+
+  const match = await bcrypt.compare(password, diagram.password);
+  if (!match) throw new Error('Invalid password');
+  if (process.env.JWT_SECRET === undefined) {
+    console.log('JWT secret is undefined');
+    throw new Error('Server Error');
+  }
+  const token = jwt.sign({ diagramId: diagram._id }, process.env.JWT_SECRET, {
+    expiresIn: '10s',
+  });
+  return token;
+};
+
+/**
+ * Retrieves a diagram by id
+ * @param id of the diagram to retrieve
+ * @returns the diagram
+ */
 const findDiagramById = async (id: string) => {
   const idRegex = /^\d{4}$/;
   if (!idRegex.test(id)) throw new Error('Invalid Diagram id');
@@ -46,9 +77,27 @@ const getDiagramContents = async (id: string) => {
   };
 };
 
-const createDiagram = async () => {
-  const diagram = await DiagramModel.create({ _id: await getNextSequence() });
-  return { id: diagram._id };
+/**
+ * Creates a diagram
+ * @param password password of the diagram to create
+ * @returns the created diagram
+ * @throws an error if the password is invalid
+ * @throws an error if the diagram could not be created
+ */
+const createDiagram = async (password: unknown) => {
+  if (!password || typeof password !== 'string')
+    throw new Error('Invalid password');
+
+  // hash the password
+  bcrypt.hash(password, 10, async (err, hash) => {
+    if (err) throw new Error('Could not create a diagram');
+    // save the hashed password
+    const diagram = new DiagramModel({
+      _id: await getNextSequence(),
+      password: hash,
+    });
+    await diagram.save();
+  });
 };
 
-export { createDiagram, findDiagramById, getDiagramContents };
+export { createDiagram, findDiagramById, getDiagramContents, loginToDiagram };
