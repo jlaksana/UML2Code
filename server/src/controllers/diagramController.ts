@@ -30,7 +30,7 @@ const loginToDiagram = async (id: string, password: string) => {
     throw new Error('Server Error');
   }
   const token = jwt.sign({ diagramId: diagram._id }, process.env.JWT_SECRET, {
-    expiresIn: '10s',
+    expiresIn: '8h',
   });
   return token;
 };
