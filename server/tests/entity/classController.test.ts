@@ -24,8 +24,8 @@ beforeAll(async () => {
   } as ConnectOptions);
 
   // create a diagram to be used in tests
-  const diagram = await createDiagram();
-  diagramId = diagram.id;
+  const diagram = await createDiagram('password');
+  diagramId = diagram._id;
 });
 
 afterAll(async () => {

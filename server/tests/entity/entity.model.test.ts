@@ -16,7 +16,7 @@ describe('Entity Schema', () => {
       useUnifiedTopology: true,
     } as ConnectOptions);
 
-    diagram = new DiagramModel({ _id: 1000 });
+    diagram = new DiagramModel({ _id: 1000, password: 'password' });
     await diagram.save();
   });
 

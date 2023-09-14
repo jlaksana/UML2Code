@@ -89,15 +89,17 @@ const createDiagram = async (password: unknown) => {
     throw new Error('Invalid password');
 
   // hash the password
-  bcrypt.hash(password, 10, async (err, hash) => {
-    if (err) throw new Error('Could not create a diagram');
-    // save the hashed password
+  try {
+    const hash = await bcrypt.hash(password, 10);
     const diagram = new DiagramModel({
       _id: await getNextSequence(),
       password: hash,
     });
     await diagram.save();
-  });
+    return diagram;
+  } catch (err) {
+    throw new Error('Could not create a diagram');
+  }
 };
 
 export { createDiagram, findDiagramById, getDiagramContents, loginToDiagram };

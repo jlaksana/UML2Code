@@ -18,7 +18,7 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   } as ConnectOptions);
 
-  const diagram = new DiagramModel({ _id: 1000 });
+  const diagram = new DiagramModel({ _id: 1000, password: 'password' });
   await diagram.save();
   testDiagramId = diagram._id;
 

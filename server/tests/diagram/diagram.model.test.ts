@@ -30,6 +30,7 @@ describe('Diagram Schema', () => {
   it('should be able to save a valid diagram', async () => {
     const diagram1 = new DiagramModel({
       _id: 1234,
+      password: 'password',
     });
     const savedDiagram1 = await diagram1.save();
     expect(savedDiagram1._id).toEqual(diagram1._id);
@@ -38,6 +39,7 @@ describe('Diagram Schema', () => {
 
     const diagram2 = new DiagramModel({
       _id: '1235',
+      password: 'password',
     });
     const savedDiagram2 = await diagram2.save();
     expect(savedDiagram2._id).toEqual(1235);
@@ -47,6 +49,7 @@ describe('Diagram Schema', () => {
   it('should not save a diagram with an invalid id', async () => {
     const diagram = new DiagramModel({
       _id: 999,
+      password: 'password',
     });
     await expect(diagram.save()).rejects.toThrow();
   });
@@ -54,6 +57,7 @@ describe('Diagram Schema', () => {
   it('should not save a diagram with a duplicate id', async () => {
     const diagram1 = new DiagramModel({
       _id: 1234,
+      password: 'password',
     });
     await diagram1.save();
     const diagram2 = new DiagramModel({
@@ -64,6 +68,13 @@ describe('Diagram Schema', () => {
 
   it('should not save a diagram without an id', async () => {
     const diagram = new DiagramModel({});
+    await expect(diagram.save()).rejects.toThrow();
+  });
+
+  it('should not save a diagram without a password', async () => {
+    const diagram = new DiagramModel({
+      _id: 1234,
+    });
     await expect(diagram.save()).rejects.toThrow();
   });
 });

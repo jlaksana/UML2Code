@@ -39,9 +39,9 @@ describe('createDiagram', () => {
   });
 
   it('should be able to create a diagram', async () => {
-    const diagram = await createDiagram();
+    const diagram = await createDiagram('password');
     expect(diagram).not.toBeNull();
-    expect(diagram.id).toEqual(1000);
+    expect(diagram.id).toEqual('1000');
     const createdDiagram = await DiagramModel.findById(diagram.id);
     expect(createdDiagram).not.toBeNull();
 
@@ -49,9 +49,9 @@ describe('createDiagram', () => {
     expect(counter).not.toBeNull();
     expect(counter?.seq).toEqual(1000);
 
-    const diagram2 = await createDiagram();
+    const diagram2 = await createDiagram('password');
     expect(diagram2).not.toBeNull();
-    expect(diagram2.id).toEqual(1001);
+    expect(diagram2.id).toEqual('1001');
     const createdDiagram2 = await DiagramModel.findById(diagram2.id);
     expect(createdDiagram2).not.toBeNull();
 
@@ -63,11 +63,11 @@ describe('createDiagram', () => {
 
 describe('findDiagramById', () => {
   beforeAll(async () => {
-    await createDiagram();
+    await createDiagram('password');
   });
 
   it('should be able to find a valid diagram', async () => {
-    await createDiagram();
+    await createDiagram('password');
     const diagram = await findDiagramById('1000');
     expect(diagram).not.toBeNull();
     expect(diagram.id).toEqual(1000);
@@ -84,7 +84,7 @@ describe('findDiagramById', () => {
 
 describe('getDiagramContents', () => {
   beforeEach(async () => {
-    await createDiagram();
+    await createDiagram('password');
   });
 
   afterEach(async () => {
