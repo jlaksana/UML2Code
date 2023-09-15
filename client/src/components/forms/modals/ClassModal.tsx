@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/FormModals.css';
 import { Attribute, Constant, Entity, Klass, Method } from '../../../types';
@@ -49,8 +48,6 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
 
   const entitiesDispatch = useEntitiesDispatch();
   const { setAlert } = useAlert();
-
-  const { diagramId } = useParams();
 
   useEffect(() => {
     if (data) {
@@ -110,9 +107,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
     if (id) {
       // editing existing class
       try {
-        const res = await axios.put(`/api/class/${id}`, klass, {
-          params: { diagramId },
-        });
+        const res = await axios.put(`/api/class/${id}`, klass);
         const updatedKlass = res.data as Entity;
         entitiesDispatch({ type: 'UPDATE_ENTITY', payload: updatedKlass });
         setAlert('Class updated successfully', AlertType.SUCCESS);
@@ -124,9 +119,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
     } else {
       // adding new class
       try {
-        const res = await axios.post('/api/class', klass, {
-          params: { diagramId },
-        });
+        const res = await axios.post('/api/class', klass);
         const newKlass = res.data as Entity;
         entitiesDispatch({ type: 'ADD_ENTITY', payload: newKlass });
         setAlert('Class created successfully', AlertType.SUCCESS);

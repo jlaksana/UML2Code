@@ -8,6 +8,7 @@ import '../../styles/StartMenu.css';
 
 function StartMenu() {
   const id = useRef<HTMLInputElement>();
+  const password = useRef<HTMLInputElement>();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -15,22 +16,23 @@ function StartMenu() {
   const navigate = useNavigate();
 
   // Handles entering an existing diagram ID
-  const handleGo = async () => {
+  const handleGo = async (event: React.FormEvent) => {
+    event.preventDefault();
     setLoading(true);
     setError(false);
     if (id.current?.value) {
       // call api to get diagram
       try {
         await axios
-          .get(`/api/diagram/${id.current.value}`, {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json;charset=UTF-8',
-            },
-            timeout: 5000,
-          })
-          .then(({ data }) => {
-            navigate(`/${data.id}`);
+          .post(
+            `/api/diagram/${id.current.value}/login`,
+            { password: password.current?.value },
+            {
+              withCredentials: false,
+            }
+          )
+          .then(() => {
+            navigate(`/${id.current?.value}`);
           })
           .catch((err) => {
             setError(true);
@@ -48,24 +50,7 @@ function StartMenu() {
   };
 
   const handleCreate = async () => {
-    setLoading(true);
-    // call api to create new diagram
-    try {
-      await axios
-        .post('/api/diagram')
-        .then(({ data }) => {
-          // redirect to editor
-          navigate(`/${data.id}`);
-        })
-        .catch((err) => {
-          setError(true);
-          setErrorMessage(err.response.data.message);
-        });
-    } catch (err) {
-      setError(true);
-      setErrorMessage('Server is not responding');
-    }
-    setLoading(false);
+    navigate('/create');
   };
 
   return (
@@ -73,24 +58,36 @@ function StartMenu() {
       <div>
         <img src={logo} className="logo" alt="logo" />
       </div>
-      <TextField
-        inputRef={id}
-        label="Diagram ID"
-        variant="standard"
-        fullWidth
-        error={error}
-        helperText={error ? errorMessage : ''}
-      />
-      <LoadingButton
-        variant="contained"
-        size="large"
-        fullWidth
-        loading={loading}
-        loadingIndicator="Loading…"
-        onClick={handleGo}
-      >
-        Go
-      </LoadingButton>
+      <form className="start-form" onSubmit={handleGo}>
+        <TextField
+          inputRef={id}
+          label="Diagram ID"
+          variant="standard"
+          fullWidth
+          required
+          error={error}
+          helperText={error ? errorMessage : ''}
+        />
+        <TextField
+          inputRef={password}
+          label="Password"
+          variant="standard"
+          type="password"
+          fullWidth
+          required
+          error={error}
+        />
+        <LoadingButton
+          type="submit"
+          variant="contained"
+          size="large"
+          fullWidth
+          loading={loading}
+          loadingIndicator="Loading…"
+        >
+          Go
+        </LoadingButton>
+      </form>
       <span>-- or --</span>
       <LoadingButton
         variant="contained"

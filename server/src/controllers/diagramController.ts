@@ -23,6 +23,8 @@ const loginToDiagram = async (id: string, password: string) => {
   const diagram = await DiagramModel.findById(id);
   if (!diagram) throw new Error('Diagram not found');
 
+  if (!password || typeof password !== 'string')
+    throw new Error('Invalid password');
   const match = await bcrypt.compare(password, diagram.password);
   if (!match) throw new Error('Invalid password');
   if (process.env.JWT_SECRET === undefined) {
@@ -87,6 +89,9 @@ const getDiagramContents = async (id: string) => {
 const createDiagram = async (password: unknown) => {
   if (!password || typeof password !== 'string')
     throw new Error('Invalid password');
+
+  if (password.length < 8)
+    throw new Error('Password must be at least 8 characters long');
 
   // hash the password
   try {

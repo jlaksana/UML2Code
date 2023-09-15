@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useRelationshipsDispatch } from '../../../context/RelationshipsContext';
 import { Relationship, RelationshipType } from '../../../types';
 import { AlertType } from '../../alert/AlertContext';
@@ -96,8 +95,6 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
   const relationshipsDispatch = useRelationshipsDispatch();
   const { setAlert } = useAlert();
 
-  const { diagramId } = useParams();
-
   const close = () => {
     setType(null);
     setSource('');
@@ -136,9 +133,7 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
     };
 
     try {
-      const res = await axios.post('/api/relationship', relationship, {
-        params: { diagramId },
-      });
+      const res = await axios.post('/api/relationship', relationship);
       const newRelationship = res.data as Relationship;
       relationshipsDispatch({
         type: 'ADD_RELATIONSHIP',
@@ -232,14 +227,10 @@ export function RelationshipEditModal({
   const relationshipsDispatch = useRelationshipsDispatch();
   const { setAlert } = useAlert();
 
-  const { diagramId } = useParams();
-
   useEffect(() => {
     const getRelationship = async () => {
       try {
-        const res = await axios.get(`/api/relationship/${id}`, {
-          params: { diagramId },
-        });
+        const res = await axios.get(`/api/relationship/${id}`);
         const relationship = res.data as Relationship;
         setSource(relationship.source);
         setTarget(relationship.target);
@@ -253,7 +244,7 @@ export function RelationshipEditModal({
     if (open) {
       getRelationship();
     }
-  }, [diagramId, id, open]);
+  }, [id, open]);
 
   const close = () => {
     setSource('');
@@ -270,7 +261,7 @@ export function RelationshipEditModal({
     setErrorMessage(undefined);
 
     const relationship = {
-      relationshipType,
+      type: relationshipType,
       source,
       target,
       label,
@@ -279,9 +270,7 @@ export function RelationshipEditModal({
     };
 
     try {
-      const res = await axios.put(`/api/relationship/${id}`, relationship, {
-        params: { diagramId },
-      });
+      const res = await axios.put(`/api/relationship/${id}`, relationship);
       const updatedRelationship = res.data as Relationship;
       relationshipsDispatch({
         type: 'UPDATE_RELATIONSHIP',

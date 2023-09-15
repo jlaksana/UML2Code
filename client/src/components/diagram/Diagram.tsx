@@ -165,13 +165,10 @@ function Diagram() {
           type: 'UPDATE_RELATIONSHIP',
           payload: newEdge,
         });
-        await axios.put(
-          `/api/relationship/${oldEdge.id}/handle`,
-          { type: oldEdge.type, ...newConnection },
-          {
-            params: { diagramId },
-          }
-        );
+        await axios.put(`/api/relationship/${oldEdge.id}/handle`, {
+          type: oldEdge.type,
+          ...newConnection,
+        });
       } catch (e) {
         setAlert(
           'Cannot update relationship to that node and port',
@@ -183,7 +180,7 @@ function Diagram() {
         });
       }
     },
-    [diagramId, relationshipsDispatch, setAlert]
+    [relationshipsDispatch, setAlert]
   );
 
   const onEdgeUpdateEnd = useCallback(() => {

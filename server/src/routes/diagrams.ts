@@ -34,7 +34,7 @@ router.post('/:id/login', async (req, res) => {
 });
 
 /** GET diagram contents by id.
- * @route GET /api/diagram/contents
+ * @route GET /api/diagram/:id/contents
  * @access Private
  * @returns {object} 200 - Diagram contents object
  * @returns {Error}  404 - Diagram not found
@@ -45,8 +45,14 @@ router.post('/:id/login', async (req, res) => {
  *  "entities": [],
  * "relationships": []
  */
-router.get('/contents', withAuth, async (req, res) => {
+router.get('/:id/contents', withAuth, async (req, res) => {
   try {
+    // verify requested diagramId matches with token
+    if (String(req.diagramId) !== req.params.id) {
+      res.status(401).json({ message: 'Unauthorized' });
+      return;
+    }
+
     const result = await getDiagramContents(req.diagramId);
     res.status(200).json(result);
   } catch (e) {
@@ -64,10 +70,10 @@ router.get('/contents', withAuth, async (req, res) => {
  */
 router.post('/create', async (req, res) => {
   try {
-    await createDiagram(req.body.password);
-    res.status(201).json({ message: 'Diagram created successfully' });
+    const diagram = await createDiagram(req.body.password);
+    res.status(201).json({ id: diagram._id });
   } catch (e) {
-    res.status(400).json({ message: 'Could not create a diagram' });
+    res.status(400).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));
   }
 });

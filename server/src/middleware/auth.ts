@@ -4,6 +4,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 const withAuth: RequestHandler = async (req, res, next) => {
   try {
     const { token } = req.cookies;
+    console.log(token);
     if (!token) throw new Error('No token provided');
 
     if (process.env.JWT_SECRET === undefined) {
