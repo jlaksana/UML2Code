@@ -34,7 +34,7 @@ describe('Diagram Schema', () => {
     });
     const savedDiagram1 = await diagram1.save();
     expect(savedDiagram1._id).toEqual(diagram1._id);
-    expect(savedDiagram1.public).toEqual(false);
+    expect(savedDiagram1.isPublic).toEqual(false);
     expect(savedDiagram1.createdAt).not.toBeUndefined();
     expect(savedDiagram1.updatedAt).not.toBeUndefined();
 
