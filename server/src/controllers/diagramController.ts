@@ -107,4 +107,26 @@ const createDiagram = async (password: unknown) => {
   }
 };
 
-export { createDiagram, findDiagramById, getDiagramContents, loginToDiagram };
+/**
+ * @param id of the diagram to retrieve
+ * @returns true if the diagram is public, false if it is private
+ */
+const getDiagramPrivacy = async (id: string) => {
+  const diagram = await DiagramModel.findById(id);
+  if (!diagram) throw new Error('Diagram not found');
+  return diagram.isPublic;
+};
+
+const setDiagramPrivacy = async (id: string, isPublic: boolean) => {
+  if (isPublic === undefined) throw new Error('Invalid privacy value');
+  await DiagramModel.findByIdAndUpdate(id, { isPublic });
+};
+
+export {
+  createDiagram,
+  findDiagramById,
+  getDiagramContents,
+  getDiagramPrivacy,
+  loginToDiagram,
+  setDiagramPrivacy,
+};

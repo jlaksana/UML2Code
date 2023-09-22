@@ -14,12 +14,14 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import logo from '../assets/UML2.png';
-import '../styles/Header.css';
+import logo from '../../assets/UML2.png';
+import '../../styles/Header.css';
+import ShareMenu from './ShareMenu';
 
 function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const [openShare, setOpenShare] = useState(false);
 
   const { diagramId } = useParams();
 
@@ -31,6 +33,11 @@ function Header() {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleShare = () => {
+    setOpenShare(true);
+    handleClose();
   };
 
   const handleDocs = () => {
@@ -80,7 +87,7 @@ function Header() {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem>
+          <MenuItem onClick={handleShare}>
             <ListItemIcon>
               <ShareIcon fontSize="small" />
             </ListItemIcon>
@@ -112,6 +119,7 @@ function Header() {
           </MenuItem>
         </Menu>
       </div>
+      <ShareMenu open={openShare} handleClose={() => setOpenShare(false)} />
     </div>
   );
 }

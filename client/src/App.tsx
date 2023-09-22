@@ -25,7 +25,7 @@ function App() {
       <Routes>
         <Route path="/" element={<StartMenu />} />
         <Route path="/create" element={<CreateMenu />} />
-        <Route path="/:diagramId" element={<Editor />} />
+        <Route path="/:diagramId/edit" element={<Editor />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ThemeProvider>

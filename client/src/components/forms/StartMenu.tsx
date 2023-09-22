@@ -32,7 +32,7 @@ function StartMenu() {
             }
           )
           .then(() => {
-            navigate(`/${id.current?.value}`);
+            navigate(`/${id.current?.value}/edit`);
           })
           .catch((err) => {
             setError(true);

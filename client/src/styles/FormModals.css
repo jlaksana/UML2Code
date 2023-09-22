@@ -86,3 +86,7 @@
   justify-content: space-between;
   width: 100%;
 }
+.share-menu {
+  min-height: 150px;
+  padding-bottom: 1rem;
+}

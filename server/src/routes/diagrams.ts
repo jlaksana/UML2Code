@@ -2,7 +2,9 @@ import express from 'express';
 import {
   createDiagram,
   getDiagramContents,
+  getDiagramPrivacy,
   loginToDiagram,
+  setDiagramPrivacy,
 } from '../controllers/diagramController';
 import withAuth from '../middleware/auth';
 import { getErrorMessage } from '../utils';
@@ -74,6 +76,34 @@ router.post('/create', async (req, res) => {
     res.status(201).json({ id: diagram._id });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
+    console.log(getErrorMessage(e));
+  }
+});
+
+/**
+ * Retrieves the privacy of a diagram
+ * @route GET /api/diagram/:id/privacy
+ * @access Private
+ * @returns {object} 200 - True if public, false if private
+ * @returns {Error}  404 - Diagram not found
+ * @returns {Error}  404 - Invalid Diagram id
+ */
+router.get('/privacy', withAuth, async (req, res) => {
+  try {
+    const result = await getDiagramPrivacy(req.diagramId);
+    res.status(200).json({ isPublic: result });
+  } catch (e) {
+    res.status(404).json({ message: getErrorMessage(e) });
+    console.log(getErrorMessage(e));
+  }
+});
+
+router.put('/privacy', withAuth, async (req, res) => {
+  try {
+    await setDiagramPrivacy(req.diagramId, req.body.isPublic);
+    res.status(200).json({ message: 'OK' });
+  } catch (e) {
+    res.status(404).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));
   }
 });
