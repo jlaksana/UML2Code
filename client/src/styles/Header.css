@@ -25,11 +25,10 @@
 }
 .header .right {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  justify-content: flex-end;
   gap: 1.5em;
-  width: 220px;
+  width: 92px;
 }
 .header .left {
-  width: 220px;
+  width: 92px;
 }
