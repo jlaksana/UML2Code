@@ -7,10 +7,10 @@
       "config": { "includeFiles": ["dist/**"] }
     }
   ],
-  "routes": [
+  "rewrites": [{ "source": "/(.*)", "destination": "/dist/src/index.js" }],
+  "headers": [
     {
-      "src": "/(.*)",
-      "dest": "dist/src/index.js",
+      "source": "/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
         {
