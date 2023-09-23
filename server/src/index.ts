@@ -7,7 +7,7 @@ dotenv.config();
 const start = (port: number) => {
   try {
     app.listen(port, () => {
-      console.log(`Api running at http://localhost:${port}`);
+      console.log(`Server listening on ${port}`);
     });
     connectDB();
   } catch (err) {
@@ -16,4 +16,4 @@ const start = (port: number) => {
   }
 };
 
-start(5000);
+start(parseInt(process.env.PORT || '5000', 10));
