@@ -27,13 +27,9 @@ function CreateMenu() {
         setLoading(false);
         return;
       }
-      const result = await axios.post(
-        '/api/diagram/create',
-        { password: password.current?.value },
-        {
-          withCredentials: false,
-        }
-      );
+      const result = await axios.post('/api/diagram/create', {
+        password: password.current?.value,
+      });
       setId(result.data.id);
       setLoading(false);
     } catch (e: any) {

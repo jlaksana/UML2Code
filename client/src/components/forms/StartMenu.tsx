@@ -24,13 +24,9 @@ function StartMenu() {
       // call api to get diagram
       try {
         await axios
-          .post(
-            `/api/diagram/${id.current.value}/login`,
-            { password: password.current?.value },
-            {
-              withCredentials: false,
-            }
-          )
+          .post(`/api/diagram/${id.current.value}/login`, {
+            password: password.current?.value,
+          })
           .then(() => {
             navigate(`/${id.current?.value}/edit`);
           })
