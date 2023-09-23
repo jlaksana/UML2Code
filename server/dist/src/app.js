@@ -17,7 +17,7 @@ const relationship_1 = __importDefault(require("./routes/relationship"));
 const app = (0, express_1.default)();
 // Middleware
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173', 'https://uml2code.vercel.app'],
     credentials: true,
 };
 app.use((0, cors_1.default)(corsOptions));
