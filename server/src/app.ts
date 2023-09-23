@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ['http://localhost:5173'], // add production url here
+    origin: ['http://localhost:5173', 'https://uml2code-server.vercel.app/'],
     credentials: true,
   })
 );
