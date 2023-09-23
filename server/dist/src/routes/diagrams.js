@@ -22,6 +22,7 @@ router.post('/:id/login', async (req, res) => {
             httpOnly: process.env.NODE_ENV === 'production',
             secure: process.env.NODE_ENV === 'production',
             maxAge: 8 * 60 * 60 * 1000,
+            sameSite: 'none',
         });
         res.status(200).json({ message: 'Logged in successfully' });
     }
