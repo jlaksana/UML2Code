@@ -2,6 +2,7 @@ import express from 'express';
 import {
   createDiagram,
   getDiagramContents,
+  getDiagramContentsPublic,
   getDiagramPrivacy,
   loginToDiagram,
   setDiagramPrivacy,
@@ -56,6 +57,24 @@ router.get('/:id/contents', withAuth, async (req, res) => {
     }
 
     const result = await getDiagramContents(req.diagramId);
+    res.status(200).json(result);
+  } catch (e) {
+    res.status(404).json({ message: getErrorMessage(e) });
+    console.log(getErrorMessage(e));
+  }
+});
+
+/** GET diagram contents by id.
+ * @route GET /api/diagram/:id/public/contents
+ * @access Public
+ * @returns {object} 200 - Diagram contents object
+ * @returns {Error}  404 - Diagram not found
+ * @returns {Error}  404 - Invalid Diagram id
+ * @returns {Error}  404 - Diagram is private
+ */
+router.get('/:id/public/contents', async (req, res) => {
+  try {
+    const result = await getDiagramContentsPublic(req.params.id);
     res.status(200).json(result);
   } catch (e) {
     res.status(404).json({ message: getErrorMessage(e) });

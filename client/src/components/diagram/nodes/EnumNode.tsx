@@ -9,29 +9,10 @@ import EnumModal from '../../forms/modals/EnumModal';
 import Handles from './Handles';
 import NodeToolBarCustom from './NodeToolBarCustom';
 
-function EnumNode({ id, data }: NodeProps<Enum>) {
-  const [editOpen, setEditOpen] = useState(false);
-  const entitiesDispatch = useEntitiesDispatch();
-
-  const { setAlert } = useAlert();
-
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`/api/entity/${id}`);
-      entitiesDispatch({ type: 'DELETE_ENTITY', id });
-      setAlert('Enum successfully deleted', AlertType.SUCCESS);
-    } catch (e) {
-      setAlert('Could not delete enum. Try again', AlertType.ERROR);
-    }
-  };
-
+export function EnumNodeView({ data }: { data: Enum }) {
   return (
     <>
       <Handles />
-      <NodeToolBarCustom
-        setEditOpen={setEditOpen}
-        handleDelete={handleDelete}
-      />
       <div className="node" style={{ backgroundColor: '#ffcccb' }}>
         <div className="node-header">
           <div className="node-supertitle">{'<enumeration>'}</div>
@@ -50,6 +31,33 @@ function EnumNode({ id, data }: NodeProps<Enum>) {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+function EnumNode({ id, data }: NodeProps<Enum>) {
+  const [editOpen, setEditOpen] = useState(false);
+  const entitiesDispatch = useEntitiesDispatch();
+
+  const { setAlert } = useAlert();
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/api/entity/${id}`);
+      entitiesDispatch({ type: 'DELETE_ENTITY', id });
+      setAlert('Enum successfully deleted', AlertType.SUCCESS);
+    } catch (e) {
+      setAlert('Could not delete enum. Try again', AlertType.ERROR);
+    }
+  };
+
+  return (
+    <>
+      <NodeToolBarCustom
+        setEditOpen={setEditOpen}
+        handleDelete={handleDelete}
+      />
+      <EnumNodeView data={data} />
       <EnumModal
         open={editOpen}
         handleClose={() => setEditOpen(false)}

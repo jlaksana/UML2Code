@@ -10,29 +10,10 @@ import ClassModal from '../../forms/modals/ClassModal';
 import Handles from './Handles';
 import NodeToolBarCustom from './NodeToolBarCustom';
 
-function ClassNode({ id, data }: NodeProps<Klass>) {
-  const [editOpen, setEditOpen] = useState(false);
-  const entitiesDispatch = useEntitiesDispatch();
-
-  const { setAlert } = useAlert();
-
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`/api/entity/${id}`);
-      entitiesDispatch({ type: 'DELETE_ENTITY', id });
-      setAlert('Class successfully deleted', AlertType.SUCCESS);
-    } catch (e) {
-      setAlert('Could not delete class. Try again', AlertType.ERROR);
-    }
-  };
-
+export function ClassNodeView({ data }: { data: Klass }) {
   return (
     <>
       <Handles />
-      <NodeToolBarCustom
-        setEditOpen={setEditOpen}
-        handleDelete={handleDelete}
-      />
       <div className="node" style={{ backgroundColor: '#D4F1F4' }}>
         <div className="node-header">
           {data.isAbstract && (
@@ -68,6 +49,33 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+function ClassNode({ id, data }: NodeProps<Klass>) {
+  const [editOpen, setEditOpen] = useState(false);
+  const entitiesDispatch = useEntitiesDispatch();
+
+  const { setAlert } = useAlert();
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/api/entity/${id}`);
+      entitiesDispatch({ type: 'DELETE_ENTITY', id });
+      setAlert('Class successfully deleted', AlertType.SUCCESS);
+    } catch (e) {
+      setAlert('Could not delete class. Try again', AlertType.ERROR);
+    }
+  };
+
+  return (
+    <>
+      <NodeToolBarCustom
+        setEditOpen={setEditOpen}
+        handleDelete={handleDelete}
+      />
+      <ClassNodeView data={data} />
       <ClassModal
         open={editOpen}
         handleClose={() => setEditOpen(false)}

@@ -10,29 +10,10 @@ import InterfaceModal from '../../forms/modals/InterfaceModal';
 import Handles from './Handles';
 import NodeToolBarCustom from './NodeToolBarCustom';
 
-function InterfaceNode({ id, data }: NodeProps<Interface>) {
-  const [editOpen, setEditOpen] = useState(false);
-  const entitiesDispatch = useEntitiesDispatch();
-
-  const { setAlert } = useAlert();
-
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`/api/entity/${id}`);
-      entitiesDispatch({ type: 'DELETE_ENTITY', id });
-      setAlert('Interface successfully deleted', AlertType.SUCCESS);
-    } catch (e) {
-      setAlert('Could not delete interface. Try again', AlertType.ERROR);
-    }
-  };
-
+export function InterfaceNodeView({ data }: { data: Interface }) {
   return (
     <>
       <Handles />
-      <NodeToolBarCustom
-        setEditOpen={setEditOpen}
-        handleDelete={handleDelete}
-      />
       <div className="node" style={{ backgroundColor: '#b1f3b1' }}>
         <div className="node-header">
           <div className="node-supertitle">{'<interface>'}</div>
@@ -60,6 +41,33 @@ function InterfaceNode({ id, data }: NodeProps<Interface>) {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+function InterfaceNode({ id, data }: NodeProps<Interface>) {
+  const [editOpen, setEditOpen] = useState(false);
+  const entitiesDispatch = useEntitiesDispatch();
+
+  const { setAlert } = useAlert();
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/api/entity/${id}`);
+      entitiesDispatch({ type: 'DELETE_ENTITY', id });
+      setAlert('Interface successfully deleted', AlertType.SUCCESS);
+    } catch (e) {
+      setAlert('Could not delete interface. Try again', AlertType.ERROR);
+    }
+  };
+
+  return (
+    <>
+      <NodeToolBarCustom
+        setEditOpen={setEditOpen}
+        handleDelete={handleDelete}
+      />
+      <InterfaceNodeView data={data} />
       <InterfaceModal
         open={editOpen}
         handleClose={() => setEditOpen(false)}

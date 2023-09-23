@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Route, Routes } from 'react-router-dom';
 import Editor from './components/Editor';
 import NotFound from './components/NotFound';
+import Viewer from './components/Viewer';
 import CreateMenu from './components/forms/CreateMenu';
 import StartMenu from './components/forms/StartMenu';
 import theme from './theme';
@@ -26,6 +27,7 @@ function App() {
         <Route path="/" element={<StartMenu />} />
         <Route path="/create" element={<CreateMenu />} />
         <Route path="/:diagramId/edit" element={<Editor />} />
+        <Route path="/:diagramId/view" element={<Viewer />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ThemeProvider>

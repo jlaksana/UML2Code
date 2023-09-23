@@ -14,7 +14,7 @@ import {
   getTgtLabelPositionX,
 } from './edgeUtils';
 
-function CompositionEdge({
+export function CompositionEdgeView({
   id,
   sourceX,
   sourceY,
@@ -23,7 +23,6 @@ function CompositionEdge({
   sourcePosition,
   targetPosition,
   data,
-  selected,
 }: EdgeProps) {
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -33,7 +32,6 @@ function CompositionEdge({
     targetY,
     targetPosition,
   });
-  const [open, setOpen] = useState(false);
   return (
     <>
       <svg style={{ position: 'absolute', top: 0, left: 0 }}>
@@ -85,6 +83,48 @@ function CompositionEdge({
           x={getTgtLabelPositionX(targetPosition, targetX)}
           y={targetY}
         />
+      </EdgeLabelRenderer>
+    </>
+  );
+}
+
+function CompositionEdge({
+  id,
+  source,
+  target,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  data,
+  selected,
+}: EdgeProps) {
+  const [edgePath, labelX, labelY] = getBezierPath({
+    sourceX,
+    sourceY,
+    sourcePosition,
+    targetX,
+    targetY,
+    targetPosition,
+  });
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <CompositionEdgeView
+        sourceX={sourceX}
+        sourceY={sourceY}
+        targetX={targetX}
+        targetY={targetY}
+        sourcePosition={sourcePosition}
+        targetPosition={targetPosition}
+        id={id}
+        source={source}
+        target={target}
+        data={data}
+      />
+      <EdgeLabelRenderer>
         {selected && (
           <RelationshipToolBar
             labelX={labelX}

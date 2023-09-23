@@ -9,7 +9,7 @@ import { RelationshipEditModal } from '../../forms/modals/RelationshipModal';
 import RelationshipToolBar from './RelationshipToolBar';
 import { getMarkerRotation } from './edgeUtils';
 
-function DependencyEdge({
+export function DependencyEdgeView({
   id,
   sourceX,
   sourceY,
@@ -17,9 +17,8 @@ function DependencyEdge({
   targetY,
   sourcePosition,
   targetPosition,
-  selected,
 }: EdgeProps) {
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [edgePath] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -27,7 +26,6 @@ function DependencyEdge({
     targetY,
     targetPosition,
   });
-  const [open, setOpen] = useState(false);
   return (
     <>
       <svg style={{ position: 'absolute', top: 1000, left: 1000 }}>
@@ -50,6 +48,38 @@ function DependencyEdge({
           </marker>
         </defs>
       </svg>
+      <BaseEdge
+        path={edgePath}
+        style={{ strokeDasharray: '5, 5' }}
+        markerStart={`url(#${id})`}
+      />
+    </>
+  );
+}
+
+function DependencyEdge({
+  id,
+  source,
+  target,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  selected,
+}: EdgeProps) {
+  const [edgePath, labelX, labelY] = getBezierPath({
+    sourceX,
+    sourceY,
+    sourcePosition,
+    targetX,
+    targetY,
+    targetPosition,
+  });
+  const [open, setOpen] = useState(false);
+  return (
+    <>
       {selected && (
         <EdgeLabelRenderer>
           <RelationshipToolBar
@@ -60,10 +90,16 @@ function DependencyEdge({
           />
         </EdgeLabelRenderer>
       )}
-      <BaseEdge
-        path={edgePath}
-        style={{ strokeDasharray: '5, 5' }}
-        markerStart={`url(#${id})`}
+      <DependencyEdgeView
+        sourceX={sourceX}
+        sourceY={sourceY}
+        targetX={targetX}
+        targetY={targetY}
+        sourcePosition={sourcePosition}
+        targetPosition={targetPosition}
+        id={id}
+        source={source}
+        target={target}
       />
       <RelationshipEditModal
         open={open}

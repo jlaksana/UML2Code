@@ -18,7 +18,11 @@ import logo from '../../assets/UML2.png';
 import '../../styles/Header.css';
 import ShareMenu from './ShareMenu';
 
-function Header() {
+type HeaderProps = {
+  isEditor?: boolean;
+};
+
+function Header({ isEditor = false }: HeaderProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [openShare, setOpenShare] = useState(false);
@@ -119,7 +123,11 @@ function Header() {
           </MenuItem>
         </Menu>
       </div>
-      <ShareMenu open={openShare} handleClose={() => setOpenShare(false)} />
+      <ShareMenu
+        open={openShare}
+        handleClose={() => setOpenShare(false)}
+        isEditor={isEditor}
+      />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { RelationshipsProvider } from '../context/RelationshipsContext';
 import AddNewSpeedDial from './AddNewSpeedDial';
 import AlertToast from './alert/Alert';
 import { AlertProvider } from './alert/AlertContext';
-import Diagram from './diagram/Diagram';
+import DiagramEditor from './diagram/DiagramEditor';
 import Header from './header/Header';
 
 function Editor() {
@@ -13,9 +13,9 @@ function Editor() {
       <EntitiesProvider>
         <RelationshipsProvider>
           <div className="editor">
-            <Header />
+            <Header isEditor />
             <AddNewSpeedDial />
-            <Diagram />
+            <DiagramEditor />
           </div>
         </RelationshipsProvider>
       </EntitiesProvider>

@@ -80,6 +80,21 @@ const getDiagramContents = async (id: string) => {
 };
 
 /**
+ * Get the contents of a public diagram. Errors if diagram is private
+ * @param id of diagram to get
+ * @returns the entities and relationships of the diagram
+ */
+const getDiagramContentsPublic = async (id: string) => {
+  const idRegex = /^\d{4}$/;
+  if (!idRegex.test(id)) throw new Error('Invalid Diagram id');
+  const diagram = await DiagramModel.findById(id);
+  if (!diagram) throw new Error('Diagram not found');
+  if (!diagram.isPublic) throw new Error('Diagram is private');
+
+  return getDiagramContents(id);
+};
+
+/**
  * Creates a diagram
  * @param password password of the diagram to create
  * @returns the created diagram
@@ -126,6 +141,7 @@ export {
   createDiagram,
   findDiagramById,
   getDiagramContents,
+  getDiagramContentsPublic,
   getDiagramPrivacy,
   loginToDiagram,
   setDiagramPrivacy,

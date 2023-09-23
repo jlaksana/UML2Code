@@ -44,7 +44,7 @@ const nodeTypes = {
 };
 
 // handle colors for minimap
-const nodeColor = (node: Entity) => {
+export const nodeColor = (node: Entity) => {
   switch (node.type) {
     case 'class':
       return '#D4F1F4';
@@ -67,7 +67,7 @@ const edgeTypes = {
   Composition: CompositionEdge,
 };
 
-function Diagram() {
+function DiagramEditor() {
   const entities = useEntities();
   const entitiesDispatch = useEntitiesDispatch();
   const relationships = useRelationships();
@@ -214,6 +214,7 @@ function Diagram() {
   return (
     <div className="diagram">
       <ReactFlow
+        fitView
         nodes={entities}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
@@ -235,4 +236,4 @@ function Diagram() {
   );
 }
 
-export default Diagram;
+export default DiagramEditor;

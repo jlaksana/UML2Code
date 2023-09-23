@@ -8,9 +8,10 @@ import { useParams } from 'react-router-dom';
 type ShareMenuProps = {
   open: boolean;
   handleClose: () => void;
+  isEditor: boolean;
 };
 
-function ShareMenu({ open, handleClose }: ShareMenuProps) {
+function ShareMenu({ open, handleClose, isEditor }: ShareMenuProps) {
   const [isPublic, setIsPublic] = useState(false);
 
   const { diagramId } = useParams();
@@ -45,13 +46,25 @@ function ShareMenu({ open, handleClose }: ShareMenuProps) {
         <div className="share-menu">
           <div>
             <FormControlLabel
-              control={<Switch checked={isPublic} onChange={handleSwitch} />}
+              control={
+                <Switch
+                  checked={isPublic}
+                  onChange={handleSwitch}
+                  disabled={!isEditor}
+                />
+              }
               label="Public"
             />
-            <Typography variant="body2">
-              Making a diagram public lets any user view your diagram. It does
-              not allow editing.
-            </Typography>
+            {isEditor ? (
+              <Typography variant="body2">
+                Making a diagram public lets any user be able to view this
+                diagram. It does not allow public editing.
+              </Typography>
+            ) : (
+              <Typography variant="body2">
+                This diagram is able to be viewed publicly. Copy the link below
+              </Typography>
+            )}
             {isPublic && (
               <Button
                 variant="outlined"

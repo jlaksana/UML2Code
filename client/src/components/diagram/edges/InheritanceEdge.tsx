@@ -9,7 +9,7 @@ import { RelationshipEditModal } from '../../forms/modals/RelationshipModal';
 import RelationshipToolBar from './RelationshipToolBar';
 import { getMarkerRotation } from './edgeUtils';
 
-function InheritanceEdge({
+export function InheritanceEdgeView({
   id,
   sourceX,
   sourceY,
@@ -17,9 +17,8 @@ function InheritanceEdge({
   targetY,
   sourcePosition,
   targetPosition,
-  selected,
 }: EdgeProps) {
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [edgePath] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -27,7 +26,6 @@ function InheritanceEdge({
     targetY,
     targetPosition,
   });
-  const [open, setOpen] = useState(false);
   return (
     <>
       <svg style={{ position: 'absolute', top: 0, left: 0 }}>
@@ -64,6 +62,34 @@ function InheritanceEdge({
           </marker>
         </defs>
       </svg>
+      <BaseEdge path={edgePath} markerStart={`url(#${id})`} />
+    </>
+  );
+}
+
+function InheritanceEdge({
+  id,
+  source,
+  target,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  selected,
+}: EdgeProps) {
+  const [edgePath, labelX, labelY] = getBezierPath({
+    sourceX,
+    sourceY,
+    sourcePosition,
+    targetX,
+    targetY,
+    targetPosition,
+  });
+  const [open, setOpen] = useState(false);
+  return (
+    <>
       {selected && (
         <EdgeLabelRenderer>
           <RelationshipToolBar
@@ -74,7 +100,17 @@ function InheritanceEdge({
           />
         </EdgeLabelRenderer>
       )}
-      <BaseEdge path={edgePath} markerStart={`url(#${id})`} />
+      <InheritanceEdgeView
+        sourceX={sourceX}
+        sourceY={sourceY}
+        targetX={targetX}
+        targetY={targetY}
+        sourcePosition={sourcePosition}
+        targetPosition={targetPosition}
+        id={id}
+        source={source}
+        target={target}
+      />
       <RelationshipEditModal
         open={open}
         handleClose={() => setOpen(false)}
