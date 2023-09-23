@@ -102,6 +102,9 @@ function CreateMenu() {
       >
         {id ? 'Return' : 'Go to Existing'}
       </LoadingButton>
+      <Typography variant="overline">
+        Developed by Jonathan Laksana 2023
+      </Typography>
     </div>
   );
 }

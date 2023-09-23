@@ -25,8 +25,8 @@ function ShareMenu({ open, handleClose, isEditor }: ShareMenuProps) {
         setIsPublic(false);
       }
     };
-    getPrivacy();
-  }, []);
+    if (open) getPrivacy();
+  }, [open]);
 
   const handleSwitch = async (event: React.ChangeEvent<HTMLInputElement>) => {
     await axios.put('/api/diagram/privacy', { isPublic: event.target.checked });

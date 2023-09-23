@@ -13,6 +13,7 @@ import InterfaceModal from './forms/modals/InterfaceModal';
 import RelationshipModal from './forms/modals/RelationshipModal';
 
 function AddNewSpeedDial() {
+  const [open, setOpen] = useState(false);
   const [classOpen, setClassOpen] = useState(false);
   const [interfaceOpen, setInterfaceOpen] = useState(false);
   const [enumOpen, setEnumOpen] = useState(false);
@@ -60,6 +61,9 @@ function AddNewSpeedDial() {
           ariaLabel="Add New SpeedDial"
           sx={{ position: 'absolute', bottom: '5vh', right: '5vh' }}
           icon={<SpeedDialIcon />}
+          open={open}
+          onClick={() => setOpen(!open)}
+          onClose={() => setOpen(false)}
         >
           {actions.map((action) => (
             <SpeedDialAction

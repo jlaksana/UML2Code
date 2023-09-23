@@ -1,5 +1,5 @@
 import LoadingButton from '@mui/lab/LoadingButton';
-import { TextField } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -99,6 +99,9 @@ function StartMenu() {
       >
         Create New
       </LoadingButton>
+      <Typography variant="overline">
+        Developed by Jonathan Laksana 2023
+      </Typography>
     </div>
   );
 }
