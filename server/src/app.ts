@@ -13,13 +13,20 @@ import relationshipRouter from './routes/relationship';
 const app = express();
 
 // Middleware
+const corsOptions = {
+  origin: ['http://localhost', 'https://uml2code.vercel.app'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'Access-Control-Allow-Methods',
+    'Access-Control-Request-Headers',
+  ],
+  credentials: true,
+  enablePreflight: true,
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
-app.use(
-  cors({
-    origin: ['http://localhost:5173', 'https://uml2code.vercel.app'],
-    credentials: true,
-  })
-);
 app.use(compression());
 app.use(cookieParser());
 app.use(loggerMiddleware);
@@ -33,7 +40,7 @@ app.use('/api/entity', entityRouter);
 app.use('/api/relationship', relationshipRouter);
 
 app.get('/', (req, res) => {
-  res.send('Hello World from UML2Code API!');
+  res.send('Hello World from UML2Code Server!');
 });
 
 export default app;
