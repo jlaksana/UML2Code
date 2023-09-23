@@ -45,10 +45,7 @@ function Header({ isEditor = false }: HeaderProps) {
   };
 
   const handleDocs = () => {
-    window.open(
-      'https://github.com/jlaksana/UML2Code/wiki/Documentation-Home',
-      '_blank'
-    );
+    window.open('https://github.com/jlaksana/UML2Code/wiki', '_blank');
   };
 
   const handleBug = () => {

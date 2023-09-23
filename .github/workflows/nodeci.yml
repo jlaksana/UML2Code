@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: ["**"]
+    branches: ["master", "develop"]
   pull_request:
-    branches: [main]
+    branches: [develop]
 
 env:
   MONGODB_URL: ${{ secrets.MONGODB_URL }}
