@@ -10,6 +10,9 @@ lerna-debug.log*
 node_modules
 dist-ssr
 *.local
+dist/tests
+dist/jest.config.js
+dist/jest.config.js.map
 
 # Editor directories and files
 .vscode/*

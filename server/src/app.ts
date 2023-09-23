@@ -14,15 +14,8 @@ const app = express();
 
 // Middleware
 const corsOptions = {
-  origin: ['http://localhost', 'https://uml2code.vercel.app'],
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'Access-Control-Allow-Methods',
-    'Access-Control-Request-Headers',
-  ],
+  origin: 'http://localhost:5173',
   credentials: true,
-  enablePreflight: true,
 };
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
