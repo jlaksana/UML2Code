@@ -18,7 +18,7 @@ const app = (0, express_1.default)();
 // Middleware
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
-    origin: ['http://localhost:5173', 'https://uml2code-server.vercel.app/'],
+    origin: ['http://localhost:5173', 'https://uml2code.vercel.app'],
     credentials: true,
 }));
 app.use((0, compression_1.default)());

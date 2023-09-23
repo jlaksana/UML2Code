@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://uml2code-server.vercel.app/'],
+    origin: ['http://localhost:5173', 'https://uml2code.vercel.app'],
     credentials: true,
   })
 );
