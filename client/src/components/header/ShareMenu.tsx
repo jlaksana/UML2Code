@@ -25,8 +25,8 @@ function ShareMenu({ open, handleClose, isEditor }: ShareMenuProps) {
         setIsPublic(false);
       }
     };
-    if (open) getPrivacy();
-  }, [open]);
+    if (open && isEditor) getPrivacy();
+  }, [isEditor, open]);
 
   const handleSwitch = async (event: React.ChangeEvent<HTMLInputElement>) => {
     await axios.put('/api/diagram/privacy', { isPublic: event.target.checked });
@@ -48,7 +48,7 @@ function ShareMenu({ open, handleClose, isEditor }: ShareMenuProps) {
             <FormControlLabel
               control={
                 <Switch
-                  checked={isPublic}
+                  checked={isPublic || !isEditor}
                   onChange={handleSwitch}
                   disabled={!isEditor}
                 />
