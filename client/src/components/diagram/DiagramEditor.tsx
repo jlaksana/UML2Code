@@ -138,6 +138,13 @@ function DiagramEditor() {
     [entitiesDispatch, setAlert]
   );
 
+  const onConnect = useCallback(() => {
+    setAlert(
+      'Unsupported Action - Please use the relationship form',
+      AlertType.INFO
+    );
+  }, [setAlert]);
+
   // handle select and remove of edges
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) =>
@@ -218,6 +225,7 @@ function DiagramEditor() {
         onNodesChange={onNodesChange}
         onNodeDragStop={onNodeDragStop}
         onNodesDelete={onNodesDelete}
+        onConnect={onConnect}
         edges={relationships}
         edgeTypes={edgeTypes}
         onEdgesChange={onEdgesChange}
