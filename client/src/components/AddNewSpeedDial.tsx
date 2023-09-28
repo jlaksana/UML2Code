@@ -63,7 +63,6 @@ function AddNewSpeedDial() {
           icon={<SpeedDialIcon />}
           open={open}
           onClick={() => setOpen(!open)}
-          onClose={() => setOpen(false)}
         >
           {actions.map((action) => (
             <SpeedDialAction
