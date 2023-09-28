@@ -4,11 +4,10 @@ import { z } from 'zod';
 import { DiagramModel } from '../models/diagram.model';
 import { EntityModel } from '../models/entity.model';
 import {
+  HandlePositions,
   Relationship,
   RelationshipModel,
   RelationshipVariant,
-  SourceHandlePositions,
-  TargetHandlePositions,
   umlMultiplicityRegex,
 } from '../models/relationship.model';
 
@@ -229,9 +228,9 @@ const validateDuplicateRelationship = async (
 const newConnectionSchema = z.object({
   type: RelationshipVariant,
   source: z.string(),
-  sourceHandle: SourceHandlePositions,
+  sourceHandle: HandlePositions,
   target: z.string(),
-  targetHandle: TargetHandlePositions,
+  targetHandle: HandlePositions,
 });
 
 const validateRelationshipHandleUpdate = async (

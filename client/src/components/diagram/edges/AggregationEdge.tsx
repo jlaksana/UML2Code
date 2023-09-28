@@ -12,6 +12,7 @@ import {
   getDiamondRefX,
   getDiamondRefY,
   getTgtLabelPositionX,
+  getTgtLabelPositionY,
 } from './edgeUtils';
 
 export function AggregationEdgeView({
@@ -81,7 +82,7 @@ export function AggregationEdgeView({
           label={data?.tgtMultiplicity}
           position="target"
           x={getTgtLabelPositionX(targetPosition, targetX)}
-          y={targetY}
+          y={getTgtLabelPositionY(targetPosition, targetY)}
         />
       </EdgeLabelRenderer>
     </>

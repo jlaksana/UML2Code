@@ -5,6 +5,7 @@ import ReactFlow, {
   Background,
   BackgroundVariant,
   Connection,
+  ConnectionMode,
   Controls,
   Edge,
   EdgeChange,
@@ -171,7 +172,7 @@ function DiagramEditor() {
         });
       } catch (e) {
         setAlert(
-          'Cannot update relationship to that node and port',
+          'Cannot update relationship to that node and port. Try again',
           AlertType.ERROR
         );
         relationshipsDispatch({
@@ -185,10 +186,7 @@ function DiagramEditor() {
 
   const onEdgeUpdateEnd = useCallback(() => {
     if (!edgeUpdateSuccessful.current) {
-      setAlert(
-        'Cannot attach edge to that port. Try a different port',
-        AlertType.WARNING
-      );
+      setAlert('Could not detect a port', AlertType.WARNING);
     }
     edgeUpdateSuccessful.current = true;
   }, [setAlert]);
@@ -227,6 +225,7 @@ function DiagramEditor() {
         onEdgeUpdate={onEdgeUpdate}
         onEdgeUpdateEnd={onEdgeUpdateEnd}
         onEdgesDelete={onEdgeDelete}
+        connectionMode={ConnectionMode.Loose}
       >
         <Background color="#444" variant={'dots' as BackgroundVariant} />
         <Controls style={{ flexDirection: 'column', gap: 0, margin: '3em' }} />

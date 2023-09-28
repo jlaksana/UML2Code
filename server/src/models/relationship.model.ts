@@ -12,16 +12,13 @@ const RelationshipVariant = z.enum([
   'Dependency',
 ]);
 
-const SourceHandlePositions = z.enum([
+const HandlePositions = z.enum([
   'bottom-left',
   'bottom-middle',
   'bottom-right',
   'right-middle',
   'left-bottom',
   'right-bottom',
-]);
-
-const TargetHandlePositions = z.enum([
   'top-left',
   'top-middle',
   'top-right',
@@ -37,8 +34,8 @@ const relationshipSchema = z.object({
   diagramId: z.number().min(1000).max(999999),
   source: z.instanceof(Schema.Types.ObjectId),
   target: z.instanceof(Schema.Types.ObjectId),
-  sourceHandle: SourceHandlePositions.optional(),
-  targetHandle: TargetHandlePositions.optional(),
+  sourceHandle: HandlePositions.optional(),
+  targetHandle: HandlePositions.optional(),
   data: z
     .object({
       label: z.string().optional(),
@@ -75,12 +72,24 @@ const schema = new Schema<Relationship>({
       'right-top',
       'right-middle',
       'right-bottom',
+      'top-left',
+      'top-middle',
+      'top-right',
+      'left-top',
+      'left-middle',
+      'left-bottom',
     ],
     default: 'bottom-middle',
   },
   targetHandle: {
     type: String,
     enum: [
+      'bottom-left',
+      'bottom-middle',
+      'bottom-right',
+      'right-top',
+      'right-middle',
+      'right-bottom',
       'top-left',
       'top-middle',
       'top-right',
@@ -118,11 +127,10 @@ schema.path('target').validate(async (tar) => {
 const RelationshipModel = model<Relationship>('Relationship', schema);
 
 export {
+  HandlePositions,
   Relationship,
   RelationshipModel,
   RelationshipVariant,
-  SourceHandlePositions,
-  TargetHandlePositions,
   relationshipSchema,
   umlMultiplicityRegex,
 };

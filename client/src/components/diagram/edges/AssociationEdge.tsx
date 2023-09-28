@@ -9,7 +9,7 @@ import {
 import { RelationshipEditModal } from '../../forms/modals/RelationshipModal';
 import EdgeLabel from './EdgeLabel';
 import RelationshipToolBar from './RelationshipToolBar';
-import { getTgtLabelPositionX } from './edgeUtils';
+import { getTgtLabelPositionX, getTgtLabelPositionY } from './edgeUtils';
 
 export function AssociationEdgeView({
   sourceX,
@@ -29,7 +29,7 @@ export function AssociationEdgeView({
     targetPosition,
   });
   const getSrcLabelPositionX = () => {
-    if (sourcePosition === Position.Left) {
+    if (sourcePosition === Position.Left || sourcePosition === Position.Top) {
       return sourceX - 10;
     }
     if (
@@ -39,6 +39,13 @@ export function AssociationEdgeView({
       return sourceX + 10;
     }
     return sourceX;
+  };
+
+  const getSrcLabelPositionY = () => {
+    if (sourcePosition === Position.Top) {
+      return sourceY - 40;
+    }
+    return sourceY;
   };
 
   return (
@@ -55,13 +62,13 @@ export function AssociationEdgeView({
           label={data?.srcMultiplicity}
           position="source"
           x={getSrcLabelPositionX()}
-          y={sourceY}
+          y={getSrcLabelPositionY()}
         />
         <EdgeLabel
           label={data?.tgtMultiplicity}
           position="target"
           x={getTgtLabelPositionX(targetPosition, targetX)}
-          y={targetY}
+          y={getTgtLabelPositionY(targetPosition, targetY)}
         />
       </EdgeLabelRenderer>
     </>
