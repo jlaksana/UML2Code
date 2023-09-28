@@ -191,9 +191,9 @@ exports.validateDuplicateRelationship = validateDuplicateRelationship;
 const newConnectionSchema = zod_1.z.object({
     type: relationship_model_1.RelationshipVariant,
     source: zod_1.z.string(),
-    sourceHandle: relationship_model_1.SourceHandlePositions,
+    sourceHandle: relationship_model_1.HandlePositions,
     target: zod_1.z.string(),
-    targetHandle: relationship_model_1.TargetHandlePositions,
+    targetHandle: relationship_model_1.HandlePositions,
 });
 const validateRelationshipHandleUpdate = async (relationshipId, handleData, diagramId) => {
     const parsedData = newConnectionSchema.safeParse(handleData);

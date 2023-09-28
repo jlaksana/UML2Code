@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.umlMultiplicityRegex = exports.relationshipSchema = exports.TargetHandlePositions = exports.SourceHandlePositions = exports.RelationshipVariant = exports.RelationshipModel = void 0;
+exports.umlMultiplicityRegex = exports.relationshipSchema = exports.RelationshipVariant = exports.RelationshipModel = exports.HandlePositions = void 0;
 const mongoose_1 = require("mongoose");
 const zod_1 = require("zod");
 const diagram_model_1 = require("./diagram.model");
@@ -14,16 +14,13 @@ const RelationshipVariant = zod_1.z.enum([
     'Dependency',
 ]);
 exports.RelationshipVariant = RelationshipVariant;
-const SourceHandlePositions = zod_1.z.enum([
+const HandlePositions = zod_1.z.enum([
     'bottom-left',
     'bottom-middle',
     'bottom-right',
     'right-middle',
     'left-bottom',
     'right-bottom',
-]);
-exports.SourceHandlePositions = SourceHandlePositions;
-const TargetHandlePositions = zod_1.z.enum([
     'top-left',
     'top-middle',
     'top-right',
@@ -31,7 +28,7 @@ const TargetHandlePositions = zod_1.z.enum([
     'left-middle',
     'right-top',
 ]);
-exports.TargetHandlePositions = TargetHandlePositions;
+exports.HandlePositions = HandlePositions;
 const umlMultiplicityRegex = /^(?:\d+|\d+\.\.\*|\d+\.\.\d+|\*|)$/;
 exports.umlMultiplicityRegex = umlMultiplicityRegex;
 const relationshipSchema = zod_1.z.object({
@@ -39,8 +36,8 @@ const relationshipSchema = zod_1.z.object({
     diagramId: zod_1.z.number().min(1000).max(999999),
     source: zod_1.z.instanceof(mongoose_1.Schema.Types.ObjectId),
     target: zod_1.z.instanceof(mongoose_1.Schema.Types.ObjectId),
-    sourceHandle: SourceHandlePositions.optional(),
-    targetHandle: TargetHandlePositions.optional(),
+    sourceHandle: HandlePositions.optional(),
+    targetHandle: HandlePositions.optional(),
     data: zod_1.z
         .object({
         label: zod_1.z.string().optional(),
@@ -75,12 +72,24 @@ const schema = new mongoose_1.Schema({
             'right-top',
             'right-middle',
             'right-bottom',
+            'top-left',
+            'top-middle',
+            'top-right',
+            'left-top',
+            'left-middle',
+            'left-bottom',
         ],
         default: 'bottom-middle',
     },
     targetHandle: {
         type: String,
         enum: [
+            'bottom-left',
+            'bottom-middle',
+            'bottom-right',
+            'right-top',
+            'right-middle',
+            'right-bottom',
             'top-left',
             'top-middle',
             'top-right',
