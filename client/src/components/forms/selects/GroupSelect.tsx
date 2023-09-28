@@ -49,7 +49,9 @@ function GroupSelect({
         .map((e) => ({ type: e.type, name: e.data.name }))
     : [];
   const prims = includePrimitives
-    ? types.map((t) => ({ type: 'primitive', name: t }))
+    ? types
+        .map((t) => ({ type: 'primitive', name: t }))
+        .concat([{ type: 'primitive', name: 'void' }])
     : [];
 
   const options = [...prims, ...classes, ...interfaces, ...enums];
