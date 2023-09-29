@@ -27,15 +27,18 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
   const [values, setValues] = useState<EnumValue[]>(data?.values || []);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('No fields can be empty');
+  const [loading, setLoading] = useState(false);
 
   const entitiesDispatch = useEntitiesDispatch();
   const { setAlert } = useAlert();
 
   useEffect(() => {
+    setLoading(true);
     if (data) {
       setName(data.name);
       setValues(data.values || []);
     }
+    setLoading(false);
   }, [data]);
 
   const close = () => {
@@ -55,6 +58,7 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(false);
+    setLoading(true);
 
     const enumer = {
       name: removeWhiteSpace(name),
@@ -85,6 +89,7 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
         setErrorMessage(err.response.data.message);
       }
     }
+    setLoading(false);
   };
 
   return (
@@ -126,10 +131,10 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
           </TabContext>
         </div>
         <div className="buttons">
-          <Button variant="text" onClick={close}>
+          <Button variant="text" onClick={close} disabled={loading}>
             Cancel
           </Button>
-          <Button variant="text" type="submit">
+          <Button variant="text" type="submit" disabled={loading}>
             OK
           </Button>
         </div>

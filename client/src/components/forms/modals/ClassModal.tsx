@@ -45,11 +45,13 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
   const [methods, setMethods] = useState<Method[]>(data?.methods || []);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('No fields can be empty');
+  const [loading, setLoading] = useState(false);
 
   const entitiesDispatch = useEntitiesDispatch();
   const { setAlert } = useAlert();
 
   useEffect(() => {
+    setLoading(true);
     if (data) {
       setName(data.name);
       setIsAbstract(data.isAbstract);
@@ -57,6 +59,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
       setAttributes(data.attributes || []);
       setMethods(data.methods || []);
     }
+    setLoading(false);
   }, [data]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -87,6 +90,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(false);
+    setLoading(true);
 
     const klass: Klass = {
       name: removeWhiteSpace(name),
@@ -129,6 +133,7 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
         setErrorMessage(err.response.data.message);
       }
     }
+    setLoading(false);
   };
 
   return (
@@ -197,10 +202,10 @@ function ClassModal({ open, handleClose, id, data }: ClassModalProps) {
           </TabContext>
         </div>
         <div className="buttons">
-          <Button variant="text" onClick={close}>
+          <Button variant="text" onClick={close} disabled={loading}>
             Cancel
           </Button>
-          <Button variant="text" type="submit">
+          <Button variant="text" type="submit" disabled={loading}>
             OK
           </Button>
         </div>

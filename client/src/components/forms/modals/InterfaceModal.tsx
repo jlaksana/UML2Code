@@ -30,16 +30,19 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
   const [methods, setMethods] = useState<Method[]>(data?.methods || []);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('No fields can be empty');
+  const [loading, setLoading] = useState(false);
 
   const entitiesDispatch = useEntitiesDispatch();
   const { setAlert } = useAlert();
 
   useEffect(() => {
+    setLoading(true);
     if (data) {
       setName(data.name);
       setConstants(data.constants || []);
       setMethods(data.methods || []);
     }
+    setLoading(false);
   }, [data]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -66,6 +69,7 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(false);
+    setLoading(true);
 
     const interfaceData = {
       name: removeWhiteSpace(name),
@@ -109,6 +113,7 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
         setErrorMessage(err.response.data.message);
       }
     }
+    setLoading(false);
   };
 
   return (
@@ -160,10 +165,10 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
           </TabContext>
         </div>
         <div className="buttons">
-          <Button variant="text" onClick={close}>
+          <Button variant="text" onClick={close} disabled={loading}>
             Cancel
           </Button>
-          <Button variant="text" type="submit">
+          <Button variant="text" type="submit" disabled={loading}>
             OK
           </Button>
         </div>

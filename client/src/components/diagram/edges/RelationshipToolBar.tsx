@@ -2,6 +2,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Tooltip } from '@mui/material';
 import axios from 'axios';
+import { useState } from 'react';
 import { useRelationshipsDispatch } from '../../../context/RelationshipsContext';
 import { AlertType } from '../../alert/AlertContext';
 import useAlert from '../../alert/useAlert';
@@ -14,10 +15,12 @@ type Props = {
 };
 
 function RelationshipToolBar({ labelX, labelY, id, openEditModal }: Props) {
+  const [loading, setLoading] = useState(false);
   const relationshipsDispatch = useRelationshipsDispatch();
   const { setAlert } = useAlert();
 
   const handleDelete = async () => {
+    setLoading(true);
     try {
       await axios.delete(`/api/relationship/${id}`);
       relationshipsDispatch({
@@ -28,6 +31,7 @@ function RelationshipToolBar({ labelX, labelY, id, openEditModal }: Props) {
     } catch (e) {
       setAlert('Could not delete relationship. Try again', AlertType.ERROR);
     }
+    setLoading(false);
   };
 
   return (
@@ -43,12 +47,22 @@ function RelationshipToolBar({ labelX, labelY, id, openEditModal }: Props) {
       className="nodrag nopan"
     >
       <Tooltip title="Edit" placement="left">
-        <IconButton aria-label="edit" color="primary" onClick={openEditModal}>
+        <IconButton
+          aria-label="edit"
+          color="primary"
+          onClick={openEditModal}
+          disabled={loading}
+        >
           <EditIcon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Delete" placement="right">
-        <IconButton aria-label="delete" color="error" onClick={handleDelete}>
+        <IconButton
+          aria-label="delete"
+          color="error"
+          onClick={handleDelete}
+          disabled={loading}
+        >
           <DeleteIcon />
         </IconButton>
       </Tooltip>

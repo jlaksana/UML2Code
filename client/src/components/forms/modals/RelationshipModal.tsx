@@ -91,6 +91,7 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
   const [srcMultiplicity, setSrcMultiplicity] = useState('');
   const [tgtMultiplicity, setTgtMultiplicity] = useState('');
   const [errorMessage, setErrorMessage] = useState();
+  const [loading, setLoading] = useState(false);
 
   const relationshipsDispatch = useRelationshipsDispatch();
   const { setAlert } = useAlert();
@@ -122,6 +123,7 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setErrorMessage(undefined);
+    setLoading(true);
 
     const relationship = {
       type,
@@ -144,6 +146,7 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
     } catch (err: any) {
       setErrorMessage(err.response.data.message);
     }
+    setLoading(false);
   };
 
   return (
@@ -196,10 +199,10 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
           )}
         </div>
         <div className="buttons">
-          <Button variant="text" onClick={close}>
+          <Button variant="text" onClick={close} disabled={loading}>
             Cancel
           </Button>
-          <Button variant="text" type="submit">
+          <Button variant="text" type="submit" disabled={loading}>
             OK
           </Button>
         </div>
@@ -223,12 +226,14 @@ export function RelationshipEditModal({
   const [srcMultiplicity, setSrcMultiplicity] = useState('');
   const [tgtMultiplicity, setTgtMultiplicity] = useState('');
   const [errorMessage, setErrorMessage] = useState<string>();
+  const [loading, setLoading] = useState(false);
 
   const relationshipsDispatch = useRelationshipsDispatch();
   const { setAlert } = useAlert();
 
   useEffect(() => {
     const getRelationship = async () => {
+      setLoading(true);
       try {
         const res = await axios.get(`/api/relationship/${id}`);
         const relationship = res.data as Relationship;
@@ -240,6 +245,7 @@ export function RelationshipEditModal({
       } catch (err: any) {
         setErrorMessage('Server Error. Please try again or report this bug.');
       }
+      setLoading(false);
     };
     if (open) {
       getRelationship();
@@ -259,6 +265,7 @@ export function RelationshipEditModal({
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setErrorMessage(undefined);
+    setLoading(true);
 
     const relationship = {
       type: relationshipType,
@@ -281,6 +288,7 @@ export function RelationshipEditModal({
     } catch (err: any) {
       setErrorMessage(err.response.data.message);
     }
+    setLoading(false);
   };
 
   return (
@@ -321,10 +329,10 @@ export function RelationshipEditModal({
           )}
         </div>
         <div className="buttons">
-          <Button variant="text" onClick={close}>
+          <Button variant="text" onClick={close} disabled={loading}>
             Cancel
           </Button>
-          <Button variant="text" type="submit">
+          <Button variant="text" type="submit" disabled={loading}>
             OK
           </Button>
         </div>
