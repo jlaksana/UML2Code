@@ -178,10 +178,7 @@ function DiagramEditor() {
           ...newConnection,
         });
       } catch (e) {
-        setAlert(
-          'Cannot update relationship to that node and port. Try again',
-          AlertType.ERROR
-        );
+        setAlert('Cannot update relationship to that entity', AlertType.ERROR);
         relationshipsDispatch({
           type: 'UPDATE_RELATIONSHIP',
           payload: oldEdge,
