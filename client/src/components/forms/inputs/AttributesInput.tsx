@@ -3,7 +3,7 @@ import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutl
 import { Button, IconButton, TextField, Tooltip } from '@mui/material';
 import '../../../styles/FormModals.css';
 import { Attribute, Visibility } from '../../../types';
-import TypeSelect from '../selects/TypeSelect';
+import GroupSelect from '../selects/GroupSelect';
 import VisibilitySelect from '../selects/VisibilitySelect';
 
 type AttributeFieldProps = {
@@ -36,7 +36,7 @@ function AttributeField({
           )
         }
       />
-      <TypeSelect
+      <GroupSelect
         option={attribute.type}
         setOption={(newType) =>
           updateAttribute(
@@ -46,6 +46,12 @@ function AttributeField({
             attribute.visibility
           )
         }
+        label="Type"
+        width={100}
+        includePrimitives
+        includeClasses
+        includeInterfaces
+        includeEnums
       />
       <TextField
         label="Name"
