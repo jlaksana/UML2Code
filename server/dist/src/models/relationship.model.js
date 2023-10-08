@@ -33,7 +33,7 @@ const umlMultiplicityRegex = /^(?:\d+|\d+\.\.\*|\d+\.\.\d+|\*|)$/;
 exports.umlMultiplicityRegex = umlMultiplicityRegex;
 const relationshipSchema = zod_1.z.object({
     type: RelationshipVariant,
-    diagramId: zod_1.z.number().min(1000).max(999999),
+    diagramId: zod_1.z.number().min(1000),
     source: zod_1.z.instanceof(mongoose_1.Schema.Types.ObjectId),
     target: zod_1.z.instanceof(mongoose_1.Schema.Types.ObjectId),
     sourceHandle: HandlePositions.optional(),

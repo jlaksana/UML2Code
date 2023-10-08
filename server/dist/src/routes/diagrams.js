@@ -8,26 +8,19 @@ const diagramController_1 = require("../controllers/diagramController");
 const auth_1 = __importDefault(require("../middleware/auth"));
 const utils_1 = require("../utils");
 const router = express_1.default.Router();
-/** Login to a diagram and sets cookie
+/** Login to a diagram and returns jwt token.
  * @route POST /api/diagram/:id
  * @access Public
- * @returns {object} 200 - token as cookie
+ * @returns {object} 200 - token
  * @returns {Error}  404 - Diagram not found
  * @returns {Error}  404 - Invalid Diagram id
  */
 router.post('/:id/login', async (req, res) => {
     try {
         const token = await (0, diagramController_1.loginToDiagram)(req.params.id, req.body.password);
-        res.cookie('token', token, {
-            httpOnly: process.env.NODE_ENV === 'production',
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 8 * 60 * 60 * 1000,
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        });
-        res.status(200).json({ message: 'Logged in successfully' });
+        res.status(200).json({ authToken: token });
     }
     catch (e) {
-        res.cookie('token', '', { maxAge: 0 });
         res.status(404).json({ message: (0, utils_1.getErrorMessage)(e) });
         console.log((0, utils_1.getErrorMessage)(e));
     }

@@ -31,7 +31,7 @@ const entityData = zod_1.z.object({
 });
 exports.entityData = entityData;
 const entitySchema = zod_1.z.object({
-    diagramId: zod_1.z.number().min(1000).max(999999),
+    diagramId: zod_1.z.number().min(1000),
     type: zod_1.z.enum(['class', 'interface', 'enum']),
     position: zod_1.z.object({ x: zod_1.z.number(), y: zod_1.z.number() }),
     data: entityData,

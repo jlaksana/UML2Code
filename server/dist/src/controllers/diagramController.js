@@ -12,13 +12,13 @@ const relationship_model_1 = require("../models/relationship.model");
 const utils_1 = require("../utils");
 const entityServices_1 = require("./entityServices");
 const relationshipService_1 = require("./relationshipService");
+const idRegex = /^\d+$/;
 /** Logs in to a diagram
  * @param id id of the diagram to log in to
  * @param password password of the diagram to log in to
  * @returns a JWT token
  */
 const loginToDiagram = async (id, password) => {
-    const idRegex = /^\d{4}$/;
     if (!idRegex.test(id))
         throw new Error('Invalid Diagram id');
     const diagram = await diagram_model_1.DiagramModel.findById(id);
@@ -45,7 +45,6 @@ exports.loginToDiagram = loginToDiagram;
  * @returns the diagram
  */
 const findDiagramById = async (id) => {
-    const idRegex = /^\d{4}$/;
     if (!idRegex.test(id))
         throw new Error('Invalid Diagram id');
     const diagram = await diagram_model_1.DiagramModel.findById(id);
@@ -86,7 +85,6 @@ exports.getDiagramContents = getDiagramContents;
  * @returns the entities and relationships of the diagram
  */
 const getDiagramContentsPublic = async (id) => {
-    const idRegex = /^\d{4}$/;
     if (!idRegex.test(id))
         throw new Error('Invalid Diagram id');
     const diagram = await diagram_model_1.DiagramModel.findById(id);

@@ -7,7 +7,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const diagram_model_1 = require("../models/diagram.model");
 const withAuth = async (req, res, next) => {
     try {
-        const { token } = req.cookies;
+        const token = req.headers.authorization?.split(' ')[1];
         if (!token)
             throw new Error('No token provided');
         if (process.env.JWT_SECRET === undefined) {

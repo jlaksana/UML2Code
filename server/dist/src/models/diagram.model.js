@@ -15,7 +15,6 @@ const schema = new mongoose_1.Schema({
     _id: {
         type: Number,
         min: 1000,
-        max: 999999,
     },
     password: {
         type: String,
@@ -32,7 +31,7 @@ exports.DiagramModel = DiagramModel;
 // Counter schema to generate unique diagram id
 const counterSchema = new mongoose_1.Schema({
     _id: { type: String, required: true },
-    seq: { type: Number, min: 1000, max: 999999 },
+    seq: { type: Number, min: 1000 },
 });
 const CounterModel = (0, mongoose_1.model)('Counter', counterSchema);
 exports.CounterModel = CounterModel;
