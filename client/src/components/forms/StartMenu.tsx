@@ -27,7 +27,8 @@ function StartMenu() {
           .post(`/api/diagram/${id.current.value}/login`, {
             password: password.current?.value,
           })
-          .then(() => {
+          .then((res) => {
+            localStorage.setItem('authToken', res.data.authToken);
             navigate(`/${id.current?.value}/edit`);
           })
           .catch((err) => {

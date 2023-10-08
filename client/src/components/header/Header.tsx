@@ -55,7 +55,8 @@ function Header({ isEditor = false }: HeaderProps) {
     );
   };
 
-  const navigateToStartMenu = () => {
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
     handleClose();
     navigate('/');
   };
@@ -112,11 +113,11 @@ function Header({ isEditor = false }: HeaderProps) {
             </ListItemIcon>
             Report Bug
           </MenuItem>
-          <MenuItem onClick={navigateToStartMenu}>
+          <MenuItem onClick={handleLogout}>
             <ListItemIcon>
               <KeyboardReturnIcon fontSize="small" />
             </ListItemIcon>
-            Start Menu
+            Log out
           </MenuItem>
         </Menu>
       </div>

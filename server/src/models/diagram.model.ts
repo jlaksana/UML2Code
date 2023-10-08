@@ -16,7 +16,6 @@ const schema = new Schema<Diagram>(
     _id: {
       type: Number,
       min: 1000,
-      max: 999999,
     },
     password: {
       type: String,
@@ -36,7 +35,7 @@ const DiagramModel = model<Diagram>('Diagram', schema);
 // Counter schema to generate unique diagram id
 const counterSchema = new Schema({
   _id: { type: String, required: true },
-  seq: { type: Number, min: 1000, max: 999999 },
+  seq: { type: Number, min: 1000 },
 });
 
 const CounterModel = model('Counter', counterSchema);

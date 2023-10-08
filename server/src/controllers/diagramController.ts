@@ -11,13 +11,14 @@ import {
 } from './entityServices';
 import { reformatRelationship } from './relationshipService';
 
+const idRegex = /^\d+$/;
+
 /** Logs in to a diagram
  * @param id id of the diagram to log in to
  * @param password password of the diagram to log in to
  * @returns a JWT token
  */
 const loginToDiagram = async (id: string, password: string) => {
-  const idRegex = /^\d{4}$/;
   if (!idRegex.test(id)) throw new Error('Invalid Diagram id');
 
   const diagram = await DiagramModel.findById(id);
@@ -43,7 +44,6 @@ const loginToDiagram = async (id: string, password: string) => {
  * @returns the diagram
  */
 const findDiagramById = async (id: string) => {
-  const idRegex = /^\d{4}$/;
   if (!idRegex.test(id)) throw new Error('Invalid Diagram id');
   const diagram = await DiagramModel.findById(id);
   if (!diagram) throw new Error('Diagram not found');
@@ -85,7 +85,6 @@ const getDiagramContents = async (id: string) => {
  * @returns the entities and relationships of the diagram
  */
 const getDiagramContentsPublic = async (id: string) => {
-  const idRegex = /^\d{4}$/;
   if (!idRegex.test(id)) throw new Error('Invalid Diagram id');
   const diagram = await DiagramModel.findById(id);
   if (!diagram) throw new Error('Diagram not found');

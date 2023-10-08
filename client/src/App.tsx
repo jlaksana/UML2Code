@@ -10,7 +10,6 @@ import theme from './theme';
 
 function App() {
   axios.defaults.baseURL = import.meta.env.VITE_API_URL;
-  axios.defaults.withCredentials = true;
   // interceptor that redirects to login page if user is not authenticated
   axios.interceptors.response.use(
     (response) => response,

@@ -32,7 +32,7 @@ const entityData = z.object({
 });
 
 const entitySchema = z.object({
-  diagramId: z.number().min(1000).max(999999),
+  diagramId: z.number().min(1000),
   type: z.enum(['class', 'interface', 'enum']),
   position: z.object({ x: z.number(), y: z.number() }),
   data: entityData,

@@ -4,7 +4,7 @@ import { DiagramModel } from '../models/diagram.model';
 
 const withAuth: RequestHandler = async (req, res, next) => {
   try {
-    const { token } = req.cookies;
+    const token = req.headers.authorization?.split(' ')[1];
     if (!token) throw new Error('No token provided');
 
     if (process.env.JWT_SECRET === undefined) {
