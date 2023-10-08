@@ -74,7 +74,7 @@ describe('findDiagramById', () => {
   });
 
   it('should not find a diagram with an invalid id', async () => {
-    expect(findDiagramById('999')).rejects.toThrow('Invalid Diagram id');
+    expect(findDiagramById('not an id')).rejects.toThrow('Invalid Diagram id');
   });
 
   it('should not find a diagram with a non-existent id', async () => {
@@ -106,7 +106,9 @@ describe('getDiagramContents', () => {
   });
 
   it('should not get the contents of a diagram with an invalid id', async () => {
-    expect(getDiagramContents('999')).rejects.toThrow('Invalid Diagram id');
+    expect(getDiagramContents('not an id')).rejects.toThrow(
+      'Invalid Diagram id'
+    );
   });
 
   it('should not get the contents of a diagram with a non-existent id', async () => {
