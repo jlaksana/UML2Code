@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
   BackgroundVariant,
+  ConnectionMode,
   Controls,
   MiniMap,
 } from 'reactflow';
@@ -67,6 +68,7 @@ function DiagramViewer() {
         nodeTypes={nodeTypes}
         edges={relationships}
         edgeTypes={edgeTypes}
+        connectionMode={ConnectionMode.Loose}
       >
         <Background color="#444" variant={'dots' as BackgroundVariant} />
         <Controls
