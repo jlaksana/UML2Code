@@ -1,4 +1,6 @@
+import DownloadIcon from '@mui/icons-material/Download';
 import axios from 'axios';
+import { toPng } from 'html-to-image';
 import { MouseEvent, useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactFlow, {
@@ -6,6 +8,7 @@ import ReactFlow, {
   BackgroundVariant,
   Connection,
   ConnectionMode,
+  ControlButton,
   Controls,
   Edge,
   EdgeChange,
@@ -13,6 +16,8 @@ import ReactFlow, {
   NodeChange,
   applyEdgeChanges,
   applyNodeChanges,
+  getRectOfNodes,
+  getTransformForBounds,
 } from 'reactflow';
 import 'reactflow/dist/base.css';
 import {
@@ -213,6 +218,44 @@ function DiagramEditor() {
     [relationshipsDispatch, setAlert]
   );
 
+  // gets the diagram contents and viewport and downloads it as a png
+  const handleDownload = async () => {
+    setAlert('Downloading diagram...', AlertType.INFO);
+    const nodesBounds = getRectOfNodes(entities);
+    const imageWidth = 1800;
+    const imageHeight = 1200;
+    const transform = getTransformForBounds(
+      nodesBounds,
+      imageWidth,
+      imageHeight,
+      0.5,
+      2
+    );
+
+    const viewport = document.querySelector(
+      '.react-flow__viewport'
+    ) as HTMLElement;
+    if (viewport) {
+      const dataUrl = await toPng(viewport, {
+        backgroundColor: '#faf9f6',
+        width: imageWidth,
+        height: imageHeight,
+        style: {
+          width: String(imageWidth),
+          height: String(imageHeight),
+          transform: `translate(${transform[0]}px, ${transform[1]}px) scale(${transform[2]})`,
+        },
+      });
+
+      const now = new Date();
+      const link = document.createElement('a');
+      link.download = `diagram${diagramId}-${now.toLocaleDateString()}.png`;
+      link.href = dataUrl;
+      link.click();
+      setAlert('Diagram successfully downloaded', AlertType.SUCCESS);
+    }
+  };
+
   return (
     <div className="diagram">
       <ReactFlow
@@ -233,7 +276,11 @@ function DiagramEditor() {
         connectionMode={ConnectionMode.Loose}
       >
         <Background color="#444" variant={'dots' as BackgroundVariant} />
-        <Controls style={{ flexDirection: 'column', gap: 0, margin: '3em' }} />
+        <Controls style={{ flexDirection: 'column', gap: 0, margin: '3em' }}>
+          <ControlButton onClick={handleDownload} title="Download Diagram">
+            <DownloadIcon />
+          </ControlButton>
+        </Controls>
         <MiniMap pannable zoomable position="top-right" nodeColor={nodeColor} />
       </ReactFlow>
     </div>

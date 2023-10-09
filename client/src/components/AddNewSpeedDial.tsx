@@ -56,7 +56,7 @@ function AddNewSpeedDial() {
 
   return (
     <>
-      <Tooltip title="Add New" arrow>
+      <Tooltip title="Add New" arrow placement="left-end">
         <SpeedDial
           ariaLabel="Add New SpeedDial"
           sx={{ position: 'absolute', bottom: '5vh', right: '5vh' }}
