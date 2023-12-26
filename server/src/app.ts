@@ -2,6 +2,7 @@ import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
 import { loggerMiddleware } from './middleware/utilMiddleware';
+import authRouter from './routes/auth';
 import classRouter from './routes/classes';
 import diagramRouter from './routes/diagrams';
 import entityRouter from './routes/entity';
@@ -22,6 +23,7 @@ app.use(compression());
 app.use(loggerMiddleware);
 
 // Routes
+app.use('/api/auth', authRouter);
 app.use('/api/diagram', diagramRouter);
 app.use('/api/class', classRouter);
 app.use('/api/interface', interfaceRouter);
