@@ -101,13 +101,13 @@ router.get('/send-reset-password-email/:email', async (req, res) => {
 });
 
 /** Resets a user's password given a token that was received from the email
- * @route POST /api/auth/reset-password
+ * @route PUT /api/auth/reset-password
  * @access Public
  * @returns {object} 200 - message
  * @returns {Error}  404 - User not found
  * @returns {Error}  404 - Invalid token
  */
-router.post('/reset-password', async (req, res) => {
+router.put('/reset-password', async (req, res) => {
   const { token, password } = req.body;
   try {
     await resetPassword(token, password);

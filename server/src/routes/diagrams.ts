@@ -40,7 +40,7 @@ router.get('/', withAuth, async (req, res) => {
  *  "entities": [],
  * "relationships": []
  */
-router.get('/:id/contents', withAuth, async (req, res) => {
+router.get('/:diagramId/contents', withAuth, async (req, res) => {
   try {
     const result = await getDiagramContents(req.params.diagramId);
     res.status(200).json(result);
@@ -58,9 +58,9 @@ router.get('/:id/contents', withAuth, async (req, res) => {
  * @returns {Error}  404 - Invalid Diagram id
  * @returns {Error}  404 - Diagram is private
  */
-router.get('/:id/public/contents', async (req, res) => {
+router.get('/:diagramId/public/contents', async (req, res) => {
   try {
-    const result = await getDiagramContentsPublic(req.params.id);
+    const result = await getDiagramContentsPublic(req.params.diagramId);
     res.status(200).json(result);
   } catch (e) {
     res.status(404).json({ message: getErrorMessage(e) });
@@ -111,7 +111,7 @@ router.post('/:diagramId/rename', withAuth, async (req, res) => {
  * @returns {Error}  404 - Diagram not found
  * @returns {Error}  404 - Invalid Diagram id
  */
-router.get('/privacy', withAuth, async (req, res) => {
+router.get('/:diagramId/privacy', withAuth, async (req, res) => {
   try {
     const result = await getDiagramPrivacy(req.params.diagramId);
     res.status(200).json({ isPublic: result });
@@ -126,7 +126,7 @@ router.get('/privacy', withAuth, async (req, res) => {
  * @route PUT /api/diagram/:diagramId/privacy
  * @access Private
  */
-router.put('/privacy', withAuth, async (req, res) => {
+router.put('/diagramId/privacy', withAuth, async (req, res) => {
   try {
     await setDiagramPrivacy(req.params.diagramId, req.body.isPublic);
     res.status(200).json({ message: 'OK' });
