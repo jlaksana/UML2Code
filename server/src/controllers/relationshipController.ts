@@ -126,10 +126,14 @@ const editRelationshipHandle = async (
   }
 };
 
-const deleteRelationship = async (relationshipId: string) => {
-  const relationship = await RelationshipModel.findByIdAndDelete(
-    relationshipId
-  );
+const deleteRelationship = async (
+  relationshipId: string,
+  diagramId: string
+) => {
+  const relationship = await RelationshipModel.findOneAndDelete({
+    _id: relationshipId,
+    diagramId,
+  });
   if (!relationship) {
     throw new Error('Could not find relationship');
   }

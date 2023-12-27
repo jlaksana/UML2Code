@@ -1,9 +1,7 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { UserModel } from 'models/user.model';
 import { DiagramModel } from '../models/diagram.model';
 import { EntityModel } from '../models/entity.model';
 import { RelationshipModel } from '../models/relationship.model';
-import { getNextSequence } from '../utils';
 import {
   reformatClass,
   reformatEnum,
@@ -11,31 +9,13 @@ import {
 } from './entityServices';
 import { reformatRelationship } from './relationshipService';
 
-const idRegex = /^\d+$/;
-
-/** Logs in to a diagram
- * @param id id of the diagram to log in to
- * @param password password of the diagram to log in to
- * @returns a JWT token
+/** Get all diagrams for a userId
+ * @param userId of the user to get diagrams for
+ * @returns all diagrams for the user
  */
-const loginToDiagram = async (id: string, password: string) => {
-  if (!idRegex.test(id)) throw new Error('Invalid Diagram id');
-
-  const diagram = await DiagramModel.findById(id);
-  if (!diagram) throw new Error('Diagram not found');
-
-  if (!password || typeof password !== 'string')
-    throw new Error('Invalid password');
-  const match = await bcrypt.compare(password, diagram.password);
-  if (!match) throw new Error('Invalid password');
-  if (process.env.JWT_SECRET === undefined) {
-    console.log('JWT secret is undefined');
-    throw new Error('Server Error');
-  }
-  const token = jwt.sign({ diagramId: diagram._id }, process.env.JWT_SECRET, {
-    expiresIn: '8h',
-  });
-  return token;
+const getDiagramsForUser = async (userId: string) => {
+  const diagrams = await DiagramModel.find({ userId });
+  return diagrams.map((d) => ({ id: d._id }));
 };
 
 /**
@@ -44,7 +24,6 @@ const loginToDiagram = async (id: string, password: string) => {
  * @returns the diagram
  */
 const findDiagramById = async (id: string) => {
-  if (!idRegex.test(id)) throw new Error('Invalid Diagram id');
   const diagram = await DiagramModel.findById(id);
   if (!diagram) throw new Error('Diagram not found');
   return { id: diagram._id };
@@ -85,7 +64,6 @@ const getDiagramContents = async (id: string) => {
  * @returns the entities and relationships of the diagram
  */
 const getDiagramContentsPublic = async (id: string) => {
-  if (!idRegex.test(id)) throw new Error('Invalid Diagram id');
   const diagram = await DiagramModel.findById(id);
   if (!diagram) throw new Error('Diagram not found');
   if (!diagram.isPublic) throw new Error('Diagram is private');
@@ -95,30 +73,30 @@ const getDiagramContentsPublic = async (id: string) => {
 
 /**
  * Creates a diagram
- * @param password password of the diagram to create
+ * @param userId of the user creating the diagram
  * @returns the created diagram
  * @throws an error if the password is invalid
  * @throws an error if the diagram could not be created
  */
-const createDiagram = async (password: unknown) => {
-  if (!password || typeof password !== 'string')
-    throw new Error('Invalid password');
+const createDiagram = async (userId: string) => {
+  if (!userId) throw new Error('Invalid user id');
+  const user = UserModel.findById(userId);
+  if (!user) throw new Error('User not found');
 
-  if (password.length < 8)
-    throw new Error('Password must be at least 8 characters long');
+  const diagram = new DiagramModel({
+    isPublic: false,
+    userId,
+  });
+  await diagram.save();
+  return diagram;
+};
 
-  // hash the password
-  try {
-    const hash = await bcrypt.hash(password, 10);
-    const diagram = new DiagramModel({
-      _id: await getNextSequence(),
-      password: hash,
-    });
-    await diagram.save();
-    return diagram;
-  } catch (err) {
-    throw new Error('Could not create a diagram');
-  }
+const renameDiagram = async (id: string, name: string) => {
+  if (!name) throw new Error('Invalid name');
+  const diagram = await DiagramModel.findById(id);
+  if (!diagram) throw new Error('Diagram not found');
+  diagram.name = name;
+  await diagram.save();
 };
 
 /**
@@ -142,6 +120,7 @@ export {
   getDiagramContents,
   getDiagramContentsPublic,
   getDiagramPrivacy,
-  loginToDiagram,
+  getDiagramsForUser,
+  renameDiagram,
   setDiagramPrivacy,
 };

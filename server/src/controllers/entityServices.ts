@@ -34,7 +34,10 @@ const validateDuplicateEntity = async (
 };
 
 // validate data to be a valid entity and diagram id to be an existing diagram
-const validateEntity = async (data: unknown, diagramId: string) => {
+const validateEntity = async (data: unknown, diagramId: string | undefined) => {
+  if (!diagramId) {
+    throw new Error('No diagram id provided');
+  }
   const parseResult = entityData.safeParse(data);
   if (!parseResult.success) {
     // incorrect data format

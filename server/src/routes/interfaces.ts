@@ -9,14 +9,14 @@ import { getErrorMessage } from '../utils';
 const router = express.Router();
 
 /** Creates interface given a diagram id as a parameter and interface data in body.
- * @route POST /api/interface
+ * @route POST /api/interface?diagramId=
  * @access Private
  * @returns {object} 201 - Interface object
  * @returns {Error}  400 - Could not create an interface
  */
 router.post('/', withAuth, async (req, res) => {
   // validate diagramId to be an existing diagram
-  const { diagramId } = req;
+  const { diagramId } = req.query as { diagramId: string };
   try {
     const newInterface = await createInterface(req.body, diagramId);
     res.status(201).json(newInterface);
@@ -27,7 +27,7 @@ router.post('/', withAuth, async (req, res) => {
 });
 
 /**
- * @route PUT /api/interface/:id
+ * @route PUT /api/interface/:id?diagramId=
  * @access Private
  * @param {string} id - interface id
  * @param {object} body - interface data
@@ -37,7 +37,7 @@ router.post('/', withAuth, async (req, res) => {
  * @returns {Error}  400 - Could not update an interface
  */
 router.put('/:id', withAuth, async (req, res) => {
-  const { diagramId } = req;
+  const { diagramId } = req.query as { diagramId: string };
   const { id } = req.params;
   try {
     const updatedInterface = await editInterface(id, diagramId, req.body);

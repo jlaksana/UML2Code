@@ -32,7 +32,7 @@ const entityData = z.object({
 });
 
 const entitySchema = z.object({
-  diagramId: z.number().min(1000),
+  diagramId: z.instanceof(Schema.Types.ObjectId),
   type: z.enum(['class', 'interface', 'enum']),
   position: z.object({ x: z.number(), y: z.number() }),
   data: entityData,
@@ -41,7 +41,7 @@ const entitySchema = z.object({
 type Entity = z.infer<typeof entitySchema> & Document;
 
 const schema = new Schema<Entity>({
-  diagramId: { type: Number, ref: 'Diagram', required: true },
+  diagramId: { type: Schema.Types.ObjectId, ref: 'Diagram', required: true },
   type: {
     type: String,
     enum: ['class', 'interface', 'enum'],

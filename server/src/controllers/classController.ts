@@ -7,9 +7,9 @@ import {
   validateEntity,
 } from './entityServices';
 
-const createClass = async (data: unknown, diagramId: string) => {
+const createClass = async (data: unknown, diagramId: string | undefined) => {
   const validatedData = await validateEntity(data, diagramId);
-  await validateDuplicateEntity(validatedData.name, diagramId);
+  await validateDuplicateEntity(validatedData.name, diagramId as string);
 
   try {
     // create a new entity while removing whitespace from all names
@@ -64,9 +64,12 @@ const editClass = async (classId: string, diagramId: string, data: unknown) => {
   }
 };
 
-const deleteEntity = async (entityId: string) => {
+const deleteEntity = async (entityId: string, diagramId: string) => {
   try {
-    const entity = await EntityModel.findByIdAndDelete(entityId);
+    const entity = await EntityModel.findOneAndDelete({
+      _id: entityId,
+      diagramId,
+    });
     if (!entity) {
       throw new Error();
     }
@@ -81,12 +84,16 @@ const deleteEntity = async (entityId: string) => {
 
 const updatePosition = async (
   entityId: string,
+  diagramId: string,
   position: { x: number; y: number }
 ) => {
   try {
-    const entity = await EntityModel.findByIdAndUpdate(entityId, {
-      position,
-    });
+    const entity = await EntityModel.findOneAndUpdate(
+      { _id: entityId, diagramId },
+      {
+        position,
+      }
+    );
     if (!entity) {
       throw new Error();
     }

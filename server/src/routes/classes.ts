@@ -6,13 +6,13 @@ import { getErrorMessage } from '../utils';
 const router = express.Router();
 
 /** Create class given a diagram id as a parameter and class data in body.
- * @route POST /api/class
+ * @route POST /api/class?diagramId=
  * @access Private
  * @returns {object} 201 - Class object
  * @returns {Error}  400 - Could not create a class
  */
 router.post('/', withAuth, async (req, res) => {
-  const { diagramId } = req;
+  const { diagramId } = req.query as { diagramId: string };
   try {
     const newClass = await createClass(req.body, diagramId);
     res.status(201).json(newClass);
@@ -23,7 +23,7 @@ router.post('/', withAuth, async (req, res) => {
 });
 
 /**
- * @route PUT /api/class/:id
+ * @route PUT /api/class/:id?diagramId=
  * @access Private
  * @param {string} id - class id
  * @param {object} body - class data
@@ -31,7 +31,7 @@ router.post('/', withAuth, async (req, res) => {
  * @returns status 400 if unsuccessful
  */
 router.put('/:id', withAuth, async (req, res) => {
-  const { diagramId } = req;
+  const { diagramId } = req.query as { diagramId: string };
   const { id } = req.params;
   try {
     const updatedClass = await editClass(id, diagramId, req.body);

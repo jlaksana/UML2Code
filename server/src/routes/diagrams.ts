@@ -4,7 +4,8 @@ import {
   getDiagramContents,
   getDiagramContentsPublic,
   getDiagramPrivacy,
-  loginToDiagram,
+  getDiagramsForUser,
+  renameDiagram,
   setDiagramPrivacy,
 } from '../controllers/diagramController';
 import withAuth from '../middleware/auth';
@@ -12,25 +13,23 @@ import { getErrorMessage } from '../utils';
 
 const router = express.Router();
 
-/** Login to a diagram and returns jwt token.
- * @route POST /api/diagram/:id
- * @access Public
- * @returns {object} 200 - token
- * @returns {Error}  404 - Diagram not found
- * @returns {Error}  404 - Invalid Diagram id
+/** GET all diagrams for a user
+ * @route GET /api/diagram
+ * @access Private
+ * @returns {object} 200 - list of Diagram object
  */
-router.post('/:id/login', async (req, res) => {
+router.get('/', withAuth, async (req, res) => {
   try {
-    const token = await loginToDiagram(req.params.id, req.body.password);
-    res.status(200).json({ authToken: token });
+    const diagrams = await getDiagramsForUser(req.userId);
+    res.status(200).json(diagrams);
   } catch (e) {
-    res.status(404).json({ message: getErrorMessage(e) });
+    res.status(400).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));
   }
 });
 
 /** GET diagram contents by id.
- * @route GET /api/diagram/:id/contents
+ * @route GET /api/diagram/:diagramId/contents
  * @access Private
  * @returns {object} 200 - Diagram contents object
  * @returns {Error}  404 - Diagram not found
@@ -43,13 +42,7 @@ router.post('/:id/login', async (req, res) => {
  */
 router.get('/:id/contents', withAuth, async (req, res) => {
   try {
-    // verify requested diagramId matches with token
-    if (String(req.diagramId) !== req.params.id) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
-    const result = await getDiagramContents(req.diagramId);
+    const result = await getDiagramContents(req.params.diagramId);
     res.status(200).json(result);
   } catch (e) {
     res.status(404).json({ message: getErrorMessage(e) });
@@ -58,7 +51,7 @@ router.get('/:id/contents', withAuth, async (req, res) => {
 });
 
 /** GET diagram contents by id.
- * @route GET /api/diagram/:id/public/contents
+ * @route GET /api/diagram/:diagramId/public/contents
  * @access Public
  * @returns {object} 200 - Diagram contents object
  * @returns {Error}  404 - Diagram not found
@@ -84,7 +77,7 @@ router.get('/:id/public/contents', async (req, res) => {
  */
 router.post('/create', async (req, res) => {
   try {
-    const diagram = await createDiagram(req.body.password);
+    const diagram = await createDiagram(req.body.userId);
     res.status(201).json({ id: diagram._id });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
@@ -93,8 +86,26 @@ router.post('/create', async (req, res) => {
 });
 
 /**
+ * Renames a diagram
+ * @route POST /api/diagram/:diagramId/rename
+ * @access Private
+ * @returns {object} 200 - Success message
+ * @returns {Error}  404 - Diagram not found
+ * @returns {Error}  404 - Invalid name
+ */
+router.post('/:diagramId/rename', withAuth, async (req, res) => {
+  try {
+    await renameDiagram(req.params.diagramId, req.body.name);
+    res.status(200).json({ message: 'OK' });
+  } catch (e) {
+    res.status(404).json({ message: getErrorMessage(e) });
+    console.log(getErrorMessage(e));
+  }
+});
+
+/**
  * Retrieves the privacy of a diagram
- * @route GET /api/diagram/:id/privacy
+ * @route GET /api/diagram/:diagramId/privacy
  * @access Private
  * @returns {object} 200 - True if public, false if private
  * @returns {Error}  404 - Diagram not found
@@ -102,7 +113,7 @@ router.post('/create', async (req, res) => {
  */
 router.get('/privacy', withAuth, async (req, res) => {
   try {
-    const result = await getDiagramPrivacy(req.diagramId);
+    const result = await getDiagramPrivacy(req.params.diagramId);
     res.status(200).json({ isPublic: result });
   } catch (e) {
     res.status(404).json({ message: getErrorMessage(e) });
@@ -110,9 +121,14 @@ router.get('/privacy', withAuth, async (req, res) => {
   }
 });
 
+/**
+ * sets the privacy of a diagram to public or private
+ * @route PUT /api/diagram/:diagramId/privacy
+ * @access Private
+ */
 router.put('/privacy', withAuth, async (req, res) => {
   try {
-    await setDiagramPrivacy(req.diagramId, req.body.isPublic);
+    await setDiagramPrivacy(req.params.diagramId, req.body.isPublic);
     res.status(200).json({ message: 'OK' });
   } catch (e) {
     res.status(404).json({ message: getErrorMessage(e) });

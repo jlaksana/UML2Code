@@ -7,7 +7,7 @@ const router = express.Router();
 
 /**
  * Edits an entity's position in the diagram
- * @route PUT /api/entity/:id/position
+ * @route PUT /api/entity/:id/position?diagramId=
  * @access Private
  * @param {string} id - class id
  * @param {object} body - class data
@@ -18,7 +18,7 @@ router.put('/:id/position', withAuth, async (req, res) => {
   const { id } = req.params;
   const position = req.body;
   try {
-    await updatePosition(id, position);
+    await updatePosition(id, req.query.diagramId as string, position);
     res.status(204).json({ message: 'Successfully updated position' });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });
@@ -28,7 +28,7 @@ router.put('/:id/position', withAuth, async (req, res) => {
 
 /**
  * Deletes an entity
- * @route DELETE /api/class/:id
+ * @route DELETE /api/class/:id?diagramId=
  * @access Private
  * @param {string} id - class id
  * @returns status 200 if successful
@@ -37,7 +37,7 @@ router.put('/:id/position', withAuth, async (req, res) => {
 router.delete('/:id', withAuth, async (req, res) => {
   const { id } = req.params;
   try {
-    await deleteEntity(id);
+    await deleteEntity(id, req.query.diagramId as string);
     res.status(204).json({ message: 'OK' });
   } catch (e) {
     res.status(400).json({ message: getErrorMessage(e) });

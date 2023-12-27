@@ -39,7 +39,7 @@ const login = async (email: string, password: string) => {
     { userId: user._id },
     process.env.JWT_SECRET as string,
     {
-      expiresIn: '8h',
+      expiresIn: '7d',
     }
   );
   return token;

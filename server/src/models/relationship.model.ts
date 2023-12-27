@@ -31,7 +31,7 @@ const umlMultiplicityRegex = /^(?:\d+|\d+\.\.\*|\d+\.\.\d+|\*|)$/;
 
 const relationshipSchema = z.object({
   type: RelationshipVariant,
-  diagramId: z.number().min(1000),
+  diagramId: z.instanceof(Schema.Types.ObjectId),
   source: z.instanceof(Schema.Types.ObjectId),
   target: z.instanceof(Schema.Types.ObjectId),
   sourceHandle: HandlePositions.optional(),
@@ -60,7 +60,7 @@ const schema = new Schema<Relationship>({
     ],
     required: true,
   },
-  diagramId: { type: Number, ref: 'Diagram', required: true },
+  diagramId: { type: Schema.Types.ObjectId, ref: 'Diagram', required: true },
   source: { type: Schema.Types.ObjectId, ref: 'Entity', required: true },
   target: { type: Schema.Types.ObjectId, ref: 'Entity', required: true },
   sourceHandle: {

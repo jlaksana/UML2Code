@@ -12,6 +12,9 @@ const enumData = z.object({
 });
 
 const validateEnum = async (data: unknown, diagramId: string) => {
+  if (diagramId === undefined) {
+    throw new Error('Must provide a diagram id');
+  }
   const parseResult = enumData.safeParse(data);
   if (!parseResult.success) {
     throw new Error(

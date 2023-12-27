@@ -34,6 +34,9 @@ const validateRelationship = async (
   diagramId: string,
   isUpdate: boolean
 ) => {
+  if (diagramId === undefined) {
+    throw new Error('Must provide a diagram id');
+  }
   // validate all fields are present and valid
   const parsedDataFromUI = relationshipUISchema.safeParse(data);
   if (!parsedDataFromUI.success) {
