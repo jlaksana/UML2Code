@@ -2,6 +2,8 @@ import express from 'express';
 import {
   getUserByEmail,
   login,
+  resetPassword,
+  sendPasswordResetEmail,
   sendVerificationEmail,
   signup,
   verifyAccount,
@@ -59,6 +61,14 @@ router.post('/verify', async (req, res) => {
   }
 });
 
+/** Resends a verification email to a user given their email
+ * @route GET /api/auth/resend-verification-email/:email
+ * @access Public
+ * @returns {object} 200 - message
+ * @returns {Error}  404 - User not found
+ * @returns {Error}  404 - User already verified
+ * @returns {Error}  404 - Email not sent
+ */
 router.get('/resend-verification-email/:email', async (req, res) => {
   const { email } = req.params;
   try {
@@ -71,6 +81,41 @@ router.get('/resend-verification-email/:email', async (req, res) => {
   }
 });
 
-// TODO: add forgot password route
+/** Sends a reset password email to a user given their email
+ * route GET /api/auth/send-reset-password-email/:email
+ * @access Public
+ * @returns {object} 200 - message
+ * @returns {Error}  404 - User not found
+ * @returns {Error}  404 - Email not sent
+ */
+router.get('/send-reset-password-email/:email', async (req, res) => {
+  const { email } = req.params;
+  try {
+    const user = await getUserByEmail(email);
+    await sendPasswordResetEmail(user);
+    res.status(200).json({ message: 'Reset password email sent' });
+  } catch (e) {
+    res.status(404).json({ message: getErrorMessage(e) });
+    console.log(getErrorMessage(e));
+  }
+});
+
+/** Resets a user's password given a token that was received from the email
+ * @route POST /api/auth/reset-password
+ * @access Public
+ * @returns {object} 200 - message
+ * @returns {Error}  404 - User not found
+ * @returns {Error}  404 - Invalid token
+ */
+router.post('/reset-password', async (req, res) => {
+  const { token, password } = req.body;
+  try {
+    await resetPassword(token, password);
+    res.status(200).json({ message: 'Password reset' });
+  } catch (e) {
+    res.status(404).json({ message: getErrorMessage(e) });
+    console.log(getErrorMessage(e));
+  }
+});
 
 export default router;

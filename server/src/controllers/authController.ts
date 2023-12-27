@@ -110,7 +110,6 @@ const sendVerificationEmail = async (user: User) => {
   );
 
   const link = `${process.env.CLIENT_URL}/verify/${token}`;
-
   const templateParams = {
     to: user.email,
     username: user.username,
@@ -129,4 +128,68 @@ const sendVerificationEmail = async (user: User) => {
   }
 };
 
-export { getUserByEmail, login, sendVerificationEmail, signup, verifyAccount };
+/**
+ * Sends a password reset email to a user given an email
+ * @param user User document
+ */
+const sendPasswordResetEmail = async (user: User) => {
+  // create a token that expires in 2 days
+  const token = jwt.sign(
+    { action: RESET, userId: user._id },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: '1h',
+    }
+  );
+
+  const link = `${process.env.CLIENT_URL}/reset/${token}`;
+  const templateParams = {
+    to: user.email,
+    htmlLink: `<a href="${link}">Reset your password</a>`,
+    link,
+  };
+
+  try {
+    await sendEmail(
+      templateParams,
+      process.env.EMAILJS_RESET_TEMPLATE_ID as string
+    );
+  } catch (err) {
+    console.log(err);
+    throw new Error('Error sending email');
+  }
+};
+
+/**
+ * Changes the user's password given a token and new password
+ * @param token token to verify given in email
+ * @param password new password to set
+ */
+const resetPassword = async (token: string, password: string) => {
+  if (!token || typeof token !== 'string') throw new Error('Invalid token');
+  if (!password || typeof password !== 'string')
+    throw new Error('Invalid password');
+
+  const decoded = jwt.verify(
+    token,
+    process.env.JWT_SECRET as string
+  ) as JwtPayload;
+  if (!decoded || decoded.action !== RESET) throw new Error('Invalid token');
+
+  const user = await UserModel.findById(decoded.userId);
+  if (!user) throw new Error('User not found');
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  user.password = hashedPassword;
+  await user.save();
+};
+
+export {
+  getUserByEmail,
+  login,
+  resetPassword,
+  sendPasswordResetEmail,
+  sendVerificationEmail,
+  signup,
+  verifyAccount,
+};
