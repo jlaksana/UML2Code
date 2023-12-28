@@ -1,7 +1,7 @@
-import { UserModel } from 'models/user.model';
 import { DiagramModel } from '../models/diagram.model';
 import { EntityModel } from '../models/entity.model';
 import { RelationshipModel } from '../models/relationship.model';
+import { UserModel } from '../models/user.model';
 import {
   reformatClass,
   reformatEnum,

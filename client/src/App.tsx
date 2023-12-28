@@ -4,8 +4,8 @@ import { Route, Routes } from 'react-router-dom';
 import Editor from './components/Editor';
 import NotFound from './components/NotFound';
 import Viewer from './components/Viewer';
-import CreateMenu from './components/forms/CreateMenu';
-import StartMenu from './components/forms/StartMenu';
+import Login from './components/auth/Login';
+import Signup from './components/auth/Signup';
 import theme from './theme';
 
 function App() {
@@ -15,17 +15,28 @@ function App() {
     (response) => response,
     (error) => {
       if (error.response.status === 401) {
-        window.location.href = '/';
+        window.location.href = '/dashboard';
       }
       return Promise.reject(error);
     }
   );
+  // https://medium.com/@shirisha95/react-router-v6-simplified-protected-routes-85b209326a55
 
   return (
     <ThemeProvider theme={theme}>
       <Routes>
-        <Route path="/" element={<StartMenu />} />
-        <Route path="/create" element={<CreateMenu />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/verify/:token" element={<h1>verify</h1>} />
+        <Route
+          path="/send-reset-password"
+          element={<h1>send reset password</h1>}
+        />
+        <Route
+          path="/reset-password/:token"
+          element={<h1>reset password</h1>}
+        />
+        <Route path="/dashboard" element={<h1>Dashboard</h1>} />
         <Route path="/:diagramId/edit" element={<Editor />} />
         <Route path="/:diagramId/view" element={<Viewer />} />
         <Route path="*" element={<NotFound />} />

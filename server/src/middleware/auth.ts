@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { UserModel } from 'models/user.model';
 import { DiagramModel } from '../models/diagram.model';
+import { UserModel } from '../models/user.model';
 
 // Middleware to check if a user is authenticated
 const withAuth: RequestHandler = async (req, res, next) => {

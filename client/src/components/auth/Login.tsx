@@ -2,12 +2,12 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/UML2.png';
-import '../../styles/StartMenu.css';
+import '../../styles/Login.css';
 
-function StartMenu() {
-  const id = useRef<HTMLInputElement>();
+function Login() {
+  const email = useRef<HTMLInputElement>();
   const password = useRef<HTMLInputElement>();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -15,23 +15,31 @@ function StartMenu() {
 
   const navigate = useNavigate();
 
-  // Handles entering an existing diagram ID
-  const handleGo = async (event: React.FormEvent) => {
+  const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
     setError(false);
-    if (id.current?.value) {
+    if (email.current?.value) {
       // call api to get diagram
       try {
         await axios
-          .post(`/api/diagram/${id.current.value}/login`, {
+          .post(`/api/auth/login`, {
+            email: email.current?.value,
             password: password.current?.value,
           })
           .then((res) => {
             localStorage.setItem('authToken', res.data.authToken);
-            navigate(`/${id.current?.value}/edit`);
+            navigate(`/dashboard`);
           })
           .catch((err) => {
+            if (err.response.data.message === 'User not verified') {
+              // eslint-disable-next-line no-param-reassign
+              err.response.data.message =
+                'User not verified. Please check your email for a verification link.';
+              axios.get(
+                `/api/auth/resend-verification-email/${email.current?.value}`
+              );
+            }
             setError(true);
             setErrorMessage(err.response.data.message);
           });
@@ -46,8 +54,8 @@ function StartMenu() {
     setLoading(false);
   };
 
-  const handleCreate = async () => {
-    navigate('/create');
+  const handleSignup = async () => {
+    navigate('/signup');
   };
 
   return (
@@ -55,11 +63,12 @@ function StartMenu() {
       <div>
         <img src={logo} className="logo" alt="logo" />
       </div>
-      <form className="start-form" onSubmit={handleGo}>
+      <form className="start-form" onSubmit={handleLogin}>
         <TextField
-          inputRef={id}
-          label="Diagram ID"
+          inputRef={email}
+          label="Email"
           variant="standard"
+          type="email"
           fullWidth
           required
           error={error}
@@ -82,8 +91,12 @@ function StartMenu() {
           loading={loading}
           loadingIndicator="Loading…"
         >
-          Go
+          Login
         </LoadingButton>
+        <Typography variant="subtitle1">
+          Forgot password? Reset password{' '}
+          <Link to="/send-reset-password">here</Link>
+        </Typography>
       </form>
       <span>-- or --</span>
       <LoadingButton
@@ -92,9 +105,9 @@ function StartMenu() {
         fullWidth
         loading={loading}
         loadingIndicator="Loading…"
-        onClick={handleCreate}
+        onClick={handleSignup}
       >
-        Create New
+        Sign up
       </LoadingButton>
       <Typography variant="overline">
         Developed by Jonathan Laksana 2023
@@ -103,4 +116,4 @@ function StartMenu() {
   );
 }
 
-export default StartMenu;
+export default Login;
