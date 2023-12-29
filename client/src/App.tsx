@@ -6,6 +6,7 @@ import NotFound from './components/NotFound';
 import Viewer from './components/Viewer';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
+import Verify from './components/auth/Verify';
 import theme from './theme';
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/verify/:token" element={<h1>verify</h1>} />
+        <Route path="/verify" element={<Verify />} />
         <Route
           path="/send-reset-password"
           element={<h1>send reset password</h1>}

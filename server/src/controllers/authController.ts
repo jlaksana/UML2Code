@@ -79,11 +79,12 @@ const signup = async (username: string, email: string, password: string) => {
  */
 const verifyAccount = async (token: string) => {
   if (!token || typeof token !== 'string') throw new Error('Invalid token');
-
-  const decoded = jwt.verify(
-    token,
-    process.env.JWT_SECRET as string
-  ) as JwtPayload;
+  let decoded: JwtPayload;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+  } catch (err) {
+    throw new Error('Invalid or expired token');
+  }
   if (!decoded || decoded.action !== VERIFY) throw new Error('Invalid token');
 
   const user = await UserModel.findById(decoded.userId);
@@ -109,7 +110,7 @@ const sendVerificationEmail = async (user: User) => {
     }
   );
 
-  const link = `${process.env.CLIENT_URL}/verify/${token}`;
+  const link = `${process.env.CLIENT_URL}/verify?token=${token}`;
   const templateParams = {
     to: user.email,
     username: user.username,

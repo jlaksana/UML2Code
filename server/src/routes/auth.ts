@@ -52,6 +52,7 @@ router.post('/signup', async (req, res) => {
  */
 router.post('/verify', async (req, res) => {
   const { token } = req.body;
+  console.log(token);
   try {
     await verifyAccount(token);
     res.status(200).json({ message: 'User verified' });
