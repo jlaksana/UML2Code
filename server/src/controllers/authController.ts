@@ -143,7 +143,7 @@ const sendPasswordResetEmail = async (user: User) => {
     }
   );
 
-  const link = `${process.env.CLIENT_URL}/reset/${token}`;
+  const link = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
   const templateParams = {
     to: user.email,
     htmlLink: `<a href="${link}">Reset your password</a>`,

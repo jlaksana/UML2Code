@@ -119,8 +119,7 @@ function Signup() {
             Sign Up
           </LoadingButton>
           <Typography variant="subtitle1">
-            Already have an account? Login{' '}
-            <Link to="/send-reset-password">here</Link>
+            Already have an account? Login <Link to="/login">here</Link>
           </Typography>
         </form>
       )}
