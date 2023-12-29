@@ -2,6 +2,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import { Route, Routes } from 'react-router-dom';
 import Editor from './components/Editor';
+import Home from './components/Home';
 import NotFound from './components/NotFound';
 import Viewer from './components/Viewer';
 import AlertToast from './components/alert/Alert';
@@ -32,6 +33,7 @@ function App() {
       <AlertProvider>
         <AlertToast />
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verify" element={<Verify />} />
