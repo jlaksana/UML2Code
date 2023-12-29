@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   createDiagram,
+  deleteDiagram,
   getDiagramContents,
   getDiagramContentsPublic,
   getDiagramPrivacy,
@@ -69,13 +70,13 @@ router.get('/:diagramId/public/contents', async (req, res) => {
 });
 
 /** Creates a diagram
- * @route POST /api/diagram/create
+ * @route POST /api/diagram
  * @access Public
  * @returns {object} 201 - Diagram object
  * @returns {Error}  400 - Could not create a diagram
  * @example response - 200 - Success message
  */
-router.post('/create', async (req, res) => {
+router.post('/', withAuth, async (req, res) => {
   try {
     const diagram = await createDiagram(req.body.userId);
     res.status(201).json({ id: diagram._id });
@@ -93,7 +94,7 @@ router.post('/create', async (req, res) => {
  * @returns {Error}  404 - Diagram not found
  * @returns {Error}  404 - Invalid name
  */
-router.post('/:diagramId/rename', withAuth, async (req, res) => {
+router.put('/:diagramId/rename', withAuth, async (req, res) => {
   try {
     await renameDiagram(req.params.diagramId, req.body.name);
     res.status(200).json({ message: 'OK' });
@@ -132,6 +133,16 @@ router.put('/diagramId/privacy', withAuth, async (req, res) => {
     res.status(200).json({ message: 'OK' });
   } catch (e) {
     res.status(404).json({ message: getErrorMessage(e) });
+    console.log(getErrorMessage(e));
+  }
+});
+
+router.delete('/:diagramId', withAuth, async (req, res) => {
+  try {
+    await deleteDiagram(req.params.diagramId);
+    res.status(200).json({ message: 'OK' });
+  } catch (e) {
+    res.status(404).json({ message: 'Could not delete diagram' });
     console.log(getErrorMessage(e));
   }
 });

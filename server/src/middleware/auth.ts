@@ -17,6 +17,10 @@ const withAuth: RequestHandler = async (req, res, next) => {
       console.log('Decoded user id is undefined');
       throw new Error();
     }
+    if (decoded.type !== 'auth') {
+      console.log('Token type is not auth');
+      throw new Error();
+    }
     const user = await UserModel.findById(decoded.userId);
     if (!user) {
       throw new Error();

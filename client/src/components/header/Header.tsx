@@ -65,7 +65,7 @@ function Header({ isEditor = false }: HeaderProps) {
     <div className="header">
       <div className="left">
         <Tooltip title="Return home" placement="right">
-          <Link to="/">
+          <Link to="/dashboard">
             <img src={logo} className="logo" alt="logo" />
           </Link>
         </Tooltip>

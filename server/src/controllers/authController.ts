@@ -5,6 +5,7 @@ import { sendEmail } from './emailService';
 
 const VERIFY = 'verify';
 const RESET = 'reset';
+const AUTH = 'auth';
 
 /**
  * returns user document given an email
@@ -36,7 +37,7 @@ const login = async (email: string, password: string) => {
   if (user.verified === false) throw new Error('User not verified');
 
   const token = jwt.sign(
-    { userId: user._id },
+    { type: AUTH, userId: user._id },
     process.env.JWT_SECRET as string,
     {
       expiresIn: '7d',

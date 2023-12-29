@@ -3,7 +3,7 @@ import Header from './header/Header';
 
 function Viewer() {
   return (
-    <div className="editor">
+    <div className="page">
       <Header />
       <DiagramViewer />
     </div>

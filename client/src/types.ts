@@ -1,5 +1,11 @@
 import { Edge, Node } from 'reactflow';
 
+export type Diagram = {
+  id: string;
+  name: string;
+  modified: string;
+};
+
 export type DataType =
   | ''
   | 'int'

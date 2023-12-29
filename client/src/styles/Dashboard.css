@@ -1,0 +1,15 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  margin: 3rem;
+  width: 1200px;
+}
+
+.dashboard-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 80%;
+}

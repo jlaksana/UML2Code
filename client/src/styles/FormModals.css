@@ -90,3 +90,8 @@
   min-height: 150px;
   padding-bottom: 1rem;
 }
+.rename-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}

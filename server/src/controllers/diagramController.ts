@@ -15,7 +15,11 @@ import { reformatRelationship } from './relationshipService';
  */
 const getDiagramsForUser = async (userId: string) => {
   const diagrams = await DiagramModel.find({ userId });
-  return diagrams.map((d) => ({ id: d._id }));
+  return diagrams.map((d) => ({
+    id: d._id,
+    name: d.name,
+    modified: d.updatedAt,
+  }));
 };
 
 /**
@@ -114,8 +118,13 @@ const setDiagramPrivacy = async (id: string, isPublic: boolean) => {
   await DiagramModel.findByIdAndUpdate(id, { isPublic });
 };
 
+const deleteDiagram = async (id: string) => {
+  await DiagramModel.findByIdAndDelete(id);
+};
+
 export {
   createDiagram,
+  deleteDiagram,
   findDiagramById,
   getDiagramContents,
   getDiagramContentsPublic,
