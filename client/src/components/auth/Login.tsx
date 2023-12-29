@@ -29,6 +29,8 @@ function Login() {
           })
           .then((res) => {
             localStorage.setItem('authToken', res.data.authToken);
+            localStorage.setItem('userId', res.data.userId);
+            localStorage.setItem('username', res.data.username);
             navigate(`/dashboard`);
           })
           .catch((err) => {

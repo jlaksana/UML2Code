@@ -34,7 +34,7 @@ function SendResetPassword() {
       <div>
         <img src={logo} className="logo" alt="logo" />
       </div>
-      <Typography variant="h5">Reset password</Typography>
+      <Typography variant="h5">Send reset password email</Typography>
       <form className="start-form" onSubmit={handleSend}>
         <TextField
           inputRef={email}

@@ -22,8 +22,8 @@ const router = express.Router();
  */
 router.post('/login', async (req, res) => {
   try {
-    const token = await login(req.body.email, req.body.password);
-    res.status(200).json({ authToken: token });
+    const result = await login(req.body.email, req.body.password);
+    res.status(200).json(result);
   } catch (e) {
     res.status(404).json({ message: getErrorMessage(e) });
     console.log(getErrorMessage(e));

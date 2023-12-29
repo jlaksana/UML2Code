@@ -4,7 +4,10 @@ import { Route, Routes } from 'react-router-dom';
 import Editor from './components/Editor';
 import NotFound from './components/NotFound';
 import Viewer from './components/Viewer';
+import AlertToast from './components/alert/Alert';
+import { AlertProvider } from './components/alert/AlertContext';
 import Login from './components/auth/Login';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 import ResetPassword from './components/auth/ResetPassword';
 import SendResetPassword from './components/auth/SendResetPassword';
 import Signup from './components/auth/Signup';
@@ -23,21 +26,25 @@ function App() {
       return Promise.reject(error);
     }
   );
-  // https://medium.com/@shirisha95/react-router-v6-simplified-protected-routes-85b209326a55
 
   return (
     <ThemeProvider theme={theme}>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/verify" element={<Verify />} />
-        <Route path="/send-reset-password" element={<SendResetPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/dashboard" element={<h1>Dashboard</h1>} />
-        <Route path="/:diagramId/edit" element={<Editor />} />
-        <Route path="/:diagramId/view" element={<Viewer />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <AlertProvider>
+        <AlertToast />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/verify" element={<Verify />} />
+          <Route path="/send-reset-password" element={<SendResetPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+            <Route path="/:diagramId/edit" element={<Editor />} />
+            <Route path="/:diagramId/view" element={<Viewer />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AlertProvider>
     </ThemeProvider>
   );
 }

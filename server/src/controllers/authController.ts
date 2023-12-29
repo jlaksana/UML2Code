@@ -42,7 +42,7 @@ const login = async (email: string, password: string) => {
       expiresIn: '7d',
     }
   );
-  return token;
+  return { userId: user._id, username: user.username, authToken: token };
 };
 
 /**
