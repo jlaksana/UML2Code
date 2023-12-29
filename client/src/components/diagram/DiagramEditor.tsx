@@ -1,7 +1,7 @@
 import DownloadIcon from '@mui/icons-material/Download';
 import axios from 'axios';
 import { toPng } from 'html-to-image';
-import { MouseEvent, useCallback, useEffect, useRef } from 'react';
+import { MouseEvent, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
@@ -83,24 +83,24 @@ function DiagramEditor() {
   const { diagramId } = useParams();
   const { setAlert } = useAlert();
 
-  useEffect(() => {
-    const fetchDiagramContents = async () => {
-      try {
-        const res = await axios.get(`/api/diagram/${diagramId}/contents`);
-        entitiesDispatch({ type: 'SET_ENTITIES', payload: res.data.entities });
-        relationshipsDispatch({
-          type: 'SET_RELATIONSHIPS',
-          payload: res.data.relationships,
-        });
-      } catch (e) {
-        setAlert(
-          'Could not fetch diagram contents. Try again',
-          AlertType.ERROR
-        );
-      }
-    };
-    fetchDiagramContents();
-  }, [diagramId, entitiesDispatch, relationshipsDispatch, setAlert]);
+  // useEffect(() => {
+  //   const fetchDiagramContents = async () => {
+  //     try {
+  //       const res = await axios.get(`/api/diagram/${diagramId}/contents`);
+  //       entitiesDispatch({ type: 'SET_ENTITIES', payload: res.data.entities });
+  //       relationshipsDispatch({
+  //         type: 'SET_RELATIONSHIPS',
+  //         payload: res.data.relationships,
+  //       });
+  //     } catch (e) {
+  //       setAlert(
+  //         'Could not fetch diagram contents. Try again',
+  //         AlertType.ERROR
+  //       );
+  //     }
+  //   };
+  //   fetchDiagramContents();
+  // }, [diagramId, entitiesDispatch, relationshipsDispatch, setAlert]);
 
   const onNodesChange = useCallback(
     async (changes: NodeChange[]) =>

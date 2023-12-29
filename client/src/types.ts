@@ -6,6 +6,13 @@ export type Diagram = {
   modified: string;
 };
 
+export type DiagramContents = {
+  diagramId: string;
+  name: string;
+  entities: Entity[];
+  relationships: Relationship[];
+};
+
 export type DataType =
   | ''
   | 'int'

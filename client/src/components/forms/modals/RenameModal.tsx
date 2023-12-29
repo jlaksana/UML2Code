@@ -1,6 +1,6 @@
 import { Button, Modal, TextField } from '@mui/material';
 import axios from 'axios';
-import { useState } from 'react';
+import { useRef } from 'react';
 import { AlertType } from '../../alert/AlertContext';
 import useAlert from '../../alert/useAlert';
 
@@ -11,16 +11,18 @@ type Props = {
 };
 
 function RenameModal({ prevName, handleClose, diagramId }: Props) {
-  const [name, setName] = useState(prevName);
+  const name = useRef<HTMLInputElement>();
 
   const { setAlert } = useAlert();
 
   const handleRename = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.put(`/api/diagram/${diagramId}/rename`, { name });
+      await axios.put(`/api/diagram/${diagramId}/rename`, {
+        name: name.current?.value,
+      });
       setAlert('Diagram renamed', AlertType.SUCCESS);
-      handleClose(name);
+      handleClose(name.current?.value);
     } catch (error) {
       setAlert('Error renaming diagram. Please try again.', AlertType.ERROR);
       handleClose(undefined);
@@ -33,12 +35,13 @@ function RenameModal({ prevName, handleClose, diagramId }: Props) {
         <h2>Rename Diagram</h2>
         <form className="rename-modal" onSubmit={handleRename}>
           <TextField
-            id="name"
+            required
+            inputRef={name}
+            id="rename-name-field"
             label="Name"
             variant="outlined"
             defaultValue={prevName}
             fullWidth
-            onChange={(e) => setName(e.target.value)}
           />
           <div className="buttons">
             <Button

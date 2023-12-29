@@ -1,6 +1,3 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -8,8 +5,7 @@ import ReactFlow, {
   Controls,
   MiniMap,
 } from 'reactflow';
-import { AlertType } from '../alert/AlertContext';
-import useAlert from '../alert/useAlert';
+import { Entity, Relationship } from '../../types';
 import { nodeColor } from './DiagramEditor';
 import { AggregationEdgeView } from './edges/AggregationEdge';
 import { AssociationEdgeView } from './edges/AssociationEdge';
@@ -38,28 +34,12 @@ const edgeTypes = {
   Composition: CompositionEdgeView,
 };
 
-function DiagramViewer() {
-  const [entities, setEntities] = useState([]);
-  const [relationships, setRelationships] = useState([]);
+type Props = {
+  entities: Entity[];
+  relationships: Relationship[];
+};
 
-  const { diagramId } = useParams();
-  const { setAlert } = useAlert();
-
-  useEffect(() => {
-    const fetchDiagramContents = async () => {
-      try {
-        const res = await axios.get(
-          `/api/diagram/${diagramId}/public/contents`
-        );
-        setEntities(res.data.entities);
-        setRelationships(res.data.relationships);
-      } catch (e) {
-        setAlert('This diagram is not available to view.', AlertType.ERROR);
-      }
-    };
-    fetchDiagramContents();
-  }, [diagramId, setAlert]);
-
+function DiagramViewer({ entities, relationships }: Props) {
   return (
     <div className="diagram">
       <ReactFlow

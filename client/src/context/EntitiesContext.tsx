@@ -7,8 +7,14 @@ const EntitiesDispatchContext = createContext<Dispatch<EntityAction> | null>(
   null
 );
 
-export function EntitiesProvider({ children }: { children: React.ReactNode }) {
-  const [entities, dispatch] = useReducer(entitiesReducer, []);
+export function EntitiesProvider({
+  value,
+  children,
+}: {
+  value: Entity[] | undefined;
+  children: React.ReactNode;
+}) {
+  const [entities, dispatch] = useReducer(entitiesReducer, value || []);
 
   return (
     <EntitiesContext.Provider value={entities}>

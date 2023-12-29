@@ -13,21 +13,20 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/UML2.png';
 import '../../styles/Header.css';
 import ShareMenu from './ShareMenu';
 
 type HeaderProps = {
+  name: string | undefined;
   isEditor?: boolean;
 };
 
-function Header({ isEditor = false }: HeaderProps) {
+function Header({ name, isEditor = false }: HeaderProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [openShare, setOpenShare] = useState(false);
-
-  const { diagramId } = useParams();
 
   const navigate = useNavigate();
 
@@ -71,7 +70,9 @@ function Header({ isEditor = false }: HeaderProps) {
         </Tooltip>
       </div>
       <div className="center">
-        <span>ID: {diagramId}</span>
+        <Tooltip title="Rename diagram" placement="bottom">
+          <span>{name}</span>
+        </Tooltip>
       </div>
       <div className="right">
         <IconButton

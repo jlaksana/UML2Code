@@ -40,9 +40,10 @@ const findDiagramById = async (id: string) => {
  * @returns the entities and relationships of the diagram
  */
 const getDiagramContents = async (id: string) => {
-  const diagram = await findDiagramById(id);
+  const diagram = await DiagramModel.findById(id);
+  if (!diagram) throw new Error('Diagram not found');
 
-  const entities = await EntityModel.find({ diagramId: diagram.id });
+  const entities = await EntityModel.find({ diagramId: diagram._id });
   const classes = entities
     .filter((entity) => entity.type === 'class')
     .map((c) => reformatClass(c));
@@ -53,10 +54,13 @@ const getDiagramContents = async (id: string) => {
     .filter((entity) => entity.type === 'enum')
     .map((e) => reformatEnum(e));
 
-  const relationships = await RelationshipModel.find({ diagramId: diagram.id });
+  const relationships = await RelationshipModel.find({
+    diagramId: diagram._id,
+  });
 
   return {
     diagramId: diagram.id,
+    name: diagram.name,
     entities: [...classes, ...interfaces, ...enums],
     relationships: relationships.map((r) => reformatRelationship(r)),
   };
