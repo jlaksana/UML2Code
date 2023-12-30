@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useRelationshipsDispatch } from '../../../context/RelationshipsContext';
 import { Relationship, RelationshipType } from '../../../types';
 import { AlertType } from '../../alert/AlertContext';
@@ -94,6 +95,7 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
   const [loading, setLoading] = useState(false);
 
   const relationshipsDispatch = useRelationshipsDispatch();
+  const { diagramId } = useParams();
   const { setAlert } = useAlert();
 
   const close = () => {
@@ -135,7 +137,10 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
     };
 
     try {
-      const res = await axios.post('/api/relationship', relationship);
+      const res = await axios.post(
+        `/api/relationship?diagramId=${diagramId}`,
+        relationship
+      );
       const newRelationship = res.data as Relationship;
       relationshipsDispatch({
         type: 'ADD_RELATIONSHIP',
@@ -229,13 +234,16 @@ export function RelationshipEditModal({
   const [loading, setLoading] = useState(false);
 
   const relationshipsDispatch = useRelationshipsDispatch();
+  const { diagramId } = useParams();
   const { setAlert } = useAlert();
 
   useEffect(() => {
     const getRelationship = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`/api/relationship/${id}`);
+        const res = await axios.get(
+          `/api/relationship/${id}?diagramId=${diagramId}`
+        );
         const relationship = res.data as Relationship;
         setSource(relationship.source);
         setTarget(relationship.target);
@@ -250,7 +258,7 @@ export function RelationshipEditModal({
     if (open) {
       getRelationship();
     }
-  }, [id, open]);
+  }, [diagramId, id, open]);
 
   const close = () => {
     setSource('');
@@ -277,7 +285,10 @@ export function RelationshipEditModal({
     };
 
     try {
-      const res = await axios.put(`/api/relationship/${id}`, relationship);
+      const res = await axios.put(
+        `/api/relationship/${id}?diagramId=${diagramId}`,
+        relationship
+      );
       const updatedRelationship = res.data as Relationship;
       relationshipsDispatch({
         type: 'UPDATE_RELATIONSHIP',

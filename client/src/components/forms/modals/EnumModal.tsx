@@ -3,6 +3,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Button, Modal, Tab, TextField, Tooltip } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/FormModals.css';
 import { Entity, Enum, EnumValue } from '../../../types';
@@ -30,6 +31,7 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
   const [loading, setLoading] = useState(false);
 
   const entitiesDispatch = useEntitiesDispatch();
+  const { diagramId } = useParams();
   const { setAlert } = useAlert();
 
   useEffect(() => {
@@ -67,7 +69,10 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
     if (id) {
       // editing
       try {
-        const res = await axios.put(`/api/enum/${id}`, enumer);
+        const res = await axios.put(
+          `/api/enum/${id}?diagramId=${diagramId}`,
+          enumer
+        );
         const updatedEnum = (await res.data) as Entity;
         entitiesDispatch({ type: 'UPDATE_ENTITY', payload: updatedEnum });
         setAlert('Enum updated successfully', AlertType.SUCCESS);
@@ -79,7 +84,10 @@ function EnumModal({ open, handleClose, id, data }: EnumModalProps) {
     } else {
       // creating
       try {
-        const res = await axios.post('/api/enum', enumer);
+        const res = await axios.post(
+          `/api/enum?diagramId=${diagramId}`,
+          enumer
+        );
         const newEnum = (await res.data) as Entity;
         entitiesDispatch({ type: 'ADD_ENTITY', payload: newEnum });
         setAlert('Enum created successfully', AlertType.SUCCESS);

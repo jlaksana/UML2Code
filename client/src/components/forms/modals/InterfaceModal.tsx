@@ -3,6 +3,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box, Button, Modal, Tab, TextField, Tooltip } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/FormModals.css';
 import { Constant, Entity, Interface, Method } from '../../../types';
@@ -33,6 +34,7 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
   const [loading, setLoading] = useState(false);
 
   const entitiesDispatch = useEntitiesDispatch();
+  const { diagramId } = useParams();
   const { setAlert } = useAlert();
 
   useEffect(() => {
@@ -85,7 +87,10 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
     if (id) {
       // edit
       try {
-        const res = await axios.put(`/api/interface/${id}`, interfaceData);
+        const res = await axios.put(
+          `/api/interface/${id}?diagramId=${diagramId}`,
+          interfaceData
+        );
         const updatedInterface = res.data as Entity;
         entitiesDispatch({
           type: 'UPDATE_ENTITY',
@@ -100,7 +105,10 @@ function InterfaceModal({ open, handleClose, id, data }: InterfaceModalProps) {
     } else {
       // create
       try {
-        const res = await axios.post('/api/interface', interfaceData);
+        const res = await axios.post(
+          `/api/interface?diagramId=${diagramId}`,
+          interfaceData
+        );
         const newInterface = res.data as Entity;
         entitiesDispatch({
           type: 'ADD_ENTITY',

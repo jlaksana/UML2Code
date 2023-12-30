@@ -1,6 +1,6 @@
 import BugReportIcon from '@mui/icons-material/BugReport';
 // import CodeIcon from '@mui/icons-material/Code';
-import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import { Logout } from '@mui/icons-material';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ShareIcon from '@mui/icons-material/Share';
@@ -11,24 +11,41 @@ import {
   Menu,
   MenuItem,
   Tooltip,
+  Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import logo from '../../assets/UML2.png';
 import '../../styles/Header.css';
+import RenameModal from '../forms/modals/RenameModal';
 import ShareMenu from './ShareMenu';
 
 type HeaderProps = {
   name: string | undefined;
   isEditor?: boolean;
+  handleRename?: (name: string) => void;
 };
 
-function Header({ name, isEditor = false }: HeaderProps) {
+function Header({ name, isEditor = false, handleRename }: HeaderProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [openShare, setOpenShare] = useState(false);
+  const [renameModalName, setRenameModalName] = useState<string | undefined>();
 
+  const user = localStorage.getItem('authToken');
   const navigate = useNavigate();
+  const { diagramId } = useParams();
+
+  const handleOpenRename = () => {
+    setRenameModalName(name);
+  };
+
+  const handleRenameClose = (newName: string | undefined) => {
+    if (newName && handleRename) {
+      handleRename(newName);
+    }
+    setRenameModalName(undefined);
+  };
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -70,9 +87,15 @@ function Header({ name, isEditor = false }: HeaderProps) {
         </Tooltip>
       </div>
       <div className="center">
-        <Tooltip title="Rename diagram" placement="bottom">
-          <span>{name}</span>
-        </Tooltip>
+        {isEditor ? (
+          <Tooltip title="Rename diagram" placement="bottom">
+            <Typography variant="h6" onClick={handleOpenRename}>
+              {name}
+            </Typography>
+          </Tooltip>
+        ) : (
+          <Typography variant="h6">{name}</Typography>
+        )}
       </div>
       <div className="right">
         <IconButton
@@ -90,12 +113,14 @@ function Header({ name, isEditor = false }: HeaderProps) {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleShare}>
-            <ListItemIcon>
-              <ShareIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Share</ListItemText>
-          </MenuItem>
+          {user && (
+            <MenuItem onClick={handleShare}>
+              <ListItemIcon>
+                <ShareIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Share</ListItemText>
+            </MenuItem>
+          )}
           {/* <MenuItem>
             <ListItemIcon>
               <CodeIcon fontSize="small" />
@@ -114,18 +139,25 @@ function Header({ name, isEditor = false }: HeaderProps) {
             </ListItemIcon>
             Report Bug
           </MenuItem>
-          <MenuItem onClick={handleLogout}>
-            <ListItemIcon>
-              <KeyboardReturnIcon fontSize="small" />
-            </ListItemIcon>
-            Log out
-          </MenuItem>
+          {user && (
+            <MenuItem onClick={handleLogout}>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Log out
+            </MenuItem>
+          )}
         </Menu>
       </div>
       <ShareMenu
         open={openShare}
         handleClose={() => setOpenShare(false)}
         isEditor={isEditor}
+      />
+      <RenameModal
+        prevName={renameModalName}
+        handleClose={handleRenameClose}
+        diagramId={diagramId as string}
       />
     </div>
   );

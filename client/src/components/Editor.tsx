@@ -11,41 +11,55 @@ import DiagramEditor from './diagram/DiagramEditor';
 import Header from './header/Header';
 
 function Editor() {
+  // interceptor that adds auth token to every request
+  const authToken = localStorage.getItem('authToken');
+  axios.defaults.headers.common.Authorization = `Bearer ${authToken}`;
+
   const [diagram, setDiagram] = useState<DiagramContents>();
 
   const { diagramId } = useParams();
   const { setAlert } = useAlert();
 
   useEffect(() => {
-    try {
-      const fetchDiagram = async () => {
+    const fetchDiagram = async () => {
+      try {
         const res = await axios.get(`/api/diagram/${diagramId}/contents`);
         setDiagram(res.data);
-      };
-      fetchDiagram();
-    } catch (error: any) {
-      // TODO NOT WORKING
-      if (error.response.status === 401) {
-        setAlert(
-          'You are not authorized to view this diagram',
-          AlertType.ERROR
-        );
-      } else if (error.response.status === 404) {
-        setAlert(
-          'Could not fetch diagram contents. Try again',
-          AlertType.ERROR
-        );
+      } catch (error: any) {
+        if (error.response.status === 401) {
+          setAlert(
+            'You are not authorized to view this diagram',
+            AlertType.ERROR
+          );
+        } else {
+          setAlert(
+            'Could not fetch diagram contents. Try again',
+            AlertType.ERROR
+          );
+        }
       }
-    }
+    };
+    fetchDiagram();
   }, [diagramId, setAlert]);
 
+  const handleRenameDiagram = (name: string) => {
+    setDiagram({ ...(diagram as DiagramContents), name });
+  };
+
   return (
-    <EntitiesProvider value={diagram?.entities}>
-      <RelationshipsProvider value={diagram?.relationships}>
+    <EntitiesProvider>
+      <RelationshipsProvider>
         <div className="page">
-          <Header name={diagram?.name} isEditor />
+          <Header
+            name={diagram?.name}
+            isEditor
+            handleRename={handleRenameDiagram}
+          />
           <AddNewSpeedDial />
-          <DiagramEditor />
+          <DiagramEditor
+            ent={diagram?.entities || []}
+            rel={diagram?.relationships || []}
+          />
         </div>
       </RelationshipsProvider>
     </EntitiesProvider>

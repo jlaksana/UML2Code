@@ -1,7 +1,7 @@
 import DownloadIcon from '@mui/icons-material/Download';
 import axios from 'axios';
 import { toPng } from 'html-to-image';
-import { MouseEvent, useCallback, useRef } from 'react';
+import { MouseEvent, useCallback, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactFlow, {
   Background,
@@ -29,7 +29,7 @@ import {
   useRelationshipsDispatch,
 } from '../../context/RelationshipsContext';
 import '../../styles/Editor.css';
-import { Entity } from '../../types';
+import { Entity, Relationship } from '../../types';
 import { AlertType } from '../alert/AlertContext';
 import useAlert from '../alert/useAlert';
 import AggregationEdge from './edges/AggregationEdge';
@@ -73,7 +73,12 @@ const edgeTypes = {
   Composition: CompositionEdge,
 };
 
-function DiagramEditor() {
+type Props = {
+  ent: Entity[];
+  rel: Relationship[];
+};
+
+function DiagramEditor({ ent, rel }: Props) {
   const entities = useEntities();
   const entitiesDispatch = useEntitiesDispatch();
   const relationships = useRelationships();
@@ -83,24 +88,10 @@ function DiagramEditor() {
   const { diagramId } = useParams();
   const { setAlert } = useAlert();
 
-  // useEffect(() => {
-  //   const fetchDiagramContents = async () => {
-  //     try {
-  //       const res = await axios.get(`/api/diagram/${diagramId}/contents`);
-  //       entitiesDispatch({ type: 'SET_ENTITIES', payload: res.data.entities });
-  //       relationshipsDispatch({
-  //         type: 'SET_RELATIONSHIPS',
-  //         payload: res.data.relationships,
-  //       });
-  //     } catch (e) {
-  //       setAlert(
-  //         'Could not fetch diagram contents. Try again',
-  //         AlertType.ERROR
-  //       );
-  //     }
-  //   };
-  //   fetchDiagramContents();
-  // }, [diagramId, entitiesDispatch, relationshipsDispatch, setAlert]);
+  useEffect(() => {
+    entitiesDispatch({ type: 'SET_ENTITIES', payload: ent });
+    relationshipsDispatch({ type: 'SET_RELATIONSHIPS', payload: rel });
+  }, [entitiesDispatch, relationshipsDispatch, ent, rel]);
 
   const onNodesChange = useCallback(
     async (changes: NodeChange[]) =>
@@ -117,7 +108,10 @@ function DiagramEditor() {
       event.stopPropagation();
       try {
         const newPos = { x: node.position.x, y: node.position.y };
-        await axios.put(`/api/entity/${node.id}/position`, newPos);
+        await axios.put(
+          `/api/entity/${node.id}/position?diagramId=${diagramId}`,
+          newPos
+        );
       } catch (e) {
         setAlert(
           'Could not update position. Please try again',
@@ -125,7 +119,7 @@ function DiagramEditor() {
         );
       }
     },
-    [setAlert]
+    [diagramId, setAlert]
   );
 
   // handle node deletion via delete key
@@ -133,14 +127,16 @@ function DiagramEditor() {
     async (nodes: Entity[]) => {
       try {
         const nodeToDelete = nodes[0];
-        await axios.delete(`/api/entity/${nodeToDelete.id}`);
+        await axios.delete(
+          `/api/entity/${nodeToDelete.id}?diagramId=${diagramId}`
+        );
         entitiesDispatch({ type: 'DELETE_ENTITY', id: nodeToDelete.id });
         setAlert('Entity successfully deleted', AlertType.SUCCESS);
       } catch (e) {
         setAlert('Could not delete entity. Try again', AlertType.ERROR);
       }
     },
-    [entitiesDispatch, setAlert]
+    [diagramId, entitiesDispatch, setAlert]
   );
 
   const onConnect = useCallback(() => {
@@ -178,10 +174,13 @@ function DiagramEditor() {
           type: 'UPDATE_RELATIONSHIP',
           payload: newEdge,
         });
-        await axios.put(`/api/relationship/${oldEdge.id}/handle`, {
-          type: oldEdge.type,
-          ...newConnection,
-        });
+        await axios.put(
+          `/api/relationship/${oldEdge.id}/handle?diagramId=${diagramId}`,
+          {
+            type: oldEdge.type,
+            ...newConnection,
+          }
+        );
       } catch (e) {
         setAlert('Cannot update relationship to that entity', AlertType.ERROR);
         relationshipsDispatch({
@@ -190,7 +189,7 @@ function DiagramEditor() {
         });
       }
     },
-    [relationshipsDispatch, setAlert]
+    [diagramId, relationshipsDispatch, setAlert]
   );
 
   const onEdgeUpdateEnd = useCallback(() => {
@@ -205,7 +204,9 @@ function DiagramEditor() {
     async (edges: Edge[]) => {
       try {
         const edgeToDelete = edges[0];
-        await axios.delete(`/api/relationship/${edgeToDelete.id}`);
+        await axios.delete(
+          `/api/relationship/${edgeToDelete.id}?diagramId=${diagramId}`
+        );
         relationshipsDispatch({
           type: 'DELETE_RELATIONSHIP',
           id: edgeToDelete.id,
@@ -215,7 +216,7 @@ function DiagramEditor() {
         setAlert('Could not delete relationship. Try again', AlertType.ERROR);
       }
     },
-    [relationshipsDispatch, setAlert]
+    [diagramId, relationshipsDispatch, setAlert]
   );
 
   // gets the diagram contents and viewport and downloads it as a png

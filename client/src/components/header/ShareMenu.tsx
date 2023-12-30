@@ -19,17 +19,19 @@ function ShareMenu({ open, handleClose, isEditor }: ShareMenuProps) {
   useEffect(() => {
     const getPrivacy = async () => {
       try {
-        const result = await axios.get('/api/diagram/privacy');
+        const result = await axios.get(`/api/diagram/${diagramId}/privacy`);
         setIsPublic(result.data.isPublic);
       } catch (error) {
         setIsPublic(false);
       }
     };
     if (open && isEditor) getPrivacy();
-  }, [isEditor, open]);
+  }, [diagramId, isEditor, open]);
 
   const handleSwitch = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    await axios.put('/api/diagram/privacy', { isPublic: event.target.checked });
+    await axios.put(`/api/diagram/${diagramId}/privacy`, {
+      isPublic: event.target.checked,
+    });
     setIsPublic((prev) => !prev);
   };
 
@@ -65,7 +67,7 @@ function ShareMenu({ open, handleClose, isEditor }: ShareMenuProps) {
                 This diagram is able to be viewed publicly. Copy the link below
               </Typography>
             )}
-            {isPublic && (
+            {(isPublic || !isEditor) && (
               <Button
                 variant="outlined"
                 startIcon={<LinkIcon />}

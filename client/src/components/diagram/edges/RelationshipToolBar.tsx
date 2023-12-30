@@ -3,6 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { IconButton, Tooltip } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useRelationshipsDispatch } from '../../../context/RelationshipsContext';
 import { AlertType } from '../../alert/AlertContext';
 import useAlert from '../../alert/useAlert';
@@ -16,13 +17,15 @@ type Props = {
 
 function RelationshipToolBar({ labelX, labelY, id, openEditModal }: Props) {
   const [loading, setLoading] = useState(false);
+
   const relationshipsDispatch = useRelationshipsDispatch();
+  const { diagramId } = useParams();
   const { setAlert } = useAlert();
 
   const handleDelete = async () => {
     setLoading(true);
     try {
-      await axios.delete(`/api/relationship/${id}`);
+      await axios.delete(`/api/relationship/${id}?diagramId=${diagramId}`);
       relationshipsDispatch({
         type: 'DELETE_RELATIONSHIP',
         id,

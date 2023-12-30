@@ -127,7 +127,7 @@ router.get('/:diagramId/privacy', withAuth, async (req, res) => {
  * @route PUT /api/diagram/:diagramId/privacy
  * @access Private
  */
-router.put('/diagramId/privacy', withAuth, async (req, res) => {
+router.put('/:diagramId/privacy', withAuth, async (req, res) => {
   try {
     await setDiagramPrivacy(req.params.diagramId, req.body.isPublic);
     res.status(200).json({ message: 'OK' });

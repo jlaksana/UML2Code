@@ -9,16 +9,11 @@ const RelationshipsDispatchContext =
   createContext<Dispatch<RelationshipAction> | null>(null);
 
 export function RelationshipsProvider({
-  value,
   children,
 }: {
-  value: Relationship[] | undefined;
   children: React.ReactNode;
 }) {
-  const [relationships, dispatch] = useReducer(
-    relationshipsReducer,
-    value || []
-  );
+  const [relationships, dispatch] = useReducer(relationshipsReducer, []);
 
   return (
     <RelationshipsContext.Provider value={relationships}>

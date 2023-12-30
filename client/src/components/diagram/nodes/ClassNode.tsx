@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { memo, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { NodeProps } from 'reactflow';
 import { useEntitiesDispatch } from '../../../context/EntitiesContext';
 import '../../../styles/Node.css';
@@ -58,10 +59,11 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
   const entitiesDispatch = useEntitiesDispatch();
 
   const { setAlert } = useAlert();
+  const { diagramId } = useParams();
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/api/entity/${id}`);
+      await axios.delete(`/api/entity/${id}?diagramId=${diagramId}`);
       entitiesDispatch({ type: 'DELETE_ENTITY', id });
       setAlert('Class successfully deleted', AlertType.SUCCESS);
     } catch (e) {
