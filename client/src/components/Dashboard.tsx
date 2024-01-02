@@ -18,6 +18,7 @@ function Dashboard() {
   setDocumentTitle('Dashboard');
 
   const [diagrams, setDiagrams] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
   const { setAlert } = useAlert();
@@ -31,6 +32,7 @@ function Dashboard() {
             new Date(b.modified).getTime() - new Date(a.modified).getTime()
         );
         setDiagrams(res.data);
+        setLoading(false);
       } catch (err) {
         setAlert('Could not get diagrams. Please reload.', AlertType.ERROR);
       }
@@ -80,6 +82,7 @@ function Dashboard() {
             New
           </Button>
         </div>
+        {loading && <Typography variant="body1">Loading...</Typography>}
         <DashTable
           diagrams={diagrams}
           handleDeleteDiagram={handleDeleteDiagram}
