@@ -18,11 +18,12 @@ function RenameModal({ prevName, handleClose, diagramId }: Props) {
   const handleRename = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const newName = name.current?.value.trim();
       await axios.put(`/api/diagram/${diagramId}/rename`, {
-        name: name.current?.value,
+        name: newName,
       });
       setAlert('Diagram renamed', AlertType.SUCCESS);
-      handleClose(name.current?.value);
+      handleClose(newName);
     } catch (error) {
       setAlert('Error renaming diagram. Please try again.', AlertType.ERROR);
       handleClose(undefined);

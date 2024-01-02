@@ -96,7 +96,7 @@ const renameDiagram = async (id: string, name: string) => {
 
   const diagram = await DiagramModel.findById(id);
   if (!diagram) throw new Error('Diagram not found');
-  diagram.name = name;
+  diagram.name = name.trim();
   await diagram.save();
 };
 
