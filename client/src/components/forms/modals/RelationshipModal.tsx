@@ -19,7 +19,7 @@ import LongRelationshipInput from '../inputs/LongRelationshipInput';
 import ShortRelationshipInput from '../inputs/ShortRelationshipInput';
 
 const relationshipTypes: RelationshipType[] = [
-  'Realization',
+  'Implementation',
   'Inheritance',
   'Association',
   'Aggregation',
@@ -61,7 +61,7 @@ const getContentByType = (
       );
     case 'Dependency':
     case 'Inheritance':
-    case 'Realization':
+    case 'Implementation':
       return (
         <ShortRelationshipInput
           type={type}

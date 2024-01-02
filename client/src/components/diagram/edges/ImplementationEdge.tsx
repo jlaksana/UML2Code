@@ -9,7 +9,7 @@ import { RelationshipEditModal } from '../../forms/modals/RelationshipModal';
 import RelationshipToolBar from './RelationshipToolBar';
 import { getMarkerRotation } from './edgeUtils';
 
-export function RealizationEdgeView({
+export function ImplementationEdgeView({
   id,
   sourceX,
   sourceY,
@@ -71,7 +71,7 @@ export function RealizationEdgeView({
   );
 }
 
-function RealizationEdge({
+function ImplementationEdge({
   id,
   source,
   target,
@@ -104,7 +104,7 @@ function RealizationEdge({
           />
         </EdgeLabelRenderer>
       )}
-      <RealizationEdgeView
+      <ImplementationEdgeView
         sourceX={sourceX}
         sourceY={sourceY}
         targetX={targetX}
@@ -119,10 +119,10 @@ function RealizationEdge({
         open={open}
         handleClose={() => setOpen(false)}
         id={id}
-        relationshipType="Realization"
+        relationshipType="Implementation"
       />
     </>
   );
 }
 
-export default RealizationEdge;
+export default ImplementationEdge;

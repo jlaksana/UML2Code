@@ -36,8 +36,8 @@ import AggregationEdge from './edges/AggregationEdge';
 import AssociationEdge from './edges/AssociationEdge';
 import CompositionEdge from './edges/CompositionEdge';
 import DependencyEdge from './edges/DependencyEdge';
+import ImplementationEdge from './edges/ImplementationEdge';
 import InheritanceEdge from './edges/InheritanceEdge';
-import RealizationEdge from './edges/RealizationEdge';
 import ClassNode from './nodes/ClassNode';
 import EnumNode from './nodes/EnumNode';
 import InterfaceNode from './nodes/InterfaceNode';
@@ -68,7 +68,7 @@ const edgeTypes = {
   Inheritance: InheritanceEdge,
   Association: AssociationEdge,
   Dependency: DependencyEdge,
-  Realization: RealizationEdge,
+  Implementation: ImplementationEdge,
   Aggregation: AggregationEdge,
   Composition: CompositionEdge,
 };

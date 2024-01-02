@@ -8,7 +8,7 @@ export const getSourceLabel = (type: RelationshipType) => {
   switch (type) {
     case 'Inheritance':
       return 'Parent';
-    case 'Realization':
+    case 'Implementation':
       return 'Interface';
     case 'Dependency':
       return 'Supplier';
@@ -24,7 +24,7 @@ export const getTargetLabel = (type: RelationshipType) => {
   switch (type) {
     case 'Inheritance':
       return 'Child';
-    case 'Realization':
+    case 'Implementation':
       return 'Class';
     case 'Dependency':
       return 'Client';
@@ -38,7 +38,7 @@ export const getTargetLabel = (type: RelationshipType) => {
 
 export const getSourcePermittedEntities = (type: RelationshipType) => {
   switch (type) {
-    case 'Realization':
+    case 'Implementation':
       return ['interface'];
     case 'Dependency':
       return ['class', 'interface', 'enum'];
@@ -54,7 +54,7 @@ export const getSourcePermittedEntities = (type: RelationshipType) => {
 
 export const getTargetPermittedEntities = (type: RelationshipType) => {
   switch (type) {
-    case 'Realization':
+    case 'Implementation':
       return ['class'];
     case 'Inheritance':
     case 'Dependency':

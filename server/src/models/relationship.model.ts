@@ -9,7 +9,7 @@ const RelationshipVariant = z.enum([
   'Association',
   'Aggregation',
   'Composition',
-  'Realization',
+  'Implementation',
   'Dependency',
 ]);
 
@@ -56,7 +56,7 @@ const schema = new Schema<Relationship>({
       'Association',
       'Aggregation',
       'Composition',
-      'Realization',
+      'Implementation',
       'Dependency',
     ],
     required: true,

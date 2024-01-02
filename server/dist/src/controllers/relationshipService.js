@@ -16,7 +16,7 @@ const relationshipUISchema = zod_1.z.object({
         'Association',
         'Aggregation',
         'Composition',
-        'Realization',
+        'Implementation',
         'Dependency',
     ]),
     source: zod_1.z.string(),
@@ -88,7 +88,7 @@ const validateSourceAndTarget = async (sourceName, targetName, diagramId, relati
     }
     try {
         switch (relationshipType) {
-            case 'Realization':
+            case 'Implementation':
                 if (sourceEntity._id.equals(targetEntity._id) ||
                     sourceEntity.type !== 'interface' ||
                     targetEntity.type !== 'class') {
@@ -134,7 +134,7 @@ const reformatRelationship = (relationship) => {
     reformattedRelationship.id = reformattedRelationship._id;
     switch (reformattedRelationship.type) {
         case 'Inheritance':
-        case 'Realization':
+        case 'Implementation':
         case 'Dependency':
             return (0, lodash_pick_1.default)(reformattedRelationship, [
                 'id',
@@ -162,9 +162,9 @@ const reformatRelationship = (relationship) => {
 };
 exports.reformatRelationship = reformatRelationship;
 const validateDuplicateRelationship = async (diagramId, type, source, target, relationshipId) => {
-    // only allow one relationship of type Inheritance, Realization, or Dependency between two entities
+    // only allow one relationship of type Inheritance, Implementation, or Dependency between two entities
     if (type !== 'Inheritance' &&
-        type !== 'Realization' &&
+        type !== 'Implementation' &&
         type !== 'Dependency') {
         return true;
     }

@@ -82,7 +82,7 @@ export type RelationshipType =
   | 'Association'
   | 'Aggregation'
   | 'Composition'
-  | 'Realization'
+  | 'Implementation'
   | 'Dependency';
 
 export type Relationship = Edge<RelationshipData | undefined>;

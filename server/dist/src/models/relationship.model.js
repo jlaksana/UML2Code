@@ -11,7 +11,7 @@ const RelationshipVariant = zod_1.z.enum([
     'Association',
     'Aggregation',
     'Composition',
-    'Realization',
+    'Implementation',
     'Dependency',
 ]);
 exports.RelationshipVariant = RelationshipVariant;
@@ -56,7 +56,7 @@ const schema = new mongoose_1.Schema({
             'Association',
             'Aggregation',
             'Composition',
-            'Realization',
+            'Implementation',
             'Dependency',
         ],
         required: true,

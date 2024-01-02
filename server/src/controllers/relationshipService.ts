@@ -17,7 +17,7 @@ const relationshipUISchema = z.object({
     'Association',
     'Aggregation',
     'Composition',
-    'Realization',
+    'Implementation',
     'Dependency',
   ]),
   source: z.string(),
@@ -109,7 +109,7 @@ const validateSourceAndTarget = async (
 
   try {
     switch (relationshipType) {
-      case 'Realization':
+      case 'Implementation':
         if (
           sourceEntity._id.equals(targetEntity._id) ||
           sourceEntity.type !== 'interface' ||
@@ -162,7 +162,7 @@ const reformatRelationship = (relationship: Relationship) => {
 
   switch (reformattedRelationship.type) {
     case 'Inheritance':
-    case 'Realization':
+    case 'Implementation':
     case 'Dependency':
       return pick(reformattedRelationship, [
         'id',
@@ -196,10 +196,10 @@ const validateDuplicateRelationship = async (
   target: string,
   relationshipId?: string
 ) => {
-  // only allow one relationship of type Inheritance, Realization, or Dependency between two entities
+  // only allow one relationship of type Inheritance, Implementation, or Dependency between two entities
   if (
     type !== 'Inheritance' &&
-    type !== 'Realization' &&
+    type !== 'Implementation' &&
     type !== 'Dependency'
   ) {
     return true;
