@@ -11,6 +11,7 @@ const sendEmail = async (params, templateId) => {
         service_id: process.env.EMAILJS_SERVICE_ID,
         template_id: templateId,
         user_id: process.env.EMAILJS_USER_ID,
+        accessToken: process.env.EMAILJS_ACCESS_KEY,
         template_params: {
             ...params,
         },
@@ -23,7 +24,7 @@ const sendEmail = async (params, templateId) => {
         body: JSON.stringify(data),
     });
     if (!response.ok)
-        throw new Error('Error sending email');
+        throw new Error(response.statusText);
 };
 exports.sendEmail = sendEmail;
 //# sourceMappingURL=emailService.js.map

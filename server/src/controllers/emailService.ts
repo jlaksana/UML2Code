@@ -8,6 +8,7 @@ const sendEmail = async (params: object, templateId: string) => {
     service_id: process.env.EMAILJS_SERVICE_ID,
     template_id: templateId,
     user_id: process.env.EMAILJS_USER_ID,
+    accessToken: process.env.EMAILJS_ACCESS_KEY,
     template_params: {
       ...params,
     },
@@ -20,7 +21,7 @@ const sendEmail = async (params: object, templateId: string) => {
     },
     body: JSON.stringify(data),
   });
-  if (!response.ok) throw new Error('Error sending email');
+  if (!response.ok) throw new Error(response.statusText);
 };
 
 // eslint-disable-next-line import/prefer-default-export
