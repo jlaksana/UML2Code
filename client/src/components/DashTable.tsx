@@ -100,7 +100,10 @@ function DashTable({
 
   return (
     <>
-      <TableContainer component={Paper} sx={{ marginTop: 3, width: '80%' }}>
+      <TableContainer
+        component={Paper}
+        sx={{ marginTop: 3, marginBottom: 3, width: '80%', maxHeight: '80vh' }}
+      >
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -117,10 +120,14 @@ function DashTable({
                 onDoubleClick={handleOpenDiagram}
               >
                 <TableCell component="th" scope="row">
-                  {diagram.name}
+                  <Tooltip title="Double click to open">
+                    <span>{diagram.name}</span>
+                  </Tooltip>
                 </TableCell>
                 <TableCell align="right">
-                  {parseDate(diagram.modified)}
+                  <Tooltip title={new Date(diagram.modified).toString()}>
+                    <span>{parseDate(diagram.modified)}</span>
+                  </Tooltip>
                 </TableCell>
                 <TableCell align="right">
                   <Tooltip title="More Actions">

@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 import { Document, Schema, model } from 'mongoose';
 import { z } from 'zod';
 import { DiagramModel } from './diagram.model';
@@ -123,6 +124,17 @@ schema.path('target').validate(async (tar) => {
   const entity = await EntityModel.findById(tar);
   return !!entity;
 }, 'Invalid target entity ID');
+
+// update diagram updatedAt on save
+schema.pre<Relationship>(
+  ['save', 'findOneAndUpdate', 'findOneAndDelete'],
+  async function (next) {
+    await DiagramModel.findByIdAndUpdate(this.diagramId, {
+      updatedAt: Date.now(),
+    });
+    next();
+  }
+);
 
 const RelationshipModel = model<Relationship>('Relationship', schema);
 

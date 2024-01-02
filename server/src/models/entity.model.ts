@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 import { Document, Schema, model } from 'mongoose';
 import { z } from 'zod';
 import { DiagramModel } from './diagram.model';
@@ -95,9 +96,20 @@ const schema = new Schema<Entity>({
 
 // validate diagramId to be an existing diagram
 schema.path('diagramId').validate(async (value) => {
-  const count = await DiagramModel.countDocuments({ _id: value });
-  return count === 1;
+  const diagram = await DiagramModel.findById(value);
+  return !!diagram;
 }, 'Invalid diagram ID');
+
+// update diagram updatedAt on save
+schema.pre<Entity>(
+  ['save', 'findOneAndUpdate', 'findOneAndDelete'],
+  async function (next) {
+    await DiagramModel.findByIdAndUpdate(this.diagramId, {
+      updatedAt: Date.now(),
+    });
+    next();
+  }
+);
 
 const EntityModel = model<Entity>('Entity', schema);
 

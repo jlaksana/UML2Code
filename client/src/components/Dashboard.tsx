@@ -23,6 +23,10 @@ function Dashboard() {
     const getDiagrams = async () => {
       try {
         const res = await axios.get('/api/diagram');
+        res.data.sort(
+          (a: any, b: any) =>
+            new Date(b.modified).getTime() - new Date(a.modified).getTime()
+        );
         setDiagrams(res.data);
       } catch (err) {
         setAlert('Could not get diagrams. Please reload.', AlertType.ERROR);
