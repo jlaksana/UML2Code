@@ -21,7 +21,7 @@ const sendEmail = async (params: object, templateId: string) => {
     },
     body: JSON.stringify(data),
   });
-  if (!response.ok) throw new Error(data.toString());
+  if (!response.ok) throw new Error('Error sending email');
 };
 
 // eslint-disable-next-line import/prefer-default-export

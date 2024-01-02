@@ -5,7 +5,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import logo from '../../assets/UML2.png';
 
 function Verify() {
-  const [verified, setVerified] = useState(false);
+  const [verified, setVerified] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,8 +16,8 @@ function Verify() {
         await axios.post('/api/auth/verify', {
           token: searchParams.get('token'),
         });
-        setVerified(true);
       } catch (e: any) {
+        setVerified(false);
         setErrorMessage(e.response.data.message);
       }
     };
