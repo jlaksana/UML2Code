@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import { DiagramModel } from '../models/diagram.model';
 import { EntityModel } from '../models/entity.model';
 import { RelationshipModel } from '../models/relationship.model';
@@ -23,23 +24,13 @@ const getDiagramsForUser = async (userId: string) => {
 };
 
 /**
- * Retrieves a diagram by id
- * @param id of the diagram to retrieve
- * @returns the diagram
- */
-const findDiagramById = async (id: string) => {
-  const diagram = await DiagramModel.findById(id);
-  if (!diagram) throw new Error('Diagram not found');
-  return { id: diagram._id };
-};
-
-/**
  * Retrieves all entities and relationships of a diagram, and
  * returns them in a format that can be used by the client
  * @param id id of the diagram to retrieve
  * @returns the entities and relationships of the diagram
  */
 const getDiagramContents = async (id: string) => {
+  if (!isValidObjectId(id)) throw new Error('Diagram not found');
   const diagram = await DiagramModel.findById(id);
   if (!diagram) throw new Error('Diagram not found');
 
@@ -101,6 +92,8 @@ const createDiagram = async (userId: string) => {
 
 const renameDiagram = async (id: string, name: string) => {
   if (!name) throw new Error('Invalid name');
+  if (!isValidObjectId(id)) throw new Error('Diagram not found');
+
   const diagram = await DiagramModel.findById(id);
   if (!diagram) throw new Error('Diagram not found');
   diagram.name = name;
@@ -112,24 +105,26 @@ const renameDiagram = async (id: string, name: string) => {
  * @returns true if the diagram is public, false if it is private
  */
 const getDiagramPrivacy = async (id: string) => {
+  if (!isValidObjectId(id)) throw new Error('Diagram not found');
   const diagram = await DiagramModel.findById(id);
   if (!diagram) throw new Error('Diagram not found');
   return diagram.isPublic;
 };
 
 const setDiagramPrivacy = async (id: string, isPublic: boolean) => {
+  if (!isValidObjectId(id)) throw new Error('Diagram not found');
   if (isPublic === undefined) throw new Error('Invalid privacy value');
   await DiagramModel.findByIdAndUpdate(id, { isPublic });
 };
 
 const deleteDiagram = async (id: string) => {
+  if (!isValidObjectId(id)) throw new Error('Diagram not found');
   await DiagramModel.findByIdAndDelete(id);
 };
 
 export {
   createDiagram,
   deleteDiagram,
-  findDiagramById,
   getDiagramContents,
   getDiagramContentsPublic,
   getDiagramPrivacy,

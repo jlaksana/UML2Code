@@ -22,7 +22,7 @@ const withAuth: RequestHandler = async (req, res, next) => {
       throw new Error();
     }
     const user = await UserModel.findById(decoded.userId);
-    if (!user) {
+    if (!user || user.verified === false) {
       throw new Error();
     }
     req.userId = decoded.userId;

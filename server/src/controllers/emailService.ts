@@ -3,7 +3,7 @@
  * @param params dynamic parameters to be passed to the email template
  * @param templateId id of the email template to use
  */
-const sendEmail = async (params: any, templateId: string) => {
+const sendEmail = async (params: object, templateId: string) => {
   const data = {
     service_id: process.env.EMAILJS_SERVICE_ID,
     template_id: templateId,

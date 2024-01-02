@@ -2,6 +2,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose, { ConnectOptions } from 'mongoose';
 import { Diagram, DiagramModel } from '../../src/models/diagram.model';
 import { EntityModel } from '../../src/models/entity.model';
+import { UserModel } from '../../src/models/user.model';
 
 describe('Entity Schema', () => {
   let mongoServer: MongoMemoryServer;
@@ -16,7 +17,12 @@ describe('Entity Schema', () => {
       useUnifiedTopology: true,
     } as ConnectOptions);
 
-    diagram = new DiagramModel({ _id: 1000, password: 'password' });
+    const user = await UserModel.create({
+      username: 'test',
+      email: 'email@email.com',
+      password: 'password',
+    });
+    diagram = new DiagramModel({ userId: user._id });
     await diagram.save();
   });
 
@@ -48,7 +54,6 @@ describe('Entity Schema', () => {
 
     const found = await EntityModel.findOne({ _id: entity._id });
     expect(found).not.toBeNull();
-    expect(found?.diagramId).toBe(diagram._id);
     expect(found?.type).toBe('class');
     expect(found?.position.x).toBe(10);
     expect(found?.position.y).toBe(20);

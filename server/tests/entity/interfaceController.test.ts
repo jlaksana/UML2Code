@@ -6,6 +6,7 @@ import {
   editInterface,
 } from '../../src/controllers/interfaceController';
 import { EntityModel } from '../../src/models/entity.model';
+import { UserModel } from '../../src/models/user.model';
 
 let mongoServer: MongoMemoryServer;
 let diagramId: string;
@@ -19,8 +20,13 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   } as ConnectOptions);
 
+  const user = await UserModel.create({
+    username: 'test',
+    email: 'test@email.com',
+    password: 'password',
+  });
   // create a diagram to be used in tests
-  const diagram = await createDiagram('password');
+  const diagram = await createDiagram(user._id);
   diagramId = diagram.id;
 });
 

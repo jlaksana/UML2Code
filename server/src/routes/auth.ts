@@ -38,7 +38,7 @@ router.post('/signup', async (req, res) => {
   const { username, email, password } = req.body;
   try {
     const user = await signup(username, email, password);
-    await sendVerificationEmail(user);
+    sendVerificationEmail(user);
     res.status(200).json({ message: 'User created' });
   } catch (e) {
     res.status(404).json({ message: getErrorMessage(e) });

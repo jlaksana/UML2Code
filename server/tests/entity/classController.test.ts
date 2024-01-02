@@ -10,6 +10,7 @@ import { createDiagram } from '../../src/controllers/diagramController';
 import { createRelationship } from '../../src/controllers/relationshipController';
 import { Entity, EntityModel } from '../../src/models/entity.model';
 import { RelationshipModel } from '../../src/models/relationship.model';
+import { UserModel } from '../../src/models/user.model';
 
 let mongoServer: MongoMemoryServer;
 let diagramId: string;
@@ -23,8 +24,13 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   } as ConnectOptions);
 
+  const user = await UserModel.create({
+    username: 'test',
+    email: 'test@email.com',
+    password: 'password',
+  });
   // create a diagram to be used in tests
-  const diagram = await createDiagram('password');
+  const diagram = await createDiagram(user._id);
   diagramId = diagram._id;
 });
 
@@ -241,13 +247,13 @@ describe('deleteEntity', () => {
   });
 
   it('should be able to delete a class', async () => {
-    await deleteEntity(klass.id);
+    await deleteEntity(klass.id, diagramId);
     const deletedClass = await EntityModel.findById(klass.id);
     expect(deletedClass).toBeNull();
   });
 
   it('should not be able to delete a class with an invalid id', async () => {
-    expect(deleteEntity('invalid')).rejects.toThrow(
+    expect(deleteEntity('invalid', diagramId)).rejects.toThrow(
       'Could not delete entity with the given id: invalid'
     );
   });
@@ -280,7 +286,7 @@ describe('deleteEntity', () => {
       diagramId
     );
 
-    await deleteEntity(square.id);
+    await deleteEntity(square.id, diagramId);
     expect(await RelationshipModel.findById(relationship1.id)).toBeNull();
     expect(await RelationshipModel.findById(relationship2.id)).toBeNull();
   });
@@ -304,7 +310,7 @@ describe('updatePosition', () => {
 
   it('should be able to update the position of a class', async () => {
     const position = { x: 100, y: 200 };
-    await updatePosition(klass.id, position);
+    await updatePosition(klass.id, diagramId, position);
     const updatedClass = await EntityModel.findById(klass.id);
     expect(updatedClass).not.toBeNull();
     expect(updatedClass?.position).toEqual(position);
@@ -312,7 +318,7 @@ describe('updatePosition', () => {
 
   it('should not be able to update the position of a class with an invalid id', async () => {
     const position = { x: 100, y: 200 };
-    expect(updatePosition('invalid', position)).rejects.toThrow(
+    expect(updatePosition('invalid', diagramId, position)).rejects.toThrow(
       'Could not update an entity position with the given id: invalid'
     );
   });
