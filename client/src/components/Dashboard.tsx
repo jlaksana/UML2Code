@@ -1,5 +1,5 @@
 import AddIcon from '@mui/icons-material/Add';
-import { Button, Typography } from '@mui/material';
+import { Box, Button, LinearProgress, Typography } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -82,7 +82,11 @@ function Dashboard() {
             New
           </Button>
         </div>
-        {loading && <Typography variant="body1">Loading...</Typography>}
+        {loading && (
+          <Box sx={{ width: '80%', margin: 5 }}>
+            <LinearProgress />
+          </Box>
+        )}
         <DashTable
           diagrams={diagrams}
           handleDeleteDiagram={handleDeleteDiagram}
