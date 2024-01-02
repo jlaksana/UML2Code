@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { EntitiesProvider } from '../context/EntitiesContext';
 import { RelationshipsProvider } from '../context/RelationshipsContext';
 import { DiagramContents } from '../types';
+import { setDocumentTitle } from '../utils';
 import AddNewSpeedDial from './AddNewSpeedDial';
 import { AlertType } from './alert/AlertContext';
 import useAlert from './alert/useAlert';
@@ -19,6 +20,8 @@ function Editor() {
 
   const { diagramId } = useParams();
   const { setAlert } = useAlert();
+
+  setDocumentTitle(diagram?.name || '');
 
   useEffect(() => {
     const fetchDiagram = async () => {

@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/UML2.png';
 import '../../styles/Login.css';
+import { setDocumentTitle } from '../../utils';
 
 function Signup() {
   const [email, setEmail] = useState('');
@@ -15,6 +16,8 @@ function Signup() {
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [showVerify, setShowVerify] = useState(false);
+
+  setDocumentTitle('Sign Up');
 
   const handleSignup = async (event: React.FormEvent) => {
     event.preventDefault();

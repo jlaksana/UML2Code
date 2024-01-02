@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/UML2.png';
+import { setDocumentTitle } from '../../utils';
 
 function SendResetPassword() {
   const email = useRef<HTMLInputElement>();
@@ -11,6 +12,8 @@ function SendResetPassword() {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [success, setSuccess] = useState(false);
+
+  setDocumentTitle('Reset Password');
 
   const handleSend = async (event: React.FormEvent) => {
     event.preventDefault();

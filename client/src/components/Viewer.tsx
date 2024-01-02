@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DiagramContents } from '../types';
+import { setDocumentTitle } from '../utils';
 import { AlertType } from './alert/AlertContext';
 import useAlert from './alert/useAlert';
 import DiagramViewer from './diagram/DiagramViewer';
@@ -12,6 +13,8 @@ function Viewer() {
 
   const { diagramId } = useParams();
   const { setAlert } = useAlert();
+
+  setDocumentTitle(diagram?.name || '');
 
   useEffect(() => {
     const fetchDiagramContents = async () => {

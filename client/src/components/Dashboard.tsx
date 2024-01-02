@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Dashboard.css';
+import { setDocumentTitle } from '../utils';
 import DashTable from './DashTable';
 import { AlertType } from './alert/AlertContext';
 import useAlert from './alert/useAlert';
@@ -13,6 +14,8 @@ function Dashboard() {
   // interceptor that adds auth token to every request
   const authToken = localStorage.getItem('authToken');
   axios.defaults.headers.common.Authorization = `Bearer ${authToken}`;
+
+  setDocumentTitle('Dashboard');
 
   const [diagrams, setDiagrams] = useState([]);
 

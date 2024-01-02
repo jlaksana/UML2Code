@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../assets/UML2.png';
 import '../../styles/Login.css';
+import { setDocumentTitle } from '../../utils';
 
 function Login() {
   const email = useRef<HTMLInputElement>();
@@ -14,6 +15,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  setDocumentTitle('Login');
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();

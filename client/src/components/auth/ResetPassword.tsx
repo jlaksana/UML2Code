@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import logo from '../../assets/UML2.png';
+import { setDocumentTitle } from '../../utils';
 
 function ResetPassword() {
   const password = useRef<HTMLInputElement>();
@@ -14,6 +15,7 @@ function ResetPassword() {
   const [success, setSuccess] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
+  setDocumentTitle('Reset Password');
 
   const handleReset = async (event: React.FormEvent) => {
     event.preventDefault();

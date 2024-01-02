@@ -3,12 +3,14 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import logo from '../../assets/UML2.png';
+import { setDocumentTitle } from '../../utils';
 
 function Verify() {
   const [verified, setVerified] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
   const [searchParams, setSearchParams] = useSearchParams();
+  setDocumentTitle('Verify Account');
 
   useEffect(() => {
     const verifyAccount = async () => {
