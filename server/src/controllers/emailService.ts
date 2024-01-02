@@ -21,7 +21,7 @@ const sendEmail = async (params: object, templateId: string) => {
     },
     body: JSON.stringify(data),
   });
-  if (!response.ok) throw new Error(response.statusText);
+  if (!response.ok) throw new Error(data.toString());
 };
 
 // eslint-disable-next-line import/prefer-default-export
