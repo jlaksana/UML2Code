@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.umlMultiplicityRegex = exports.relationshipSchema = exports.RelationshipVariant = exports.RelationshipModel = exports.HandlePositions = void 0;
+/* eslint-disable func-names */
 const mongoose_1 = require("mongoose");
 const zod_1 = require("zod");
 const diagram_model_1 = require("./diagram.model");
@@ -33,7 +34,7 @@ const umlMultiplicityRegex = /^(?:\d+|\d+\.\.\*|\d+\.\.\d+|\*|)$/;
 exports.umlMultiplicityRegex = umlMultiplicityRegex;
 const relationshipSchema = zod_1.z.object({
     type: RelationshipVariant,
-    diagramId: zod_1.z.number().min(1000),
+    diagramId: zod_1.z.instanceof(mongoose_1.Schema.Types.ObjectId),
     source: zod_1.z.instanceof(mongoose_1.Schema.Types.ObjectId),
     target: zod_1.z.instanceof(mongoose_1.Schema.Types.ObjectId),
     sourceHandle: HandlePositions.optional(),
@@ -60,7 +61,7 @@ const schema = new mongoose_1.Schema({
         ],
         required: true,
     },
-    diagramId: { type: Number, ref: 'Diagram', required: true },
+    diagramId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Diagram', required: true },
     source: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Entity', required: true },
     target: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Entity', required: true },
     sourceHandle: {
@@ -120,6 +121,13 @@ schema.path('target').validate(async (tar) => {
     const entity = await entity_model_1.EntityModel.findById(tar);
     return !!entity;
 }, 'Invalid target entity ID');
+// update diagram updatedAt on save
+schema.pre(['save', 'findOneAndUpdate', 'findOneAndDelete'], async function (next) {
+    await diagram_model_1.DiagramModel.findByIdAndUpdate(this.diagramId, {
+        updatedAt: Date.now(),
+    });
+    next();
+});
 const RelationshipModel = (0, mongoose_1.model)('Relationship', schema);
 exports.RelationshipModel = RelationshipModel;
 //# sourceMappingURL=relationship.model.js.map

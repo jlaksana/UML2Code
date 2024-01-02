@@ -10,13 +10,13 @@ const utils_1 = require("../utils");
 const router = express_1.default.Router();
 /**
  * GET a relationship given an id
- * @route GET /api/relationship/:id
+ * @route GET /api/relationship/:id?diagramId=
  * @access Private
  * @param {string} id - relationship id
  * @returns {object} 200 - Relationship object
  */
 router.get('/:id', auth_1.default, async (req, res) => {
-    const { diagramId } = req;
+    const { diagramId } = req.query;
     try {
         const relationship = await (0, relationshipController_1.getRelationship)(req.params.id, diagramId);
         if (!relationship) {
@@ -38,7 +38,7 @@ router.get('/:id', auth_1.default, async (req, res) => {
  */
 router.post('/', auth_1.default, async (req, res) => {
     // validate diagramId to be an existing diagram
-    const { diagramId } = req;
+    const { diagramId } = req.query;
     try {
         const newRelationship = await (0, relationshipController_1.createRelationship)(req.body, diagramId);
         res.status(201).json(newRelationship);
@@ -50,7 +50,7 @@ router.post('/', auth_1.default, async (req, res) => {
 });
 /**
  * Edit relationship given a relationship id as a parameter and relationship data in body
- * @route PUT /api/relationship/:id
+ * @route PUT /api/relationship/:id?diagramId=
  * @access Private
  * @param {string} id - relationship id
  * @param {object} body - relationship data
@@ -58,7 +58,7 @@ router.post('/', auth_1.default, async (req, res) => {
  * @returns status 400 if unsuccessful
  */
 router.put('/:id', auth_1.default, async (req, res) => {
-    const { diagramId } = req;
+    const { diagramId } = req.query;
     const { id } = req.params;
     try {
         const updatedRelationship = await (0, relationshipController_1.editRelationship)(id, diagramId, req.body);
@@ -71,7 +71,7 @@ router.put('/:id', auth_1.default, async (req, res) => {
 });
 /**
  * Edit relationship handles given a relationship id as a parameter and handle data in body
- * @route PUT /api/relationship/:id/handle
+ * @route PUT /api/relationship/:id/handle?diagramId=
  * @access Private
  * @param {string} id - relationship id
  * @param {object} body - handle update data
@@ -79,7 +79,7 @@ router.put('/:id', auth_1.default, async (req, res) => {
  * @returns status 400 if unsuccessful
  */
 router.put('/:id/handle', auth_1.default, async (req, res) => {
-    const { diagramId } = req;
+    const { diagramId } = req.query;
     const { id } = req.params;
     try {
         await (0, relationshipController_1.editRelationshipHandle)(id, diagramId, req.body);
@@ -91,7 +91,7 @@ router.put('/:id/handle', auth_1.default, async (req, res) => {
     }
 });
 /**
- * @route DELETE /api/relationship/:id
+ * @route DELETE /api/relationship/:id?diagramId=
  * @access Private
  * @param {string} id - relationship id
  * @returns status 200 if successful
@@ -100,7 +100,7 @@ router.put('/:id/handle', auth_1.default, async (req, res) => {
 router.delete('/:id', auth_1.default, async (req, res) => {
     const { id } = req.params;
     try {
-        await (0, relationshipController_1.deleteRelationship)(id);
+        await (0, relationshipController_1.deleteRelationship)(id, req.query.diagramId);
         res.status(204).json({ message: 'OK' });
     }
     catch (e) {

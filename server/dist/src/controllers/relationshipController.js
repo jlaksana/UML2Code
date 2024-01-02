@@ -87,8 +87,11 @@ const editRelationshipHandle = async (relationshipId, diagramId, handleData) => 
     }
 };
 exports.editRelationshipHandle = editRelationshipHandle;
-const deleteRelationship = async (relationshipId) => {
-    const relationship = await relationship_model_1.RelationshipModel.findByIdAndDelete(relationshipId);
+const deleteRelationship = async (relationshipId, diagramId) => {
+    const relationship = await relationship_model_1.RelationshipModel.findOneAndDelete({
+        _id: relationshipId,
+        diagramId,
+    });
     if (!relationship) {
         throw new Error('Could not find relationship');
     }

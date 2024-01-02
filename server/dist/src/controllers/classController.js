@@ -57,9 +57,12 @@ const editClass = async (classId, diagramId, data) => {
     }
 };
 exports.editClass = editClass;
-const deleteEntity = async (entityId) => {
+const deleteEntity = async (entityId, diagramId) => {
     try {
-        const entity = await entity_model_1.EntityModel.findByIdAndDelete(entityId);
+        const entity = await entity_model_1.EntityModel.findOneAndDelete({
+            _id: entityId,
+            diagramId,
+        });
         if (!entity) {
             throw new Error();
         }
@@ -73,9 +76,9 @@ const deleteEntity = async (entityId) => {
     }
 };
 exports.deleteEntity = deleteEntity;
-const updatePosition = async (entityId, position) => {
+const updatePosition = async (entityId, diagramId, position) => {
     try {
-        const entity = await entity_model_1.EntityModel.findByIdAndUpdate(entityId, {
+        const entity = await entity_model_1.EntityModel.findOneAndUpdate({ _id: entityId, diagramId }, {
             position,
         });
         if (!entity) {

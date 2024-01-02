@@ -10,7 +10,7 @@ const utils_1 = require("../utils");
 const router = express_1.default.Router();
 /**
  * Edits an entity's position in the diagram
- * @route PUT /api/entity/:id/position
+ * @route PUT /api/entity/:id/position?diagramId=
  * @access Private
  * @param {string} id - class id
  * @param {object} body - class data
@@ -21,7 +21,7 @@ router.put('/:id/position', auth_1.default, async (req, res) => {
     const { id } = req.params;
     const position = req.body;
     try {
-        await (0, classController_1.updatePosition)(id, position);
+        await (0, classController_1.updatePosition)(id, req.query.diagramId, position);
         res.status(204).json({ message: 'Successfully updated position' });
     }
     catch (e) {
@@ -31,7 +31,7 @@ router.put('/:id/position', auth_1.default, async (req, res) => {
 });
 /**
  * Deletes an entity
- * @route DELETE /api/class/:id
+ * @route DELETE /api/class/:id?diagramId=
  * @access Private
  * @param {string} id - class id
  * @returns status 200 if successful
@@ -40,7 +40,7 @@ router.put('/:id/position', auth_1.default, async (req, res) => {
 router.delete('/:id', auth_1.default, async (req, res) => {
     const { id } = req.params;
     try {
-        await (0, classController_1.deleteEntity)(id);
+        await (0, classController_1.deleteEntity)(id, req.query.diagramId);
         res.status(204).json({ message: 'OK' });
     }
     catch (e) {

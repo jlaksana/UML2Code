@@ -13,6 +13,9 @@ const enumData = zod_1.z.object({
         .min(1),
 });
 const validateEnum = async (data, diagramId) => {
+    if (diagramId === undefined) {
+        throw new Error('Must provide a diagram id');
+    }
     const parseResult = enumData.safeParse(data);
     if (!parseResult.success) {
         throw new Error('Invalid - Ensure all fields are present and valid. Must have at least one value');

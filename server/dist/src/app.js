@@ -7,6 +7,7 @@ const compression_1 = __importDefault(require("compression"));
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 const utilMiddleware_1 = require("./middleware/utilMiddleware");
+const auth_1 = __importDefault(require("./routes/auth"));
 const classes_1 = __importDefault(require("./routes/classes"));
 const diagrams_1 = __importDefault(require("./routes/diagrams"));
 const entity_1 = __importDefault(require("./routes/entity"));
@@ -24,6 +25,7 @@ app.use(express_1.default.json());
 app.use((0, compression_1.default)());
 app.use(utilMiddleware_1.loggerMiddleware);
 // Routes
+app.use('/api/auth', auth_1.default);
 app.use('/api/diagram', diagrams_1.default);
 app.use('/api/class', classes_1.default);
 app.use('/api/interface', interfaces_1.default);

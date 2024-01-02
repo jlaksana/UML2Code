@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.entitySchema = exports.entityData = exports.EntityModel = void 0;
+/* eslint-disable func-names */
 const mongoose_1 = require("mongoose");
 const zod_1 = require("zod");
 const diagram_model_1 = require("./diagram.model");
@@ -31,14 +32,14 @@ const entityData = zod_1.z.object({
 });
 exports.entityData = entityData;
 const entitySchema = zod_1.z.object({
-    diagramId: zod_1.z.number().min(1000),
+    diagramId: zod_1.z.instanceof(mongoose_1.Schema.Types.ObjectId),
     type: zod_1.z.enum(['class', 'interface', 'enum']),
     position: zod_1.z.object({ x: zod_1.z.number(), y: zod_1.z.number() }),
     data: entityData,
 });
 exports.entitySchema = entitySchema;
 const schema = new mongoose_1.Schema({
-    diagramId: { type: Number, ref: 'Diagram', required: true },
+    diagramId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Diagram', required: true },
     type: {
         type: String,
         enum: ['class', 'interface', 'enum'],
@@ -91,9 +92,16 @@ const schema = new mongoose_1.Schema({
 });
 // validate diagramId to be an existing diagram
 schema.path('diagramId').validate(async (value) => {
-    const count = await diagram_model_1.DiagramModel.countDocuments({ _id: value });
-    return count === 1;
+    const diagram = await diagram_model_1.DiagramModel.findById(value);
+    return !!diagram;
 }, 'Invalid diagram ID');
+// update diagram updatedAt on save
+schema.pre(['save', 'findOneAndUpdate', 'findOneAndDelete'], async function (next) {
+    await diagram_model_1.DiagramModel.findByIdAndUpdate(this.diagramId, {
+        updatedAt: Date.now(),
+    });
+    next();
+});
 const EntityModel = (0, mongoose_1.model)('Entity', schema);
 exports.EntityModel = EntityModel;
 //# sourceMappingURL=entity.model.js.map

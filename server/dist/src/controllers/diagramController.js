@@ -1,58 +1,26 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setDiagramPrivacy = exports.loginToDiagram = exports.getDiagramPrivacy = exports.getDiagramContentsPublic = exports.getDiagramContents = exports.findDiagramById = exports.createDiagram = void 0;
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+exports.setDiagramPrivacy = exports.renameDiagram = exports.getDiagramsForUser = exports.getDiagramPrivacy = exports.getDiagramContentsPublic = exports.getDiagramContents = exports.deleteDiagram = exports.createDiagram = void 0;
+const mongoose_1 = require("mongoose");
 const diagram_model_1 = require("../models/diagram.model");
 const entity_model_1 = require("../models/entity.model");
 const relationship_model_1 = require("../models/relationship.model");
-const utils_1 = require("../utils");
+const user_model_1 = require("../models/user.model");
 const entityServices_1 = require("./entityServices");
 const relationshipService_1 = require("./relationshipService");
-const idRegex = /^\d+$/;
-/** Logs in to a diagram
- * @param id id of the diagram to log in to
- * @param password password of the diagram to log in to
- * @returns a JWT token
+/** Get all diagrams for a userId
+ * @param userId of the user to get diagrams for
+ * @returns all diagrams for the user
  */
-const loginToDiagram = async (id, password) => {
-    if (!idRegex.test(id))
-        throw new Error('Invalid Diagram id');
-    const diagram = await diagram_model_1.DiagramModel.findById(id);
-    if (!diagram)
-        throw new Error('Diagram not found');
-    if (!password || typeof password !== 'string')
-        throw new Error('Invalid password');
-    const match = await bcrypt_1.default.compare(password, diagram.password);
-    if (!match)
-        throw new Error('Invalid password');
-    if (process.env.JWT_SECRET === undefined) {
-        console.log('JWT secret is undefined');
-        throw new Error('Server Error');
-    }
-    const token = jsonwebtoken_1.default.sign({ diagramId: diagram._id }, process.env.JWT_SECRET, {
-        expiresIn: '8h',
-    });
-    return token;
+const getDiagramsForUser = async (userId) => {
+    const diagrams = await diagram_model_1.DiagramModel.find({ userId });
+    return diagrams.map((d) => ({
+        id: d._id,
+        name: d.name,
+        modified: d.updatedAt,
+    }));
 };
-exports.loginToDiagram = loginToDiagram;
-/**
- * Retrieves a diagram by id
- * @param id of the diagram to retrieve
- * @returns the diagram
- */
-const findDiagramById = async (id) => {
-    if (!idRegex.test(id))
-        throw new Error('Invalid Diagram id');
-    const diagram = await diagram_model_1.DiagramModel.findById(id);
-    if (!diagram)
-        throw new Error('Diagram not found');
-    return { id: diagram._id };
-};
-exports.findDiagramById = findDiagramById;
+exports.getDiagramsForUser = getDiagramsForUser;
 /**
  * Retrieves all entities and relationships of a diagram, and
  * returns them in a format that can be used by the client
@@ -60,8 +28,12 @@ exports.findDiagramById = findDiagramById;
  * @returns the entities and relationships of the diagram
  */
 const getDiagramContents = async (id) => {
-    const diagram = await findDiagramById(id);
-    const entities = await entity_model_1.EntityModel.find({ diagramId: diagram.id });
+    if (!(0, mongoose_1.isValidObjectId)(id))
+        throw new Error('Diagram not found');
+    const diagram = await diagram_model_1.DiagramModel.findById(id);
+    if (!diagram)
+        throw new Error('Diagram not found');
+    const entities = await entity_model_1.EntityModel.find({ diagramId: diagram._id });
     const classes = entities
         .filter((entity) => entity.type === 'class')
         .map((c) => (0, entityServices_1.reformatClass)(c));
@@ -71,9 +43,12 @@ const getDiagramContents = async (id) => {
     const enums = entities
         .filter((entity) => entity.type === 'enum')
         .map((e) => (0, entityServices_1.reformatEnum)(e));
-    const relationships = await relationship_model_1.RelationshipModel.find({ diagramId: diagram.id });
+    const relationships = await relationship_model_1.RelationshipModel.find({
+        diagramId: diagram._id,
+    });
     return {
         diagramId: diagram.id,
+        name: diagram.name,
         entities: [...classes, ...interfaces, ...enums],
         relationships: relationships.map((r) => (0, relationshipService_1.reformatRelationship)(r)),
     };
@@ -85,8 +60,6 @@ exports.getDiagramContents = getDiagramContents;
  * @returns the entities and relationships of the diagram
  */
 const getDiagramContentsPublic = async (id) => {
-    if (!idRegex.test(id))
-        throw new Error('Invalid Diagram id');
     const diagram = await diagram_model_1.DiagramModel.findById(id);
     if (!diagram)
         throw new Error('Diagram not found');
@@ -97,36 +70,44 @@ const getDiagramContentsPublic = async (id) => {
 exports.getDiagramContentsPublic = getDiagramContentsPublic;
 /**
  * Creates a diagram
- * @param password password of the diagram to create
+ * @param userId of the user creating the diagram
  * @returns the created diagram
  * @throws an error if the password is invalid
  * @throws an error if the diagram could not be created
  */
-const createDiagram = async (password) => {
-    if (!password || typeof password !== 'string')
-        throw new Error('Invalid password');
-    if (password.length < 8)
-        throw new Error('Password must be at least 8 characters long');
-    // hash the password
-    try {
-        const hash = await bcrypt_1.default.hash(password, 10);
-        const diagram = new diagram_model_1.DiagramModel({
-            _id: await (0, utils_1.getNextSequence)(),
-            password: hash,
-        });
-        await diagram.save();
-        return diagram;
-    }
-    catch (err) {
-        throw new Error('Could not create a diagram');
-    }
+const createDiagram = async (userId) => {
+    if (!userId)
+        throw new Error('Invalid user id');
+    const user = user_model_1.UserModel.findById(userId);
+    if (!user)
+        throw new Error('User not found');
+    const diagram = new diagram_model_1.DiagramModel({
+        isPublic: false,
+        userId,
+    });
+    await diagram.save();
+    return diagram;
 };
 exports.createDiagram = createDiagram;
+const renameDiagram = async (id, name) => {
+    if (!name)
+        throw new Error('Invalid name');
+    if (!(0, mongoose_1.isValidObjectId)(id))
+        throw new Error('Diagram not found');
+    const diagram = await diagram_model_1.DiagramModel.findById(id);
+    if (!diagram)
+        throw new Error('Diagram not found');
+    diagram.name = name;
+    await diagram.save();
+};
+exports.renameDiagram = renameDiagram;
 /**
  * @param id of the diagram to retrieve
  * @returns true if the diagram is public, false if it is private
  */
 const getDiagramPrivacy = async (id) => {
+    if (!(0, mongoose_1.isValidObjectId)(id))
+        throw new Error('Diagram not found');
     const diagram = await diagram_model_1.DiagramModel.findById(id);
     if (!diagram)
         throw new Error('Diagram not found');
@@ -134,9 +115,17 @@ const getDiagramPrivacy = async (id) => {
 };
 exports.getDiagramPrivacy = getDiagramPrivacy;
 const setDiagramPrivacy = async (id, isPublic) => {
+    if (!(0, mongoose_1.isValidObjectId)(id))
+        throw new Error('Diagram not found');
     if (isPublic === undefined)
         throw new Error('Invalid privacy value');
     await diagram_model_1.DiagramModel.findByIdAndUpdate(id, { isPublic });
 };
 exports.setDiagramPrivacy = setDiagramPrivacy;
+const deleteDiagram = async (id) => {
+    if (!(0, mongoose_1.isValidObjectId)(id))
+        throw new Error('Diagram not found');
+    await diagram_model_1.DiagramModel.findByIdAndDelete(id);
+};
+exports.deleteDiagram = deleteDiagram;
 //# sourceMappingURL=diagramController.js.map

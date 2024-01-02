@@ -9,13 +9,13 @@ const auth_1 = __importDefault(require("../middleware/auth"));
 const utils_1 = require("../utils");
 const router = express_1.default.Router();
 /** Create class given a diagram id as a parameter and class data in body.
- * @route POST /api/class
+ * @route POST /api/class?diagramId=
  * @access Private
  * @returns {object} 201 - Class object
  * @returns {Error}  400 - Could not create a class
  */
 router.post('/', auth_1.default, async (req, res) => {
-    const { diagramId } = req;
+    const { diagramId } = req.query;
     try {
         const newClass = await (0, classController_1.createClass)(req.body, diagramId);
         res.status(201).json(newClass);
@@ -26,7 +26,7 @@ router.post('/', auth_1.default, async (req, res) => {
     }
 });
 /**
- * @route PUT /api/class/:id
+ * @route PUT /api/class/:id?diagramId=
  * @access Private
  * @param {string} id - class id
  * @param {object} body - class data
@@ -34,7 +34,7 @@ router.post('/', auth_1.default, async (req, res) => {
  * @returns status 400 if unsuccessful
  */
 router.put('/:id', auth_1.default, async (req, res) => {
-    const { diagramId } = req;
+    const { diagramId } = req.query;
     const { id } = req.params;
     try {
         const updatedClass = await (0, classController_1.editClass)(id, diagramId, req.body);

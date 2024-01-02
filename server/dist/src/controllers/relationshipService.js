@@ -28,6 +28,9 @@ const relationshipUISchema = zod_1.z.object({
     tgtMultiplicity: zod_1.z.string().regex(relationship_model_1.umlMultiplicityRegex).optional(),
 });
 const validateRelationship = async (data, diagramId, isUpdate) => {
+    if (diagramId === undefined) {
+        throw new Error('Must provide a diagram id');
+    }
     // validate all fields are present and valid
     const parsedDataFromUI = relationshipUISchema.safeParse(data);
     if (!parsedDataFromUI.success) {

@@ -9,14 +9,14 @@ const auth_1 = __importDefault(require("../middleware/auth"));
 const utils_1 = require("../utils");
 const router = express_1.default.Router();
 /** Create enum given a diagram id as a parameter and enum data in body.
- * @route POST /api/enum
+ * @route POST /api/enum?diagramId=
  * @access Public
  * @returns {object} 201 - Enum object
  * @returns {Error}  400 - Could not create an enum
  * @returns {Error}  400 - Invalid - Ensure all fields are present and valid
  */
 router.post('/', auth_1.default, async (req, res) => {
-    const { diagramId } = req;
+    const { diagramId } = req.query;
     try {
         const newEnum = await (0, enumController_1.createEnum)(req.body, diagramId);
         res.status(201).json(newEnum);
@@ -28,7 +28,7 @@ router.post('/', auth_1.default, async (req, res) => {
 });
 /**
  * Edits an enum given a diagram id as a parameter and enum data in body.
- * @route PUT /api/enum/:id
+ * @route PUT /api/enum/:id?diagramId=
  * @access Private
  * @param {string} id - enum id
  * @param {object} body - enum data
@@ -36,7 +36,7 @@ router.post('/', auth_1.default, async (req, res) => {
  * @returns status 400 if unsuccessful
  */
 router.put('/:id', auth_1.default, async (req, res) => {
-    const { diagramId } = req;
+    const { diagramId } = req.query;
     const { id } = req.params;
     try {
         const updatedEnum = await (0, enumController_1.editEnum)(id, diagramId, req.body);
