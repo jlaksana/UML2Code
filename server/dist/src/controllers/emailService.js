@@ -24,7 +24,7 @@ const sendEmail = async (params, templateId) => {
         body: JSON.stringify(data),
     });
     if (!response.ok)
-        throw new Error(data.toString());
+        throw new Error('Error sending email');
 };
 exports.sendEmail = sendEmail;
 //# sourceMappingURL=emailService.js.map
