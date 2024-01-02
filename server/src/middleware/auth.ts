@@ -36,6 +36,16 @@ const withAuth: RequestHandler = async (req, res, next) => {
         throw new Error();
       }
     }
+    if (req.params.diagramId) {
+      // check if diagram belongs to user
+      const diagram = await DiagramModel.findOne({
+        userId: req.userId,
+        _id: req.params.diagramId,
+      });
+      if (!diagram) {
+        throw new Error();
+      }
+    }
     next();
   } catch (e) {
     res.status(401).json({ message: 'Unauthorized' });

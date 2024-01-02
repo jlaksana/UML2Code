@@ -72,6 +72,7 @@ function ResetPassword() {
           fullWidth
           loading={loading}
           loadingIndicator="Loading…"
+          disabled={success}
         >
           Reset
         </LoadingButton>
