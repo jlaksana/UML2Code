@@ -82,16 +82,16 @@ function Dashboard() {
             New
           </Button>
         </div>
-        {loading && (
-          <Box sx={{ width: '80%', margin: 5 }}>
-            <LinearProgress />
-          </Box>
-        )}
         <DashTable
           diagrams={diagrams}
           handleDeleteDiagram={handleDeleteDiagram}
           handleRenameDiagram={handleRenameDiagram}
         />
+        {loading && (
+          <Box sx={{ width: '80%', margin: 5 }}>
+            <LinearProgress />
+          </Box>
+        )}
       </div>
     </div>
   );
