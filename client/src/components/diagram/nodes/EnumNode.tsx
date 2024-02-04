@@ -59,7 +59,9 @@ function EnumNode({ id, data }: NodeProps<Enum>) {
         setEditOpen={setEditOpen}
         handleDelete={handleDelete}
       />
-      <EnumNodeView data={data} />
+      <div onDoubleClick={() => setEditOpen(true)}>
+        <EnumNodeView data={data} />
+      </div>
       <EnumModal
         open={editOpen}
         handleClose={() => setEditOpen(false)}

@@ -69,7 +69,9 @@ function InterfaceNode({ id, data }: NodeProps<Interface>) {
         setEditOpen={setEditOpen}
         handleDelete={handleDelete}
       />
-      <InterfaceNodeView data={data} />
+      <div onDoubleClick={() => setEditOpen(true)}>
+        <InterfaceNodeView data={data} />
+      </div>
       <InterfaceModal
         open={editOpen}
         handleClose={() => setEditOpen(false)}

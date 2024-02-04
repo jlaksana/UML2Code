@@ -77,7 +77,9 @@ function ClassNode({ id, data }: NodeProps<Klass>) {
         setEditOpen={setEditOpen}
         handleDelete={handleDelete}
       />
-      <ClassNodeView data={data} />
+      <div onDoubleClick={() => setEditOpen(true)}>
+        <ClassNodeView data={data} />
+      </div>
       <ClassModal
         open={editOpen}
         handleClose={() => setEditOpen(false)}
