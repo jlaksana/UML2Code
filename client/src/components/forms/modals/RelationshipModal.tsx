@@ -174,7 +174,7 @@ function RelationshipModal({ open, handleClose }: RelationshipModalProps) {
           </h2>
           <Autocomplete
             autoComplete
-            autoSelect
+            autoHighlight
             options={relationshipTypes}
             value={type}
             onChange={handleTypeChange}

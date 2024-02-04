@@ -76,6 +76,8 @@ function GroupSelect({
           sx={{ width }}
         />
       )}
+      clearOnBlur
+      selectOnFocus
     />
   );
 }
