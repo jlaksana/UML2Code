@@ -120,6 +120,8 @@ const setDiagramPrivacy = async (id: string, isPublic: boolean) => {
 const deleteDiagram = async (id: string) => {
   if (!isValidObjectId(id)) throw new Error('Diagram not found');
   await DiagramModel.findByIdAndDelete(id);
+  await EntityModel.deleteMany({ diagramId: id });
+  await RelationshipModel.deleteMany({ diagramId: id });
 };
 
 export {
