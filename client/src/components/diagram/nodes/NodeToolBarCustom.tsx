@@ -27,7 +27,7 @@ function NodeToolBarCustom({ setEditOpen, handleDelete }: Props) {
           onClick={() => setEditOpen(true)}
           disabled={loading}
         >
-          <EditIcon />
+          <EditIcon fontSize="large" />
         </IconButton>
       </Tooltip>
       <Tooltip title="Delete" placement="right">
@@ -37,7 +37,7 @@ function NodeToolBarCustom({ setEditOpen, handleDelete }: Props) {
           onClick={handleDeleteLoading}
           disabled={loading}
         >
-          <DeleteIcon />
+          <DeleteIcon fontSize="large" />
         </IconButton>
       </Tooltip>
     </NodeToolbar>

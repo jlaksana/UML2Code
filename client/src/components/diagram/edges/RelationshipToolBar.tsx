@@ -56,7 +56,7 @@ function RelationshipToolBar({ labelX, labelY, id, openEditModal }: Props) {
           onClick={openEditModal}
           disabled={loading}
         >
-          <EditIcon />
+          <EditIcon fontSize="large" />
         </IconButton>
       </Tooltip>
       <Tooltip title="Delete" placement="right">
@@ -66,7 +66,7 @@ function RelationshipToolBar({ labelX, labelY, id, openEditModal }: Props) {
           onClick={handleDelete}
           disabled={loading}
         >
-          <DeleteIcon />
+          <DeleteIcon fontSize="large" />
         </IconButton>
       </Tooltip>
     </div>
